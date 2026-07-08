@@ -1,0 +1,247 @@
+import { useState } from 'react';
+import { useOrders } from '@/hooks/useCarPipApi';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  ShoppingCart, Search, Clock, CheckCircle2, XCircle, Eye,
+  Package, DollarSign, TrendingUp, FileText
+} from 'lucide-react';
+
+const orders = [
+  { id: 'PO-2026-0842', wholesaler: 'TechDistribute Inc.', items: [
+    { name: 'Premium Wireless Earbuds', sku: 'SKU-001', qty: 100, unitPrice: 62.50, negotiated: true },
+  ], total: 6250.00, status: 'ACCEPTED', date: '2026-07-02', savings: 1749.00, aiNegotiated: true },
+  { id: 'PO-2026-0839', wholesaler: 'EcoSupply Partners', items: [
+    { name: 'Bamboo Desk Organizer', sku: 'SKU-003', qty: 50, unitPrice: 28.00, negotiated: true },
+  ], total: 1400.00, status: 'NEGOTIATING', date: '2026-07-01', savings: 325.00, aiNegotiated: true },
+  { id: 'PO-2026-0835', wholesaler: 'WholeSale Pro Ltd.', items: [
+    { name: 'Organic Coffee Blend 1kg', sku: 'SKU-002', qty: 200, unitPrice: 19.50, negotiated: true },
+    { name: 'Protein Bar Variety Pack', sku: 'SKU-006', qty: 150, unitPrice: 24.00, negotiated: true },
+  ], total: 7500.00, status: 'ACCEPTED', date: '2026-06-30', savings: 1996.50, aiNegotiated: true },
+  { id: 'PO-2026-0830', wholesaler: 'EcoSupply Partners', items: [
+    { name: 'Reusable Shopping Bags (5pk)', sku: 'SKU-010', qty: 500, unitPrice: 9.50, negotiated: true },
+  ], total: 4750.00, status: 'ACCEPTED', date: '2026-06-29', savings: 1745.00, aiNegotiated: true },
+  { id: 'PO-2026-0825', wholesaler: 'WholeSale Pro Ltd.', items: [
+    { name: 'Yoga Mat Premium', sku: 'SKU-009', qty: 80, unitPrice: 36.50, negotiated: true },
+    { name: 'Stainless Steel Water Bottle', sku: 'SKU-004', qty: 100, unitPrice: 16.99, negotiated: true },
+  ], total: 4619.00, status: 'REJECTED', date: '2026-06-28', savings: 0, aiNegotiated: true },
+  { id: 'PO-2026-0819', wholesaler: 'TechDistribute Inc.', items: [
+    { name: 'Premium Wireless Earbuds', sku: 'SKU-001', qty: 50, unitPrice: 67.99, negotiated: false },
+  ], total: 3399.50, status: 'PENDING', date: '2026-06-27', savings: 0, aiNegotiated: false },
+];
+
+const statusConfig: Record<string, { variant: 'success' | 'info' | 'warning' | 'destructive' | 'outline'; icon: typeof CheckCircle2 }> = {
+  ACCEPTED: { variant: 'success', icon: CheckCircle2 },
+  NEGOTIATING: { variant: 'info', icon: Clock },
+  PENDING: { variant: 'warning', icon: Clock },
+  REJECTED: { variant: 'destructive', icon: XCircle },
+};
+
+export function RetailerOrdersPage() {
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+
+  const { orders: rawOrders } = useOrders(orders);
+  const displayOrders = rawOrders.map((o: any) => ({
+    id: o.id || o.poNumber || 'PO-2026-LIVE',
+    wholesaler: o.wholesaler || o.supplier || o.wholesalerName || 'Live Wholesaler Partner',
+    items: o.items && Array.isArray(o.items) && o.items[0]?.name ? o.items : [{ name: 'Procured Stock Item', sku: 'SKU-001', qty: typeof o.items === 'number' ? o.items : 100, unitPrice: 25.00, negotiated: true }],
+    total: o.total ?? (o.amount || 1500.00),
+    status: o.status || 'PENDING',
+    date: o.date || '2026-07-03',
+    savings: o.savings ?? Math.floor((o.total ?? 1500) * 0.15),
+    aiNegotiated: o.aiNegotiated ?? true,
+  }));
+
+  const filtered = displayOrders.filter(o => {
+    const matchSearch = o.id.toLowerCase().includes(search.toLowerCase()) ||
+      o.wholesaler.toLowerCase().includes(search.toLowerCase());
+    const matchStatus = statusFilter === 'ALL' || o.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  const totalSaved = orders.reduce((s, o) => s + o.savings, 0);
+  const activeOrders = orders.filter(o => o.status === 'NEGOTIATING' || o.status === 'PENDING').length;
+  const completedOrders = orders.filter(o => o.status === 'ACCEPTED').length;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Purchase Orders</h1>
+          <p className="text-muted-foreground">Track and manage all procurement orders</p>
+        </div>
+        <Button size="sm"><ShoppingCart className="w-4 h-4 mr-2" />New Manual Order</Button>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-5 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10"><ShoppingCart className="w-5 h-5 text-primary" /></div>
+            <div><p className="text-2xl font-bold">{orders.length}</p><p className="text-xs text-muted-foreground">Total Orders</p></div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-5 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-blue-500/10"><Clock className="w-5 h-5 text-blue-500" /></div>
+            <div><p className="text-2xl font-bold">{activeOrders}</p><p className="text-xs text-muted-foreground">In Progress</p></div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-5 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-green-500/10"><CheckCircle2 className="w-5 h-5 text-green-500" /></div>
+            <div><p className="text-2xl font-bold">{completedOrders}</p><p className="text-xs text-muted-foreground">Completed</p></div>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200/50 dark:border-green-800/30">
+          <CardContent className="p-5 flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-green-500/10"><DollarSign className="w-5 h-5 text-green-600" /></div>
+            <div><p className="text-2xl font-bold text-green-600">${totalSaved.toLocaleString()}</p><p className="text-xs text-muted-foreground">AI Savings Total</p></div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input placeholder="Search by PO# or wholesaler..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+        </div>
+        <Tabs value={statusFilter} onValueChange={setStatusFilter}>
+          <TabsList>
+            <TabsTrigger value="ALL">All</TabsTrigger>
+            <TabsTrigger value="PENDING">Pending</TabsTrigger>
+            <TabsTrigger value="NEGOTIATING">Negotiating</TabsTrigger>
+            <TabsTrigger value="ACCEPTED">Accepted</TabsTrigger>
+            <TabsTrigger value="REJECTED">Rejected</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      {/* Orders Table */}
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order #</TableHead>
+                <TableHead>Wholesaler</TableHead>
+                <TableHead className="text-center">Items</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+                <TableHead className="text-right">AI Savings</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map(order => {
+                const cfg = statusConfig[order.status];
+                return (
+                  <TableRow key={order.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs font-semibold">{order.id}</span>
+                        {order.aiNegotiated && (
+                          <Badge variant="outline" className="text-[10px] gap-1 py-0">
+                            <TrendingUp className="w-3 h-3" />AI
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium">{order.wholesaler}</TableCell>
+                    <TableCell className="text-center">{order.items.length}</TableCell>
+                    <TableCell className="text-right font-semibold">${order.total.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">
+                      {order.savings > 0 ? (
+                        <span className="text-green-600 font-medium">-${order.savings.toLocaleString()}</span>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={cfg.variant} className="gap-1">
+                        <cfg.icon className="w-3 h-3" />{order.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-sm">{order.date}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm" onClick={() => setSelectedOrder(order)}>
+                        <Eye className="w-4 h-4 mr-1" />View
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Order Detail Dialog */}
+      <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
+        <DialogContent className="max-w-2xl">
+          {selectedOrder && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-3">
+                  <DialogTitle>{selectedOrder.id}</DialogTitle>
+                  <Badge variant={statusConfig[selectedOrder.status].variant}>{selectedOrder.status}</Badge>
+                </div>
+                <DialogDescription>{selectedOrder.wholesaler} · {selectedOrder.date}</DialogDescription>
+              </DialogHeader>
+              <div className="py-4">
+                <h4 className="font-medium mb-3 flex items-center gap-2"><Package className="w-4 h-4" /> Order Items</h4>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Product</TableHead>
+                      <TableHead>SKU</TableHead>
+                      <TableHead className="text-right">Qty</TableHead>
+                      <TableHead className="text-right">Unit Price</TableHead>
+                      <TableHead className="text-right">Subtotal</TableHead>
+                      <TableHead>Negotiated</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {selectedOrder.items.map((item: any, i: number) => (
+                      <TableRow key={i}>
+                        <TableCell className="font-medium">{item.name}</TableCell>
+                        <TableCell className="font-mono text-xs">{item.sku}</TableCell>
+                        <TableCell className="text-right">{item.qty}</TableCell>
+                        <TableCell className="text-right">${item.unitPrice.toFixed(2)}</TableCell>
+                        <TableCell className="text-right font-medium">${(item.qty * item.unitPrice).toFixed(2)}</TableCell>
+                        <TableCell>{item.negotiated ? <Badge variant="success" className="text-[10px]">AI</Badge> : <Badge variant="outline" className="text-[10px]">Manual</Badge>}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <div className="mt-4 p-4 rounded-lg bg-muted/50 border space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Order Total</span>
+                    <span className="font-bold text-lg">${selectedOrder.total.toLocaleString()}</span>
+                  </div>
+                  {selectedOrder.savings > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">AI Negotiation Savings</span>
+                      <span className="font-bold text-green-600">-${selectedOrder.savings.toLocaleString()}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

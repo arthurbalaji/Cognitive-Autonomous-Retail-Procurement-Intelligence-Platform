@@ -1,0 +1,14 @@
+package com.carpip.repository;
+
+import com.carpip.entity.Order;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface OrderRepository extends JpaRepository<Order, String> {
+    List<Order> findByRetailerId(String retailerId);
+    List<Order> findByWholesalerId(String wholesalerId);
+    List<Order> findByStatus(Order.OrderStatus status);
+}

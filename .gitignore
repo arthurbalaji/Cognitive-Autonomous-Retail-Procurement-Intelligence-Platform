@@ -1,0 +1,122 @@
+# =================================================================
+# CARPIP - Global .gitignore
+# Cognitive Autonomous Retail Procurement Intelligence Platform
+# =================================================================
+
+# ──── Operating System & Editor Files ────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ──── IDEs & Editors ────
+.idea/
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+*.iml
+*.ipr
+*.iws
+
+# ──── Environment & Sensitive Files ────
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.cert
+*.p12
+*.pkcs12
+*.pfx
+secrets.json
+
+# ──── Python / AI Service (ai-service/) ────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+.venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+*.model
+*.h5
+*.pkl
+*.joblib
+*.pth
+*.onnx
+
+# ──── Java / Maven / Spring Boot (backend/) ────
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.log
+.mtj.tmp/
+*.properties~
+*.src
+.settings/
+.classpath
+.project
+.springBeans
+.factorypath
+
+# ──── Node.js / TypeScript / Vite / Tailwind (frontend/) ────
+node_modules/
+dist/
+dist-ssr/
+.vite/
+.eslintcache
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.nx/
+.turbo/
+
+# ──── Docker & General Logs ────
+logs/
+*.log
+docker-compose.override.yml
