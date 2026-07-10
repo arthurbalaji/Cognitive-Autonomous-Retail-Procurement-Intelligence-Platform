@@ -116,6 +116,10 @@ lerna-debug.log*
 .nx/
 .turbo/
 
+# Keep frontend build output ignored, but allow committing the generated deployment entrypoint
+!/frontend/dist/
+!/frontend/dist/index.html
+
 # ──── Docker & General Logs ────
 logs/
 *.log
