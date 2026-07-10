@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Keep frontend build output ignored, but allow committing only dist/index.html
+dist/*
+!dist/index.html
+!dist/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
