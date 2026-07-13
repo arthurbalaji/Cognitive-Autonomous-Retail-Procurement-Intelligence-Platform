@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useProducts } from '@/hooks/useCarPipApi';
+import { useProducts, useIntegrationStatus } from '@/hooks/useCarPipApi';
 import api from '@/lib/axios';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +14,7 @@ import { toast } from '@/hooks/use-toast';
 import {
   Package, Search, Filter, Plus, Download, Upload,
   ArrowUpDown, Edit2, Trash2, AlertTriangle, TrendingDown,
-  BarChart3, Eye
+  BarChart3, Eye, Wifi, Clock, Database
 } from 'lucide-react';
 
 const allProducts = [
@@ -48,6 +48,7 @@ export function RetailerInventoryPage() {
   const [newProd, setNewProd] = useState({ sku: '', name: '', category: '', price: '', stock: '', reorder: '', supplier: '' });
 
   const { products: displayProducts, isLive, refetch } = useProducts(allProducts);
+  const { connected: erpConnected, provider: erpProvider, lastSyncAt } = useIntegrationStatus();
   const riskOrder: Record<string, number> = { CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
 
   const filtered = displayProducts
@@ -147,6 +148,24 @@ export function RetailerInventoryPage() {
           <p className="text-muted-foreground">Real-time stock levels with AI predictions</p>
         </div>
         <div className="flex items-center gap-2">
+          {isLive && erpConnected && (
+            <Badge variant="success" className="text-[10px] gap-1">
+              <Wifi className="w-3 h-3" />LIVE from {erpProvider || 'POS'}
+            </Badge>
+          )}
+          {isLive && lastSyncAt && (
+            <span className="text-xs text-muted-foreground flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              Synced {(() => {
+                const d = new Date(lastSyncAt);
+                const now = new Date();
+                const mins = Math.floor((now.getTime() - d.getTime()) / 60000);
+                if (mins < 1) return 'just now';
+                if (mins < 60) return `${mins}m ago`;
+                return `${Math.floor(mins / 60)}h ago`;
+              })()}
+            </span>
+          )}
           <Button variant="outline" size="sm" onClick={handleExportCsv}><Download className="w-4 h-4 mr-2" />Export CSV</Button>
           <Button variant="outline" size="sm" onClick={() => toast({ title: 'Import Ready', description: 'Upload CSV file format supported. Use Export CSV to view template structure.' })}><Upload className="w-4 h-4 mr-2" />Import</Button>
           <Button size="sm" onClick={() => setShowAddDialog(true)}><Plus className="w-4 h-4 mr-2" />Add Product</Button>

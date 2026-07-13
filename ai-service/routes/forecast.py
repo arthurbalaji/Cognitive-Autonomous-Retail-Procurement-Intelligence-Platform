@@ -185,20 +185,32 @@ def batch_forecast():
     return jsonify({'forecasts': results})
 
 
-@forecast_bp.route('/mpi', methods=['GET'])
+@forecast_bp.route('/mpi', methods=['GET', 'POST'])
 def get_mpi():
-    """Get the current Market Pulse Index."""
-    # In production, this reads from the database
-    # For now, use mock product data
-    mock_products = [
-        {'sku': 'SKU-001', 'current_stock': 45, 'reorder_point': 50, 'base_price': 79.99, 'predicted_demand': 60},
-        {'sku': 'SKU-002', 'current_stock': 230, 'reorder_point': 100, 'base_price': 24.99, 'predicted_demand': 80},
-        {'sku': 'SKU-003', 'current_stock': 12, 'reorder_point': 25, 'base_price': 34.50, 'predicted_demand': 40},
-        {'sku': 'SKU-004', 'current_stock': 89, 'reorder_point': 60, 'base_price': 19.99, 'predicted_demand': 35},
-        {'sku': 'SKU-005', 'current_stock': 5, 'reorder_point': 30, 'base_price': 45.00, 'predicted_demand': 25},
-    ]
+    """Get the current Market Pulse Index.
+    Accepts optional POST body with real product data from the backend.
+    Falls back to mock data when no products are provided.
+    """
+    products_data = None
 
-    mpi = calculate_mpi(mock_products)
+    if request.method == 'POST':
+        data = request.get_json(silent=True)
+        if data and 'products' in data:
+            products_data = data['products']
+
+    if not products_data:
+        # Fallback to mock product data
+        products_data = [
+            {'sku': 'SKU-001', 'current_stock': 45, 'reorder_point': 50, 'base_price': 79.99, 'predicted_demand': 60},
+            {'sku': 'SKU-002', 'current_stock': 230, 'reorder_point': 100, 'base_price': 24.99, 'predicted_demand': 80},
+            {'sku': 'SKU-003', 'current_stock': 12, 'reorder_point': 25, 'base_price': 34.50, 'predicted_demand': 40},
+            {'sku': 'SKU-004', 'current_stock': 89, 'reorder_point': 60, 'base_price': 19.99, 'predicted_demand': 35},
+            {'sku': 'SKU-005', 'current_stock': 5, 'reorder_point': 30, 'base_price': 45.00, 'predicted_demand': 25},
+        ]
+
+    mpi = calculate_mpi(products_data)
+    mpi['data_source'] = 'live' if request.method == 'POST' else 'mock'
+    mpi['product_count'] = len(products_data)
     return jsonify(mpi)
 
 

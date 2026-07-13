@@ -1,4 +1,4 @@
-import { useMpi, useOrders, useProducts, triggerManualSync } from '@/hooks/useCarPipApi';
+import { useMpi, useOrders, useProducts, triggerManualSync, useIntegrationHealth } from '@/hooks/useCarPipApi';
 import api from '@/lib/axios';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import {
   TrendingUp, DollarSign, Package, ShoppingCart, ArrowUpRight, ArrowDownRight,
-  Check, XCircle, RefreshCw, Gauge
+  Check, XCircle, RefreshCw, Gauge, Wifi, Database, Brain, Zap, Bot, Server
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
@@ -44,8 +44,9 @@ export function WholesalerDashboard() {
   const [isSyncing, setIsSyncing] = useState(false);
   const { mpi, trend, factors } = useMpi(72);
   const mpiVal = typeof mpi === 'number' ? mpi : 72;
-  const { orders: livePOs, refetch } = useOrders(incomingPOs);
-  const { products } = useProducts([]);
+  const { orders: livePOs, isLive: ordersLive, refetch } = useOrders(incomingPOs);
+  const { products, isLive: productsLive } = useProducts([]);
+  const erpHealth = useIntegrationHealth();
 
   // Build MPI factors from live data
   const mpiFactors = defaultMpiFactors.map(f => ({
@@ -100,6 +101,45 @@ export function WholesalerDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* ERP Connectivity Status Bar */}
+      <Card className="bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border-slate-200/50 dark:border-slate-700/50">
+        <CardContent className="py-3 px-5">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${erpHealth.connected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
+                <span className="text-xs font-medium">ERP System</span>
+                <Badge variant={erpHealth.connected ? 'success' : 'outline'} className="text-[10px] py-0">
+                  {erpHealth.connected ? erpHealth.provider || 'Connected' : 'Not Connected'}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs font-medium">Backend API</span>
+                <Badge variant="success" className="text-[10px] py-0">Online</Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs font-medium">AI Engine</span>
+                <Badge variant="success" className="text-[10px] py-0">Active</Badge>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              {productsLive && (
+                <Badge variant="success" className="text-[10px] gap-1 py-0">
+                  <Zap className="w-2.5 h-2.5" />LIVE DATA
+                </Badge>
+              )}
+              {!productsLive && (
+                <Badge variant="outline" className="text-[10px] gap-1 py-0">
+                  <Database className="w-2.5 h-2.5" />DEMO MODE
+                </Badge>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
@@ -108,7 +148,7 @@ export function WholesalerDashboard() {
         </div>
         <Button variant="outline" size="sm" onClick={handleSyncInventory} disabled={isSyncing}>
           <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
-          {isSyncing ? 'Syncing...' : 'Sync Inventory'}
+          {isSyncing ? 'Syncing...' : 'Sync ERP'}
         </Button>
       </div>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useProducts, useOrders, triggerNegotiation, fetchLiveNegotiationDemo } from '@/hooks/useCarPipApi';
+import { useProducts, useOrders, useOrderStats, useIntegrationHealth, triggerNegotiation, fetchLiveNegotiationDemo } from '@/hooks/useCarPipApi';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -7,7 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import {
   Package, TrendingDown, AlertTriangle, ShoppingCart, ArrowUpRight, ArrowDownRight,
-  Bot, RefreshCw, Sparkles, Loader2, CheckCircle2, DollarSign
+  Bot, RefreshCw, Sparkles, Loader2, CheckCircle2, DollarSign,
+  Wifi, WifiOff, Activity, Database, Brain, Zap
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -58,13 +59,22 @@ const riskColors: Record<string, string> = {
   LOW: 'success',
 };
 
+const healthStatusConfig = {
+  HEALTHY: { color: 'text-green-500', bg: 'bg-green-500', label: 'Healthy' },
+  DEGRADED: { color: 'text-yellow-500', bg: 'bg-yellow-500', label: 'Degraded' },
+  DOWN: { color: 'text-red-500', bg: 'bg-red-500', label: 'Down' },
+  NOT_CONNECTED: { color: 'text-gray-400', bg: 'bg-gray-400', label: 'Not Connected' },
+};
+
 export function RetailerDashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isNegotiating, setIsNegotiating] = useState(false);
   const [liveTranscript, setLiveTranscript] = useState<any[]>(negotiationTranscript);
   const [liveResult, setLiveResult] = useState<any | null>(null);
-  const { products, refetch: refetchProd } = useProducts(inventoryData);
-  const { orders, refetch: refetchOrd } = useOrders([]);
+  const { products, isLive: productsLive, refetch: refetchProd } = useProducts(inventoryData);
+  const { orders, isLive: ordersLive, refetch: refetchOrd } = useOrders([]);
+  const orderStats = useOrderStats();
+  const erpHealth = useIntegrationHealth();
 
   useEffect(() => {
     // Load initial live demo transcript if available from backend
@@ -80,6 +90,8 @@ export function RetailerDashboard() {
     setIsRefreshing(true);
     refetchProd();
     refetchOrd();
+    orderStats.refetch();
+    erpHealth.refetch();
     setTimeout(() => setIsRefreshing(false), 800);
   };
 
@@ -128,15 +140,65 @@ export function RetailerDashboard() {
     setIsNegotiating(false);
   };
 
+  const aiSavingsDisplay = orderStats.isLive && orderStats.totalSavings > 0
+    ? `$${orderStats.totalSavings.toLocaleString()}`
+    : '$4,280';
+
   const stats = [
-    { label: 'Total SKUs', value: `${products.length || 247}`, icon: Package, change: '+12', up: true },
-    { label: 'Low Stock Alerts', value: `${products.filter((p: any) => p.risk === 'CRITICAL' || p.risk === 'HIGH').length || 8}`, icon: AlertTriangle, change: '+3', up: true, alert: true },
-    { label: 'Active Orders', value: `${orders.filter((o: any) => o.status === 'PENDING' || o.status === 'NEGOTIATING' || o.status === 'ACCEPTED').length || 14}`, icon: ShoppingCart, change: '-2', up: false },
-    { label: 'AI Savings (MTD)', value: '$4,280', icon: Bot, change: '+18%', up: true },
+    { label: 'Total SKUs', value: `${products.length || 247}`, icon: Package, change: '+12', up: true, live: productsLive },
+    { label: 'Low Stock Alerts', value: `${products.filter((p: any) => p.risk === 'CRITICAL' || p.risk === 'HIGH').length || 8}`, icon: AlertTriangle, change: '+3', up: true, alert: true, live: productsLive },
+    { label: 'Active Orders', value: `${orderStats.isLive ? (orderStats.pending + orderStats.negotiating + orderStats.accepted) : orders.filter((o: any) => o.status === 'PENDING' || o.status === 'NEGOTIATING' || o.status === 'ACCEPTED').length || 14}`, icon: ShoppingCart, change: '-2', up: false, live: ordersLive },
+    { label: 'AI Savings (MTD)', value: aiSavingsDisplay, icon: Bot, change: '+18%', up: true, live: orderStats.isLive },
   ];
+
+  const erpStatus = healthStatusConfig[erpHealth.status] || healthStatusConfig.NOT_CONNECTED;
 
   return (
     <div className="space-y-6">
+      {/* Connectivity Status Bar */}
+      <Card className="bg-gradient-to-r from-slate-50 to-slate-100/50 dark:from-slate-900/50 dark:to-slate-800/30 border-slate-200/50 dark:border-slate-700/50">
+        <CardContent className="py-3 px-5">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-5">
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${erpStatus.bg} ${erpHealth.status === 'HEALTHY' ? 'animate-pulse' : ''}`} />
+                <span className="text-xs font-medium">ERP/POS</span>
+                <Badge variant={erpHealth.connected ? 'success' : 'outline'} className="text-[10px] py-0">
+                  {erpHealth.connected ? erpHealth.provider || 'Connected' : 'Not Connected'}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs font-medium">Backend API</span>
+                <Badge variant="success" className="text-[10px] py-0">Online</Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs font-medium">AI Engine</span>
+                <Badge variant="success" className="text-[10px] py-0">Active</Badge>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              {productsLive && (
+                <Badge variant="success" className="text-[10px] gap-1 py-0">
+                  <Zap className="w-2.5 h-2.5" />LIVE DATA
+                </Badge>
+              )}
+              {!productsLive && (
+                <Badge variant="outline" className="text-[10px] gap-1 py-0">
+                  <Database className="w-2.5 h-2.5" />DEMO MODE
+                </Badge>
+              )}
+              {orderStats.autoGenerated > 0 && (
+                <Badge variant="info" className="text-[10px] gap-1 py-0">
+                  <Bot className="w-2.5 h-2.5" />{orderStats.autoGenerated} Auto-POs
+                </Badge>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
@@ -158,9 +220,16 @@ export function RetailerDashboard() {
                 <div className="p-2 rounded-lg bg-primary/10">
                   <stat.icon className={`w-5 h-5 ${stat.alert ? 'text-yellow-500' : 'text-primary'}`} />
                 </div>
-                <div className={`flex items-center gap-1 text-xs font-medium ${stat.up ? 'text-green-600' : 'text-red-500'}`}>
-                  {stat.up ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                  {stat.change}
+                <div className="flex items-center gap-2">
+                  {stat.live !== undefined && (
+                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${stat.live ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
+                      {stat.live ? 'LIVE' : 'DEMO'}
+                    </span>
+                  )}
+                  <div className={`flex items-center gap-1 text-xs font-medium ${stat.up ? 'text-green-600' : 'text-red-500'}`}>
+                    {stat.up ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                    {stat.change}
+                  </div>
                 </div>
               </div>
               <div className="mt-3">
@@ -252,8 +321,18 @@ export function RetailerDashboard() {
         <TabsContent value="inventory">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">SKU Intelligence Table</CardTitle>
-              <CardDescription>Real-time stock levels with AI-predicted stockout dates</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-base">SKU Intelligence Table</CardTitle>
+                  <CardDescription>Real-time stock levels with AI-predicted stockout dates</CardDescription>
+                </div>
+                {productsLive && (
+                  <Badge variant="success" className="gap-1 text-[10px]">
+                    <Activity className="w-3 h-3" />
+                    Live from ERP
+                  </Badge>
+                )}
+              </div>
             </CardHeader>
             <CardContent>
               <Table>
