@@ -115,10 +115,14 @@ services:
         condition: service_healthy
     ports:
       - "5000:5000"
+    volumes:
+      - ./ai-service/credentials:/app/credentials:ro
     environment:
       DATABASE_URL: postgresql://carpip:${POSTGRES_PASSWORD:-carpip_secure_password}@postgres:5432/carpipdb
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GOOGLE_APPLICATION_CREDENTIALS: /app/credentials/service-account.json
+      GCP_PROJECT_ID: ${GCP_PROJECT_ID:-gen-lang-client-0550374026}
+      GCP_LOCATION: ${GCP_LOCATION:-us-central1}
       FLASK_SECRET_KEY: ${FLASK_SECRET_KEY:-flask-dev-secret}
       CORS_ORIGINS: http://localhost:5173,http://localhost:80,http://nginx:80
     networks:

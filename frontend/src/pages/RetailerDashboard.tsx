@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useProducts, useOrders, useOrderStats, useIntegrationHealth, triggerNegotiation, fetchLiveNegotiationDemo } from '@/hooks/useCarPipApi';
+import { useWebSocket } from '@/hooks/useWebSocket';
+import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -75,6 +77,8 @@ export function RetailerDashboard() {
   const { orders, isLive: ordersLive, refetch: refetchOrd } = useOrders([]);
   const orderStats = useOrderStats();
   const erpHealth = useIntegrationHealth();
+  const { user } = useAuthStore();
+  const { isConnected: wsConnected, lastMessage } = useWebSocket(user?.tenantId);
 
   useEffect(() => {
     // Load initial live demo transcript if available from backend
@@ -173,7 +177,12 @@ export function RetailerDashboard() {
                 <Badge variant="success" className="text-[10px] py-0">Online</Badge>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <div className={`w-2 h-2 rounded-full ${wsConnected ? 'bg-blue-500 animate-pulse' : 'bg-gray-400'}`} />
+                <span className="text-xs font-medium">Live Feed</span>
+                <Badge variant={wsConnected ? 'default' : 'outline'} className="text-[10px] py-0 bg-blue-500 hover:bg-blue-600">
+                  {wsConnected ? 'Connected' : 'Connecting...'}
+                </Badge>
+              </div>
                 <span className="text-xs font-medium">AI Engine</span>
                 <Badge variant="success" className="text-[10px] py-0">Active</Badge>
               </div>

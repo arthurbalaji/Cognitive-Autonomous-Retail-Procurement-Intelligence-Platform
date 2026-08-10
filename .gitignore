@@ -41,6 +41,9 @@ desktop.ini
 *.pkcs12
 *.pfx
 secrets.json
+**/credentials/*.json
+**/service-account*.json
+gen-lang-client-*.json
 
 # ──── Python / AI Service (ai-service/) ────
 __pycache__/
@@ -124,3 +127,6 @@ lerna-debug.log*
 logs/
 *.log
 docker-compose.override.yml
+
+# ──── Datasets ────
+M5 Forecasting Accuracy/

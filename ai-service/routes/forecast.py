@@ -7,10 +7,12 @@ import json
 forecast_bp = Blueprint('forecast', __name__)
 
 
+from forecaster import forecaster, bootstrap_m5_data
+
 def generate_forecast(historical_sales, current_stock, reorder_point):
     """
-    Demand forecasting pipeline using weighted moving average + trend analysis.
-    In production, replace with trained LSTM + XGBoost ensemble.
+    Demand forecasting pipeline using LSTM + XGBoost ensemble.
+    Falls back to simple estimation if models are not trained.
     """
     if not historical_sales or len(historical_sales) < 3:
         # Not enough data — use simple estimation
@@ -24,35 +26,40 @@ def generate_forecast(historical_sales, current_stock, reorder_point):
             'model': 'simple_estimation'
         }
 
-    # Convert to pandas Series
-    sales_series = pd.Series(historical_sales)
+    # Ensure models are bootstrapped
+    bootstrap_m5_data()
 
-    # Weighted Moving Average (recent data weighted more)
-    weights = np.exp(np.linspace(-1, 0, len(sales_series)))
-    weights /= weights.sum()
-    wma = np.average(sales_series, weights=weights)
-
-    # Trend calculation
-    if len(sales_series) >= 7:
-        recent_avg = sales_series[-3:].mean()
-        older_avg = sales_series[-7:-3].mean() if len(sales_series) >= 7 else sales_series[:-3].mean()
-        trend_factor = recent_avg / older_avg if older_avg > 0 else 1.0
+    # Try ML Prediction
+    predicted_demand = forecaster.predict(historical_sales)
+    
+    if predicted_demand is not None:
+        predicted_daily = predicted_demand / 7.0
+        confidence = 0.90 # high confidence with ML
+        model_name = 'lstm_xgboost_ensemble'
+        trend_factor = 1.0 # ML handles trend inherently
     else:
-        trend_factor = 1.0
+        # Fallback to WMA if sequence too short
+        sales_series = pd.Series(historical_sales)
+        weights = np.exp(np.linspace(-1, 0, len(sales_series)))
+        weights /= weights.sum()
+        wma = np.average(sales_series, weights=weights)
 
-    # 7-day demand prediction with trend adjustment
-    predicted_daily = wma * trend_factor
-    predicted_demand = max(1, int(predicted_daily * 7))
+        if len(sales_series) >= 7:
+            recent_avg = sales_series[-3:].mean()
+            older_avg = sales_series[-7:-3].mean() if len(sales_series) >= 7 else sales_series[:-3].mean()
+            trend_factor = recent_avg / older_avg if older_avg > 0 else 1.0
+        else:
+            trend_factor = 1.0
+
+        predicted_daily = wma * trend_factor
+        predicted_demand = max(1, int(predicted_daily * 7))
+        confidence = 0.75
+        model_name = 'wma_fallback'
 
     # Stockout prediction
     daily_consumption = predicted_daily if predicted_daily > 0 else 1
     days_until_stockout = max(1, int(current_stock / daily_consumption))
     stockout_date = datetime.utcnow() + timedelta(days=days_until_stockout)
-
-    # Confidence based on data quality
-    data_quality = min(1.0, len(sales_series) / 30)
-    variance_penalty = 1.0 - min(0.3, sales_series.std() / (sales_series.mean() + 1) * 0.5)
-    confidence = round(data_quality * variance_penalty * 0.95, 2)
 
     return {
         'predicted_demand_7d': predicted_demand,
@@ -60,8 +67,24 @@ def generate_forecast(historical_sales, current_stock, reorder_point):
         'confidence': confidence,
         'trend_factor': round(trend_factor, 3),
         'daily_consumption_rate': round(predicted_daily, 2),
-        'model': 'wma_trend_v1'
+        'model': model_name
     }
+
+@forecast_bp.route('/forecast/train', methods=['POST'])
+def train_models():
+    """Online learning endpoint to fine-tune LSTM and incrementally train XGBoost."""
+    data = request.get_json()
+    historical_sales = data.get('historical_sales', [])
+    
+    if not historical_sales or len(historical_sales) < 21:
+        return jsonify({'status': 'error', 'message': 'Insufficient data for training (min 21 days required).'}), 400
+        
+    success = forecaster.train_incremental(historical_sales)
+    
+    if success:
+        return jsonify({'status': 'success', 'message': 'Models successfully updated with new data.'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Training failed.'}), 500
 
 
 def calculate_mpi(category_data):

@@ -1,4 +1,6 @@
 import { useMpi, useOrders, useProducts, triggerManualSync, useIntegrationHealth } from '@/hooks/useCarPipApi';
+import { useWebSocket } from '@/hooks/useWebSocket';
+import { useAuthStore } from '@/stores/authStore';
 import api from '@/lib/axios';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -47,6 +49,8 @@ export function WholesalerDashboard() {
   const { orders: livePOs, isLive: ordersLive, refetch } = useOrders(incomingPOs);
   const { products, isLive: productsLive } = useProducts([]);
   const erpHealth = useIntegrationHealth();
+  const { user } = useAuthStore();
+  const { isConnected: wsConnected } = useWebSocket(user?.tenantId);
 
   // Build MPI factors from live data
   const mpiFactors = defaultMpiFactors.map(f => ({
@@ -117,6 +121,13 @@ export function WholesalerDashboard() {
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-xs font-medium">Backend API</span>
                 <Badge variant="success" className="text-[10px] py-0">Online</Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${wsConnected ? 'bg-blue-500 animate-pulse' : 'bg-gray-400'}`} />
+                <span className="text-xs font-medium">Live Feed</span>
+                <Badge variant={wsConnected ? 'default' : 'outline'} className="text-[10px] py-0 bg-blue-500 hover:bg-blue-600">
+                  {wsConnected ? 'Connected' : 'Connecting...'}
+                </Badge>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />

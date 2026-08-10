@@ -10,6 +10,7 @@ import com.carpip.repository.TenantRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.*;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,6 +32,7 @@ public class ErpSyncService {
     private final OrderRepository orderRepository;
     private final List<ErpAdapter> adapters;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final WebSocketNotificationService webSocketNotifier;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${ai.service.url:http://localhost:5000}")
@@ -42,12 +44,14 @@ public class ErpSyncService {
                           ProductRepository productRepository,
                           OrderRepository orderRepository,
                           List<ErpAdapter> adapters,
-                          KafkaTemplate<String, Object> kafkaTemplate) {
+                          KafkaTemplate<String, Object> kafkaTemplate,
+                          WebSocketNotificationService webSocketNotifier) {
         this.tenantRepository = tenantRepository;
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.adapters = adapters;
         this.kafkaTemplate = kafkaTemplate;
+        this.webSocketNotifier = webSocketNotifier;
     }
 
     /**
@@ -81,6 +85,7 @@ public class ErpSyncService {
      * Now also tracks sync metadata and triggers auto-procurement.
      */
     @Transactional
+    @CacheEvict(value = {"products", "orders", "order-stats"}, allEntries = true)
     public Map<String, Object> syncTenant(Tenant tenant) {
         log.info("Syncing tenant: {} (provider: {})", tenant.getName(), tenant.getErpProvider());
 
@@ -172,6 +177,13 @@ public class ErpSyncService {
             int autoProcCount = checkAndCreateAutoProcurementOrders(tenant);
             if (autoProcCount > 0) {
                 log.info("Created {} auto-procurement orders for tenant: {}", autoProcCount, tenant.getName());
+
+                // Notify dashboards of new orders
+                webSocketNotifier.notifyOrderUpdate(tenant.getId(), Map.of(
+                        "event", "AUTO_PROCUREMENT",
+                        "ordersCreated", autoProcCount,
+                        "tenantName", tenant.getName()
+                ));
             }
 
             // ──── Push real product data to AI service for MPI calculation ────
@@ -198,6 +210,15 @@ public class ErpSyncService {
         if (syncError != null) {
             result.put("error", syncError);
         }
+
+        // Push real-time WebSocket notifications
+        webSocketNotifier.notifySyncComplete(tenant.getId(), result);
+        webSocketNotifier.notifyInventoryUpdate(tenant.getId(), Map.of(
+                "event", "SYNC_COMPLETE",
+                "productsUpserted", productsUpserted,
+                "salesPublished", salesPublished
+        ));
+
         return result;
     }
 

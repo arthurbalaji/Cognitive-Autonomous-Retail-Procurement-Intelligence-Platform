@@ -3,6 +3,8 @@ package com.carpip.controller;
 import com.carpip.entity.Product;
 import com.carpip.entity.User;
 import com.carpip.repository.ProductRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @Cacheable(value = "products", key = "#user.tenant.id")
     public ResponseEntity<List<Product>> getProducts(@AuthenticationPrincipal User user) {
         List<Product> products = productRepository.findByTenantId(user.getTenant().getId());
         return ResponseEntity.ok(products);
@@ -34,6 +37,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @CacheEvict(value = "products", key = "#user.tenant.id")
     public ResponseEntity<Product> createProduct(@RequestBody Product product, @AuthenticationPrincipal User user) {
         product.setTenant(user.getTenant());
         Product saved = productRepository.save(product);
@@ -41,6 +45,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @CacheEvict(value = "products", key = "#user.tenant.id")
     public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product updates,
                                                   @AuthenticationPrincipal User user) {
         Product product = productRepository.findById(id)
@@ -59,6 +64,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @CacheEvict(value = "products", key = "#user.tenant.id")
     public ResponseEntity<Void> deleteProduct(@PathVariable String id, @AuthenticationPrincipal User user) {
         Product product = productRepository.findById(id)
                 .filter(p -> p.getTenant().getId().equals(user.getTenant().getId()))

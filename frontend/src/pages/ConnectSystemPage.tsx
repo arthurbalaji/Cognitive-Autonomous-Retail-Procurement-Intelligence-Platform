@@ -56,7 +56,7 @@ const allProviders: ProviderDef[] = [
     ],
   },
   {
-    id: 'custom',
+    id: 'retailer-pos',
     name: 'Square POS',
     description: 'Connect Square Point of Sale for real-time inventory counts & in-store transaction sync.',
     icon: CreditCard,
@@ -78,7 +78,7 @@ const allProviders: ProviderDef[] = [
     ],
   },
   {
-    id: 'custom',
+    id: 'retailer-pos',
     name: 'Custom POS / eCommerce API',
     description: 'Connect any POS or eCommerce platform via a custom REST API endpoint.',
     icon: Store,
@@ -102,7 +102,7 @@ const allProviders: ProviderDef[] = [
 
   // ─── WHOLESALER providers (ERP systems) ────────────────────
   {
-    id: 'custom',
+    id: 'wholesaler-erp',
     name: 'SAP Business One',
     description: 'Enterprise-grade ERP integration for SAP B1 — sync catalog, stock levels, and fulfillment.',
     icon: Server,
@@ -124,7 +124,7 @@ const allProviders: ProviderDef[] = [
     ],
   },
   {
-    id: 'custom',
+    id: 'wholesaler-erp',
     name: 'Custom ERP / WMS API',
     description: 'Connect any ERP, WMS, or warehouse system via a custom REST API endpoint.',
     icon: Globe,

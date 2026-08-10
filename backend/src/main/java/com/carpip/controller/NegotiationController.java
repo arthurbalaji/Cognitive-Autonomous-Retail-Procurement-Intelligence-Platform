@@ -5,6 +5,7 @@ import com.carpip.entity.Order;
 import com.carpip.entity.User;
 import com.carpip.repository.NegotiationLogRepository;
 import com.carpip.repository.OrderRepository;
+import com.carpip.service.WebSocketNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,15 +24,18 @@ public class NegotiationController {
     private static final Logger log = LoggerFactory.getLogger(NegotiationController.class);
     private final NegotiationLogRepository negotiationLogRepository;
     private final OrderRepository orderRepository;
+    private final WebSocketNotificationService webSocketNotifier;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${ai.service.url:http://localhost:5000}")
     private String aiServiceUrl;
 
     public NegotiationController(NegotiationLogRepository negotiationLogRepository,
-                                  OrderRepository orderRepository) {
+                                  OrderRepository orderRepository,
+                                  WebSocketNotificationService webSocketNotifier) {
         this.negotiationLogRepository = negotiationLogRepository;
         this.orderRepository = orderRepository;
+        this.webSocketNotifier = webSocketNotifier;
     }
 
     /**
@@ -92,6 +96,12 @@ public class NegotiationController {
                 if (request.orderId() != null) {
                     saveTranscript(request.orderId(), result);
                 }
+
+                // Push real-time WebSocket notification
+                webSocketNotifier.notifyNegotiationUpdate(
+                        request.orderId() != null ? request.orderId() : request.sku(),
+                        result
+                );
 
                 return ResponseEntity.ok(result);
             }

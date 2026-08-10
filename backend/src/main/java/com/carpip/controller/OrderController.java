@@ -6,6 +6,8 @@ import com.carpip.entity.User;
 import com.carpip.repository.NegotiationLogRepository;
 import com.carpip.repository.OrderRepository;
 import com.carpip.repository.TenantRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,7 @@ public class OrderController {
     }
 
     @GetMapping
+    @Cacheable(value = "orders", key = "#user.tenant.id + '-' + #user.role")
     public ResponseEntity<List<Order>> getOrders(@AuthenticationPrincipal User user) {
         String tenantId = user.getTenant().getId();
         List<Order> orders;
@@ -53,6 +56,7 @@ public class OrderController {
     }
 
     @PostMapping
+    @CacheEvict(value = {"orders", "order-stats"}, allEntries = true)
     public ResponseEntity<Order> createOrder(@RequestBody Order order, @AuthenticationPrincipal User user) {
         order.setRetailer(user.getTenant());
         order.setStatus(Order.OrderStatus.PENDING);
@@ -61,6 +65,7 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}/status")
+    @CacheEvict(value = {"orders", "order-stats"}, allEntries = true)
     public ResponseEntity<Order> updateOrderStatus(@PathVariable String id,
                                                      @RequestBody StatusUpdate statusUpdate,
                                                      @AuthenticationPrincipal User user) {
@@ -102,6 +107,7 @@ public class OrderController {
      * Get summary statistics for orders.
      */
     @GetMapping("/stats")
+    @Cacheable(value = "order-stats", key = "#user.tenant.id + '-' + #user.role")
     public ResponseEntity<Map<String, Object>> getOrderStats(@AuthenticationPrincipal User user) {
         String tenantId = user.getTenant().getId();
         List<Order> orders;
