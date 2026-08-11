@@ -183,6 +183,8 @@ export function RetailerDashboard() {
                   {wsConnected ? 'Connected' : 'Connecting...'}
                 </Badge>
               </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
                 <span className="text-xs font-medium">AI Engine</span>
                 <Badge variant="success" className="text-[10px] py-0">Active</Badge>
               </div>

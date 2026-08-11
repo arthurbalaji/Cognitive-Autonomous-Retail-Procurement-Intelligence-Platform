@@ -37,9 +37,8 @@ services:
     networks:
       - carpip-network
 
-  # Zookeeper (required by Kafka)
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
+    image: confluentinc/cp-zookeeper:7.7.0
     container_name: carpip-zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -51,7 +50,7 @@ services:
 
   # Apache Kafka
   kafka:
-    image: confluentinc/cp-kafka:7.5.0
+    image: confluentinc/cp-kafka:7.7.0
     container_name: carpip-kafka
     depends_on:
       - zookeeper
