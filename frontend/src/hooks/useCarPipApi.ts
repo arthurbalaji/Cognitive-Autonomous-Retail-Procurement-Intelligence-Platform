@@ -397,6 +397,17 @@ export async function triggerNegotiation(params: {
   }
 }
 
+// ─── 11b. Simulate Low Stock (trigger auto-procurement + negotiation) ─
+export async function simulateLowStock() {
+  try {
+    const res = await api.post('/products/simulate-low-stock');
+    return res.data;
+  } catch (err: any) {
+    const message = err.response?.data?.message || err.message || 'Simulation failed';
+    throw new Error(message);
+  }
+}
+
 // ─── 12. Forecasts Hook (FIXED: proper request format) ────
 export function useForecasts<T>(fallbackData: T[]) {
   const { data, isLoading } = useQuery({

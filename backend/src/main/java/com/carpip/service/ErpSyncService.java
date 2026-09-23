@@ -39,6 +39,8 @@ public class ErpSyncService {
     private String aiServiceUrl;
 
     private boolean kafkaAvailable = true;
+    private long lastKafkaFailureTime = 0;
+    private static final long KAFKA_RETRY_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
     public ErpSyncService(TenantRepository tenantRepository,
                           ProductRepository productRepository,
@@ -317,17 +319,25 @@ public class ErpSyncService {
     }
 
     /**
-     * Publish to Kafka with graceful fallback if Kafka is unavailable.
+     * Publish to Kafka with graceful fallback and periodic retry if Kafka was unavailable.
      */
     private void publishToKafka(String topic, String key, Map<String, Object> data, Tenant tenant) {
-        if (!kafkaAvailable) return;
+        // If Kafka was marked unavailable, check if enough time has passed to retry
+        if (!kafkaAvailable) {
+            if (System.currentTimeMillis() - lastKafkaFailureTime < KAFKA_RETRY_INTERVAL_MS) {
+                return; // Still within backoff window
+            }
+            log.info("Retrying Kafka connection after backoff period...");
+            kafkaAvailable = true; // Allow retry
+        }
 
         try {
             kafkaTemplate.send(topic, key, data);
         } catch (Exception e) {
             if (kafkaAvailable) {
-                log.warn("Kafka unavailable ({}). Skipping event publishing. System continues without Kafka.", e.getMessage());
+                log.warn("Kafka unavailable ({}). Skipping event publishing. Will retry in 5 minutes.", e.getMessage());
                 kafkaAvailable = false;
+                lastKafkaFailureTime = System.currentTimeMillis();
             }
         }
     }

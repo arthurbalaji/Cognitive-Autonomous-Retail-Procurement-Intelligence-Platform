@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useProducts, useOrders, useOrderStats, useIntegrationHealth, triggerNegotiation, fetchLiveNegotiationDemo } from '@/hooks/useCarPipApi';
+import { useProducts, useOrders, useOrderStats, useIntegrationHealth, triggerNegotiation, fetchLiveNegotiationDemo, simulateLowStock } from '@/hooks/useCarPipApi';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -71,6 +71,9 @@ const healthStatusConfig = {
 export function RetailerDashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isNegotiating, setIsNegotiating] = useState(false);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simulationStep, setSimulationStep] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('inventory');
   const [liveTranscript, setLiveTranscript] = useState<any[]>(negotiationTranscript);
   const [liveResult, setLiveResult] = useState<any | null>(null);
   const { products, isLive: productsLive, refetch: refetchProd } = useProducts(inventoryData);
@@ -97,6 +100,84 @@ export function RetailerDashboard() {
     orderStats.refetch();
     erpHealth.refetch();
     setTimeout(() => setIsRefreshing(false), 800);
+  };
+
+  const handleSimulateLowStock = async () => {
+    setIsSimulating(true);
+    setSimulationStep('Dropping stock below reorder level...');
+    setLiveTranscript([]);
+    setLiveResult(null);
+
+    try {
+      // Step 1: Drop stock
+      const simResult = await simulateLowStock();
+      const product = simResult.product;
+
+      toast({
+        title: '⚠️ Stock Dropped!',
+        description: simResult.message,
+      });
+
+      // Animate: show drop notification in transcript
+      const dropMsg = {
+        agent: 'SYSTEM',
+        message: `⚠️ LOW STOCK ALERT: ${product.name} (${product.sku}) stock dropped from ${product.originalStock} → ${product.newStock} units. Reorder level is ${product.reorderPoint}. Auto-procurement triggered.`,
+        timestamp: new Date().toLocaleTimeString(),
+      };
+      setLiveTranscript([dropMsg]);
+      setSimulationStep('Creating auto-procurement order...');
+      await new Promise(r => setTimeout(r, 1200));
+
+      // Step 2: Switch to negotiations tab
+      setActiveTab('negotiations');
+      setSimulationStep('Running AI multi-agent negotiation...');
+      await new Promise(r => setTimeout(r, 800));
+
+      // Step 3: Trigger negotiation for this product
+      const negResult = await triggerNegotiation({
+        sku: product.sku,
+        productName: product.name,
+        basePrice: Number(product.basePrice),
+        currentStock: product.newStock,
+        reorderPoint: product.reorderPoint,
+        risk: 'CRITICAL',
+      });
+
+      if (negResult && negResult.transcript) {
+        // Animate transcript messages one-by-one
+        const fullTranscript = [dropMsg];
+        for (let i = 0; i < negResult.transcript.length; i++) {
+          const msg = negResult.transcript[i];
+          fullTranscript.push({
+            ...msg,
+            timestamp: msg.timestamp || new Date().toLocaleTimeString(),
+          });
+          setLiveTranscript([...fullTranscript]);
+          await new Promise(r => setTimeout(r, 900)); // staggered animation
+        }
+
+        if (negResult.result) {
+          setLiveResult(negResult.result);
+          toast({
+            title: '✅ Negotiation Complete!',
+            description: `${product.name}: agreed at $${Number(negResult.result.final_price || 0).toFixed(2)}/unit. Saved $${Number(negResult.result.savings || 0).toFixed(2)}!`,
+          });
+        }
+      }
+
+      // Refresh product list to show updated stock
+      refetchProd();
+      refetchOrd();
+      setSimulationStep(null);
+    } catch (err: any) {
+      toast({
+        title: 'Simulation Error',
+        description: err.message || 'Failed to simulate low stock.',
+        variant: 'destructive',
+      });
+      setSimulationStep(null);
+    }
+    setIsSimulating(false);
   };
 
   const handleRunLiveNegotiation = async () => {
@@ -316,8 +397,50 @@ export function RetailerDashboard() {
         </Card>
       </div>
 
+      {/* Simulate Low Stock Button */}
+      <Card className="bg-gradient-to-r from-orange-50 via-red-50 to-pink-50 dark:from-orange-950/20 dark:via-red-950/20 dark:to-pink-950/20 border-orange-200/50 dark:border-orange-800/30">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-orange-100 dark:bg-orange-900/30">
+                <Zap className="w-6 h-6 text-orange-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-base">Simulate Low Stock → Auto-Negotiate</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Drops a synced product's stock below its reorder level, triggers auto-procurement, and runs live AI multi-agent negotiation.
+                </p>
+                {simulationStep && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-orange-600" />
+                    <span className="text-xs font-medium text-orange-700 dark:text-orange-400 animate-pulse">{simulationStep}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <Button
+              onClick={handleSimulateLowStock}
+              disabled={isSimulating}
+              className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg shadow-orange-500/25"
+            >
+              {isSimulating ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Running Simulation...
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4 mr-2" />
+                  Simulate Low Stock
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Tabs: Inventory + Negotiations */}
-      <Tabs defaultValue="inventory" className="space-y-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList>
           <TabsTrigger value="inventory">
             <Package className="w-4 h-4 mr-2" />

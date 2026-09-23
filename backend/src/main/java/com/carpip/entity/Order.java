@@ -1,5 +1,6 @@
 package com.carpip.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,10 +15,12 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "retailer_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "apiKeys"})
     private Tenant retailer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wholesaler_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "apiKeys"})
     private Tenant wholesaler;
 
     @Column(name = "po_number", unique = true)

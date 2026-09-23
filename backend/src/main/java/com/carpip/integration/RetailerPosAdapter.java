@@ -2,6 +2,7 @@ package com.carpip.integration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -30,28 +31,40 @@ public class RetailerPosAdapter implements ErpAdapter {
     private Map<String, String> credentials;
     private boolean isDemoMode = false;
 
+    @Value("${POS_API_URL:}")
+    private String defaultPosApiUrl;
+
     @Override
     public boolean connect(Map<String, String> credentials) {
         this.credentials = credentials;
-        String posApiUrl = credentials.get("posApiUrl");
+
+        // Use env var as fallback if credential not provided
+        String posApiUrl = credentials.getOrDefault("posApiUrl",
+                defaultPosApiUrl != null && !defaultPosApiUrl.isEmpty() ? defaultPosApiUrl : null);
         String posApiKey = credentials.get("posApiKey");
         String storeId = credentials.get("storeId");
+
+        // Store resolved URL back into credentials for later use by sync methods
+        if (posApiUrl != null && !credentials.containsKey("posApiUrl")) {
+            credentials.put("posApiUrl", posApiUrl);
+        }
 
         if (posApiUrl == null || posApiKey == null) {
             log.error("POS adapter connection failed: missing posApiUrl or posApiKey");
             return false;
         }
 
-        // Detect demo mode
-        if (posApiUrl.contains("demo") || posApiUrl.contains("localhost") || posApiKey.startsWith("demo-")) {
+        // Detect explicit demo mode (only for obviously fake keys)
+        if (posApiKey.startsWith("demo-")) {
             log.info("Retailer POS adapter running in DEMO mode for store: {} (url: {})", storeId, posApiUrl);
             isDemoMode = true;
             return true;
         }
 
-        // Real POS API health check
+        // Real POS API health check — use configurable health endpoint
+        String healthEndpoint = credentials.getOrDefault("healthEndpoint", "/api/v1/health");
         try {
-            String url = normalizeUrl(posApiUrl) + "/health";
+            String url = normalizeUrl(posApiUrl) + healthEndpoint;
             HttpHeaders headers = buildHeaders(posApiKey);
 
             ResponseEntity<Map> response = restTemplate.exchange(
@@ -64,11 +77,14 @@ public class RetailerPosAdapter implements ErpAdapter {
                 return true;
             } else {
                 log.error("POS health check returned: {}", response.getStatusCode());
-                return false;
+                // Don't fall to demo — try connecting anyway, sync methods will handle errors
+                isDemoMode = false;
+                return true;
             }
         } catch (Exception e) {
-            log.warn("POS API health check failed ({}). Falling back to demo mode.", e.getMessage());
-            isDemoMode = true;
+            log.warn("POS API health check failed ({}). Will attempt data sync anyway.", e.getMessage());
+            // Don't fall to demo mode — let sync methods try real endpoints first
+            isDemoMode = false;
             return true;
         }
     }
@@ -77,10 +93,17 @@ public class RetailerPosAdapter implements ErpAdapter {
     public List<Map<String, Object>> syncInventory() {
         log.info("Syncing inventory from Retailer POS (demo={})...", isDemoMode);
 
-        if (!isDemoMode && credentials != null) {
+        if (credentials != null) {
+            String baseUrl = normalizeUrl(credentials.get("posApiUrl"));
+            String apiKey = credentials.get("posApiKey");
+
+            // Skip real API calls only in explicit demo mode
+            if (isDemoMode || baseUrl.isEmpty() || apiKey == null || apiKey.startsWith("demo-")) {
+                log.info("Using demo inventory data (demo mode or missing credentials)");
+                return getDemoInventory();
+            }
+
             try {
-                String baseUrl = normalizeUrl(credentials.get("posApiUrl"));
-                String apiKey = credentials.get("posApiKey");
                 String storeId = credentials.getOrDefault("storeId", "default");
                 String inventoryEndpoint = credentials.getOrDefault("inventoryEndpoint", "/api/v1/inventory");
 
@@ -138,10 +161,17 @@ public class RetailerPosAdapter implements ErpAdapter {
     public List<Map<String, Object>> fetchSales() {
         log.info("Fetching sales from Retailer POS (demo={})...", isDemoMode);
 
-        if (!isDemoMode && credentials != null) {
+        if (credentials != null) {
+            String baseUrl = normalizeUrl(credentials.get("posApiUrl"));
+            String apiKey = credentials.get("posApiKey");
+
+            // Skip real API calls only in explicit demo mode
+            if (isDemoMode || baseUrl.isEmpty() || apiKey == null || apiKey.startsWith("demo-")) {
+                log.info("Using demo sales data (demo mode or missing credentials)");
+                return getDemoSales();
+            }
+
             try {
-                String baseUrl = normalizeUrl(credentials.get("posApiUrl"));
-                String apiKey = credentials.get("posApiKey");
                 String storeId = credentials.getOrDefault("storeId", "default");
                 String salesEndpoint = credentials.getOrDefault("salesEndpoint", "/api/v1/transactions");
 

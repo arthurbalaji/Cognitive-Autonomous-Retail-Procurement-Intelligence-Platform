@@ -1,7 +1,11 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
+  # ============================================================
+  #  INFRASTRUCTURE
+  # ============================================================
+
+  # Shared PostgreSQL — creates carpipdb, pos_db, erp_db on first run
   postgres:
     image: postgres:15-alpine
     container_name: carpip-postgres
@@ -13,6 +17,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U carpip"]
       interval: 10s
@@ -21,7 +26,7 @@ services:
     networks:
       - carpip-network
 
-  # Redis Cache
+  # Redis Cache (for CARPIP)
   redis:
     image: redis:7-alpine
     container_name: carpip-redis
@@ -37,6 +42,7 @@ services:
     networks:
       - carpip-network
 
+  # Zookeeper (for Kafka)
   zookeeper:
     image: confluentinc/cp-zookeeper:7.7.0
     container_name: carpip-zookeeper
@@ -48,7 +54,7 @@ services:
     networks:
       - carpip-network
 
-  # Apache Kafka
+  # Apache Kafka (for CARPIP event streaming)
   kafka:
     image: confluentinc/cp-kafka:7.7.0
     container_name: carpip-kafka
@@ -72,8 +78,11 @@ services:
     networks:
       - carpip-network
 
-  # Spring Boot Backend
-  backend:
+  # ============================================================
+  #  CARPIP PLATFORM (Central AI Engine)
+  # ============================================================
+
+  carpip-backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -97,12 +106,15 @@ services:
       REDIS_PORT: 6379
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       JWT_SECRET: ${JWT_SECRET:-carpip-production-secret-key-must-be-at-least-256-bits-long}
-      CORS_ORIGINS: http://localhost:5173,http://localhost:80,http://nginx:80
+      CORS_ORIGINS: http://localhost:5173,http://localhost:80,http://localhost,http://carpip-frontend:80
+      AI_SERVICE_URL: http://carpip-ai-service:5000
+      # Integration URLs — point to POS and ERP backends within the Docker network
+      POS_API_URL: http://pos-backend:8081
+      ERP_API_URL: http://erp-backend:8082
     networks:
       - carpip-network
 
-  # Flask AI Service
-  ai-service:
+  carpip-ai-service:
     build:
       context: ./ai-service
       dockerfile: Dockerfile
@@ -123,28 +135,102 @@ services:
       GCP_PROJECT_ID: ${GCP_PROJECT_ID:-gen-lang-client-0550374026}
       GCP_LOCATION: ${GCP_LOCATION:-us-central1}
       FLASK_SECRET_KEY: ${FLASK_SECRET_KEY:-flask-dev-secret}
-      CORS_ORIGINS: http://localhost:5173,http://localhost:80,http://nginx:80
+      CORS_ORIGINS: http://localhost:5173,http://localhost:80,http://localhost,http://carpip-frontend:80
     networks:
       - carpip-network
 
-  # Nginx (Frontend + Reverse Proxy)
-  nginx:
+  carpip-frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: carpip-nginx
+    container_name: carpip-frontend
     depends_on:
-      - backend
-      - ai-service
+      - carpip-backend
+      - carpip-ai-service
     ports:
       - "80:80"
     networks:
       - carpip-network
 
+  # ============================================================
+  #  POS APPLICATION (Retailer Point-of-Sale)
+  # ============================================================
+
+  pos-backend:
+    build:
+      context: ./pos-application/backend
+      dockerfile: Dockerfile
+    container_name: pos-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/pos_db
+      DB_USERNAME: pos_user
+      DB_PASSWORD: pos_password
+      SERVER_PORT: 8081
+    networks:
+      - carpip-network
+
+  pos-frontend:
+    build:
+      context: ./pos-application/frontend
+      dockerfile: Dockerfile
+    container_name: pos-frontend
+    depends_on:
+      - pos-backend
+    ports:
+      - "3001:80"
+    networks:
+      - carpip-network
+
+  # ============================================================
+  #  ERP APPLICATION (Wholesaler Enterprise Resource Planning)
+  # ============================================================
+
+  erp-backend:
+    build:
+      context: ./erp-application/backend
+      dockerfile: Dockerfile
+    container_name: erp-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/erp_db
+      DB_USERNAME: erp_user
+      DB_PASSWORD: erp_password
+      SERVER_PORT: 8082
+    networks:
+      - carpip-network
+
+  erp-frontend:
+    build:
+      context: ./erp-application/frontend
+      dockerfile: Dockerfile
+    container_name: erp-frontend
+    depends_on:
+      - erp-backend
+    ports:
+      - "3002:80"
+    networks:
+      - carpip-network
+
+# ============================================================
+#  VOLUMES & NETWORKS
+# ============================================================
+
 volumes:
   postgres_data:
+    name: carpip-postgres-data
   redis_data:
+    name: carpip-redis-data
 
 networks:
   carpip-network:
     driver: bridge
+    name: carpip-network

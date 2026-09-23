@@ -1,0 +1,25 @@
+.git
+.gitignore
+.dockerignore
+
+# Local Python environments and caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local configuration, credentials, and runtime state
+.env
+.env.*
+credentials/
+instance/
+*.db
+*.sqlite*
+
+# Logs and test output
+*.log
+.coverage
+htmlcov/

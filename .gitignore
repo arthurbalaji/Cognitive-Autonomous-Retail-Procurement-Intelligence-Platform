@@ -1,9 +1,6 @@
-# =================================================================
-# CARPIP - Global .gitignore
-# Cognitive Autonomous Retail Procurement Intelligence Platform
-# =================================================================
+# CARPIP monorepo ignore rules
 
-# ──── Operating System & Editor Files ────
+# Operating-system metadata
 .DS_Store
 .DS_Store?
 ._*
@@ -13,88 +10,119 @@ ehthumbs.db
 Thumbs.db
 desktop.ini
 
-# ──── IDEs & Editors ────
+# Editors and IDEs
 .idea/
-.vscode/
+.vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+*.iml
+*.ipr
+*.iws
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 *~
-*.iml
-*.ipr
-*.iws
 
-# ──── Environment & Sensitive Files ────
+# Local environment, credentials, and certificates
 .env
 .env.*
 !.env.example
+!.env.*.example
+!.env.sample
+!.env.template
 *.key
 *.pem
+*.crt
+*.cer
 *.cert
 *.p12
-*.pkcs12
 *.pfx
+*.pkcs12
+*.jks
+*.keystore
 secrets.json
-**/credentials/*.json
+secrets.*.json
 **/service-account*.json
 gen-lang-client-*.json
+**/credentials/**
+!**/credentials/.gitignore
 
-# ──── Python / AI Service (ai-service/) ────
+# Logs, caches, and temporary files
+logs/
+*.log
+*.tmp
+*.temp
+*.bak
+*.pid
+*.orig
+.cache/
+
+# Python / AI service
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-/lib/
-/lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-venv/
 .venv/
+venv/
 env/
-.env/
 ENV/
 env.bak/
 venv.bak/
 .pytest_cache/
-.coverage
-htmlcov/
 .mypy_cache/
 .ruff_cache/
+.pyright/
+.tox/
+.nox/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.ipynb_checkpoints/
+develop-eggs/
+.eggs/
+eggs/
+downloads/
+sdist/
+wheels/
+share/python-wheels/
+*.egg
+*.egg-info/
+.installed.cfg
+MANIFEST
+
+# Local runtime databases
+instance/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+
+# Generated ML checkpoints (JSON models may be intentionally versioned)
 *.model
 *.h5
 *.pkl
+*.pickle
 *.joblib
 *.pth
 *.onnx
 
-# ──── Java / Maven / Spring Boot (backend/) ────
+# Java / Maven / Spring Boot
 target/
 *.class
 *.jar
 *.war
 *.ear
 *.nar
-*.log
+!**/.mvn/wrapper/maven-wrapper.jar
 .mtj.tmp/
 *.properties~
 *.src
@@ -103,14 +131,23 @@ target/
 .project
 .springBeans
 .factorypath
+dependency-reduced-pom.xml
+release.properties
+pom.xml.releaseBackup
+hs_err_pid*
+replay_pid*
 
-# ──── Node.js / TypeScript / Vite / Tailwind (frontend/) ────
+# Node.js / TypeScript / Vite / Tailwind
 node_modules/
+.pnpm-store/
 dist/
 dist-ssr/
 .vite/
+coverage/
+.nyc_output/
 .eslintcache
-*.log
+.stylelintcache
+*.tsbuildinfo
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -119,14 +156,11 @@ lerna-debug.log*
 .nx/
 .turbo/
 
-# Keep frontend build output ignored, but allow committing the generated deployment entrypoint
-!/frontend/dist/
-!/frontend/dist/index.html
-
-# ──── Docker & General Logs ────
-logs/
-*.log
+# Docker local overrides and persistent data
 docker-compose.override.yml
+compose.override.yml
+postgres-data/
+redis-data/
 
-# ──── Datasets ────
-M5 Forecasting Accuracy/
+# Large external training dataset (keep local; never commit)
+/M5 Forecasting Accuracy/

@@ -2,6 +2,7 @@ package com.carpip.integration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -31,28 +32,40 @@ public class WholesalerErpAdapter implements ErpAdapter {
     private Map<String, String> credentials;
     private boolean isDemoMode = false;
 
+    @Value("${ERP_API_URL:}")
+    private String defaultErpApiUrl;
+
     @Override
     public boolean connect(Map<String, String> credentials) {
         this.credentials = credentials;
-        String erpApiUrl = credentials.get("erpApiUrl");
+
+        // Use env var as fallback if credential not provided
+        String erpApiUrl = credentials.getOrDefault("erpApiUrl",
+                defaultErpApiUrl != null && !defaultErpApiUrl.isEmpty() ? defaultErpApiUrl : null);
         String erpApiKey = credentials.get("erpApiKey");
         String warehouseId = credentials.get("warehouseId");
+
+        // Store resolved URL back into credentials for later use by sync methods
+        if (erpApiUrl != null && !credentials.containsKey("erpApiUrl")) {
+            credentials.put("erpApiUrl", erpApiUrl);
+        }
 
         if (erpApiUrl == null || erpApiKey == null) {
             log.error("Wholesaler ERP connection failed: missing erpApiUrl or erpApiKey");
             return false;
         }
 
-        // Detect demo mode
-        if (erpApiUrl.contains("demo") || erpApiUrl.contains("localhost") || erpApiKey.startsWith("demo-")) {
+        // Detect explicit demo mode (only for obviously fake URLs/keys)
+        if (erpApiKey.startsWith("demo-")) {
             log.info("Wholesaler ERP adapter running in DEMO mode (warehouse: {}, url: {})", warehouseId, erpApiUrl);
             isDemoMode = true;
             return true;
         }
 
-        // Real ERP API health check
+        // Real ERP API health check — use configurable health endpoint
+        String healthEndpoint = credentials.getOrDefault("healthEndpoint", "/api/v1/health");
         try {
-            String url = normalizeUrl(erpApiUrl) + "/health";
+            String url = normalizeUrl(erpApiUrl) + healthEndpoint;
             HttpHeaders headers = buildHeaders(erpApiKey);
 
             ResponseEntity<Map> response = restTemplate.exchange(
@@ -65,11 +78,14 @@ public class WholesalerErpAdapter implements ErpAdapter {
                 return true;
             } else {
                 log.error("ERP health check returned: {}", response.getStatusCode());
-                return false;
+                // Don't fall to demo — try connecting anyway, sync methods will handle errors
+                isDemoMode = false;
+                return true;
             }
         } catch (Exception e) {
-            log.warn("ERP API health check failed ({}). Falling back to demo mode.", e.getMessage());
-            isDemoMode = true;
+            log.warn("ERP API health check failed ({}). Will attempt data sync anyway.", e.getMessage());
+            // Don't fall to demo mode — let sync methods try real endpoints first
+            isDemoMode = false;
             return true;
         }
     }
@@ -78,10 +94,17 @@ public class WholesalerErpAdapter implements ErpAdapter {
     public List<Map<String, Object>> syncInventory() {
         log.info("Syncing warehouse inventory from Wholesaler ERP (demo={})...", isDemoMode);
 
-        if (!isDemoMode && credentials != null) {
+        if (credentials != null) {
+            String baseUrl = normalizeUrl(credentials.get("erpApiUrl"));
+            String apiKey = credentials.get("erpApiKey");
+
+            // Skip real API calls only in explicit demo mode
+            if (isDemoMode || baseUrl.isEmpty() || apiKey == null || apiKey.startsWith("demo-")) {
+                log.info("Using demo inventory data (demo mode or missing credentials)");
+                return getDemoInventory();
+            }
+
             try {
-                String baseUrl = normalizeUrl(credentials.get("erpApiUrl"));
-                String apiKey = credentials.get("erpApiKey");
                 String warehouseId = credentials.getOrDefault("warehouseId", "WH-MAIN");
                 String inventoryEndpoint = credentials.getOrDefault("inventoryEndpoint", "/api/v1/warehouse/stock");
 
@@ -139,10 +162,17 @@ public class WholesalerErpAdapter implements ErpAdapter {
     public List<Map<String, Object>> fetchSales() {
         log.info("Fetching sales orders from Wholesaler ERP (demo={})...", isDemoMode);
 
-        if (!isDemoMode && credentials != null) {
+        if (credentials != null) {
+            String baseUrl = normalizeUrl(credentials.get("erpApiUrl"));
+            String apiKey = credentials.get("erpApiKey");
+
+            // Skip real API calls only in explicit demo mode
+            if (isDemoMode || baseUrl.isEmpty() || apiKey == null || apiKey.startsWith("demo-")) {
+                log.info("Using demo sales data (demo mode or missing credentials)");
+                return getDemoSales();
+            }
+
             try {
-                String baseUrl = normalizeUrl(credentials.get("erpApiUrl"));
-                String apiKey = credentials.get("erpApiKey");
                 String salesEndpoint = credentials.getOrDefault("salesEndpoint", "/api/v1/sales-orders");
 
                 HttpHeaders headers = buildHeaders(apiKey);
