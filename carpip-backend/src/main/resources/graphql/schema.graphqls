@@ -1,0 +1,92 @@
+"""Read-only query engine for third-party systems (paper §3.3). Authenticate with Authorization: Bearer <apiKey|JWT>."""
+type Query {
+  "Real-time stock status, optionally only items at/below their reorder position"
+  stockStatus(skus: [String!], belowReorderOnly: Boolean = false, first: Int = 50): [StockItem!]!
+  product(sku: String!): StockItem
+  reorderLimits(skus: [String!]!): [ReorderLimit!]!
+  "Ongoing and finished multi-agent negotiations (floor visible to wholesalers, retailer max visible to retailers)"
+  negotiations(first: Int = 20): [Negotiation!]!
+  purchaseOrders(status: [String!], first: Int = 20): [PurchaseOrder!]!
+  mpiHistory(sku: String!, last: Int = 96): [MpiPoint!]!
+  "WHOLESALER only: aggregated demand pressure for the caller's catalog across related retailers"
+  reorderSignals(horizonDays: Int = 14): [ReorderSignal!]!
+}
+
+type StockItem {
+  sku: String!
+  gtin: String
+  name: String!
+  category: String!
+  currentStock: Int!
+  onOrder: Int!
+  inventoryPosition: Int!
+  reorderPoint: Int!
+  mpi: Float
+  basePrice: String
+  retailPrice: String
+}
+
+type ReorderLimit {
+  sku: String!
+  reorderPoint: Int!
+  ropSource: String!
+  inventoryPosition: Int!
+  belowReorderPoint: Boolean!
+}
+
+type NegotiationTurn {
+  turnNo: Int!
+  actor: String!
+  action: String!
+  price: String
+  source: String
+  clamped: Boolean
+  message: String
+}
+
+type Negotiation {
+  id: ID!
+  poNumber: String
+  sku: String
+  supplier: String
+  retailer: String
+  status: String!
+  mode: String
+  basePrice: String
+  finalPrice: String
+  floorPrice: String
+  retailerMax: String
+  mpiUsed: Float
+  turns: [NegotiationTurn!]!
+}
+
+type PurchaseOrder {
+  poNumber: String!
+  status: String!
+  sku: String
+  product: String
+  quantity: Int!
+  unitPrice: String
+  totalAmount: String
+  supplier: String
+  retailer: String
+  expectedDelivery: String
+}
+
+type MpiPoint {
+  computedAt: String!
+  mpi: Float!
+  trend: String
+  quality: String
+}
+
+type ReorderSignal {
+  gtin: String!
+  name: String!
+  retailersTracking: Int!
+  retailersBelowRop: Int!
+  unitsSold7d: Int!
+  forecastUnits14d: Float!
+  avgMpi: Float
+  shortfallUnits: Int!
+}

@@ -1,0 +1,14 @@
+.env
+.env.aws
+.demo/
+node_modules/
+dist/
+target/
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.log
+models/
+.idea/
+.vscode/

@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.sh eol=lf
+mvnw eol=lf
+*.png binary
+*.docx binary
