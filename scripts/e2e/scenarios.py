@@ -15,7 +15,7 @@ import time
 
 import httpx
 
-CARPIP, POS, ERP = os.getenv("CARPIP_URL", "http://localhost:8080"), os.getenv("POS_URL", "http://localhost:4000"), os.getenv("ERP_URL", "http://localhost:8000")
+CARPIP, POS, ERP = os.getenv("CARPIP_URL", "http://127.0.0.1:8080"), os.getenv("POS_URL", "http://127.0.0.1:4000"), os.getenv("ERP_URL", "http://127.0.0.1:8000")
 PW = "Demo@12345"
 FAILS: list[str] = []
 c = httpx.Client(timeout=90)

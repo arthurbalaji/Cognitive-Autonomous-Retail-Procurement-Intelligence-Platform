@@ -17,9 +17,9 @@ import time
 
 import httpx
 
-CARPIP = os.getenv("CARPIP_URL", "http://localhost:8080")
-POS = os.getenv("POS_URL", "http://localhost:4000")
-ERP = os.getenv("ERP_URL", "http://localhost:8000")
+CARPIP = os.getenv("CARPIP_URL", "http://127.0.0.1:8080")
+POS = os.getenv("POS_URL", "http://127.0.0.1:4000")
+ERP = os.getenv("ERP_URL", "http://127.0.0.1:8000")
 PW = "Demo@12345"
 STORES = {"store-1": ("retailer1@carpip.demo", "1111"), "store-2": ("retailer2@carpip.demo", "2222"), "store-3": ("retailer3@carpip.demo", "3333")}
 ERP_USERS = {"Kovai Distributors": "a@erp.demo", "Sri Murugan Wholesale": "b@erp.demo", "Chennai Bulk Traders": "c@erp.demo"}
