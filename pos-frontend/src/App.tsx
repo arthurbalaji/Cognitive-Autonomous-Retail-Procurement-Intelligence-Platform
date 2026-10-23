@@ -10,6 +10,7 @@ const time = (iso?: string | null) => (iso ? new Date(iso).toLocaleTimeString('e
 async function call<T = any>(path: string, token?: string, body?: unknown): Promise<T> {
   const r = await fetch(path, { method: body !== undefined ? 'POST' : 'GET', headers: { ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body: body !== undefined ? JSON.stringify(body) : undefined });
   const j = await r.json().catch(() => ({}));
+  if (r.status === 401 && token) { localStorage.removeItem('pos.session'); location.reload(); }   // session expired / system was reset
   if (!r.ok) throw Object.assign(new Error(j.detail ?? `HTTP ${r.status}`), { code: j.code, status: r.status });
   return j as T;
 }

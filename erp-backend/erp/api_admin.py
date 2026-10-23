@@ -142,14 +142,17 @@ def stockout(req: StockoutReq):
             """SELECT i.id, i.sku, i.name FROM items i LEFT JOIN sales_order_lines l ON l.item_id=i.id WHERE i.company_id=:c AND i.active GROUP BY i.id ORDER BY count(l.id) DESC, i.id LIMIT 1""", c=co["id"])
         if not item:
             continue
+        # 1) reject pending orders FIRST, each in its own transaction (they release their reservations);
+        #    doing it inside a transaction that already locked the lots would self-deadlock
+        for so in db.rows("""SELECT DISTINCT s.id FROM sales_orders s JOIN sales_order_lines l ON l.sales_order_id=s.id WHERE s.company_id=:c AND l.item_id=:i
+                             AND s.status IN ('RECEIVED','CONFIRMED','PARTIALLY_CONFIRMED')""", c=co["id"], i=item["id"]):
+            try:
+                domain.reject_sales_order(co, so["id"], "OUT_OF_STOCK: supplier ran out of stock", "demo-stockout")
+            except domain.ErpError:
+                pass
+        # 2) then wipe whatever is still sellable
         with db.tx() as c:
             db.execute("UPDATE stock_lots SET qty_on_hand = qty_reserved WHERE item_id=:i", c, i=item["id"])
-            for so in db.rows("""SELECT DISTINCT s.id FROM sales_orders s JOIN sales_order_lines l ON l.sales_order_id=s.id WHERE s.company_id=:c AND l.item_id=:i
-                                 AND s.status IN ('RECEIVED','CONFIRMED','PARTIALLY_CONFIRMED')""", c, c=co["id"], i=item["id"]):
-                try:
-                    domain.reject_sales_order(co, so["id"], "OUT_OF_STOCK: supplier ran out of stock", "demo-stockout")
-                except domain.ErpError:
-                    pass
             domain._emit_stock(c, co["id"], [item["id"]])
             domain.mark_dirty(c, co["id"])
         out.append({"company": co["code"], "sku": item["sku"], "name": item["name"]})

@@ -7,6 +7,7 @@ let TOKEN = '';
 async function call<T = any>(path: string, body?: unknown, method?: string): Promise<T> {
   const r = await fetch(path, { method: method ?? (body !== undefined ? 'POST' : 'GET'), headers: { ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(TOKEN ? { Authorization: `Bearer ${TOKEN}` } : {}) }, body: body !== undefined ? JSON.stringify(body) : undefined });
   const j = await r.json().catch(() => ({}));
+  if (r.status === 401 && TOKEN) { localStorage.removeItem('erp.token'); TOKEN = ''; location.reload(); }   // session expired / system was reset
   if (!r.ok) throw Object.assign(new Error(j.detail ?? j.message ?? `HTTP ${r.status}`), { status: r.status, code: j.code });
   return j as T;
 }

@@ -1,0 +1,190 @@
+- generic [ref=f7e3]:
+  - complementary [ref=f7e4]:
+    - generic [ref=f7e5]:
+      - generic [ref=f7e6]: C
+      - generic [ref=f7e7]:
+        - generic [ref=f7e8]: CARPIP
+        - generic [ref=f7e9]: Procurement Intelligence
+    - navigation [ref=f7e10]:
+      - link "Overview" [ref=f7e11] [cursor=pointer]:
+        - /url: /
+        - generic [aria-hidden] [ref=f7e12]: ▦
+        - text: Overview
+      - link "System health" [ref=f7e13] [cursor=pointer]:
+        - /url: /admin/health
+        - generic [aria-hidden] [ref=f7e14]: ♥
+        - text: System health
+      - link "Demo control panel" [ref=f7e15] [cursor=pointer]:
+        - /url: /admin/control
+        - generic [aria-hidden] [ref=f7e16]: ▶
+        - text: Demo control panel
+      - link "CDIN & forecasting" [ref=f7e17] [cursor=pointer]:
+        - /url: /admin/cdin
+        - generic [aria-hidden] [ref=f7e18]: ◎
+        - text: CDIN & forecasting
+      - link "All purchase orders" [ref=f7e19] [cursor=pointer]:
+        - /url: /orders
+        - generic [aria-hidden] [ref=f7e20]: ☰
+        - text: All purchase orders
+      - link "Negotiations" [ref=f7e21] [cursor=pointer]:
+        - /url: /negotiations
+        - generic [aria-hidden] [ref=f7e22]: ⇄
+        - text: Negotiations
+      - link "All inventory" [ref=f7e23] [cursor=pointer]:
+        - /url: /inventory
+        - generic [aria-hidden] [ref=f7e24]: ▤
+        - text: All inventory
+      - link "Integrations" [ref=f7e25] [cursor=pointer]:
+        - /url: /integrations
+        - generic [aria-hidden] [ref=f7e26]: ⚙
+        - text: Integrations
+      - link "Dead letters" [ref=f7e27] [cursor=pointer]:
+        - /url: /admin/dlq
+        - generic [aria-hidden] [ref=f7e28]: ☠
+        - text: Dead letters
+      - link "Metrics" [ref=f7e29] [cursor=pointer]:
+        - /url: /admin/metrics
+        - generic [aria-hidden] [ref=f7e30]: ∑
+        - text: Metrics
+      - link "Audit log" [ref=f7e31] [cursor=pointer]:
+        - /url: /admin/audit
+        - generic [aria-hidden] [ref=f7e32]: ✎
+        - text: Audit log
+      - link "Tenants" [ref=f7e33] [cursor=pointer]:
+        - /url: /admin/tenants
+        - generic [aria-hidden] [ref=f7e34]: ☺
+        - text: Tenants
+    - generic [ref=f7e35]:
+      - generic [ref=f7e36]: CARPIP Platform
+      - generic [ref=f7e37]: admin@carpip.local
+      - generic [ref=f7e38]:
+        - generic [ref=f7e39]: live feed
+        - button "Sign out" [ref=f7e41] [cursor=pointer]
+  - generic [ref=f7e42]:
+    - banner [ref=f7e43]:
+      - generic [ref=f7e44]: ADMIN
+      - generic [ref=f7e45]:
+        - generic "us.anthropic.claude-sonnet-5-5 · us-east-1" [ref=f7e176]: "✓ LLM: Claude via Bedrock"
+        - generic [ref=f7e46]: INR · IST
+    - main [ref=f7e47]:
+      - generic [ref=f7e48]:
+        - generic [ref=f7e49]:
+          - heading "CDIN & forecasting" [level=1] [ref=f7e50]
+          - paragraph [ref=f7e51]: Privacy-preserving federated learning across retail nodes, and the LSTM + Transformer + XGBoost forecasting ensemble
+        - generic [ref=f7e52]:
+          - button "▶ Run federated round" [ref=f7e53] [cursor=pointer]
+          - button "Retrain forecasts" [ref=f7e54] [cursor=pointer]
+      - generic [ref=f7e55]:
+        - generic [ref=f7e56]:
+          - heading "Federated nodes" [level=3] [ref=f7e58]
+          - generic [ref=f7e59]:
+            - list [ref=f7e60]:
+              - listitem [ref=f7e61]:
+                - generic [ref=f7e62]: Erode Fresh Mart
+                - generic [ref=f7e63]:
+                  - generic [aria-hidden] [ref=f7e64]: ✓
+                  - text: online
+              - listitem [ref=f7e65]:
+                - generic [ref=f7e66]: Kovai Mart - Gandhipuram
+                - generic [ref=f7e67]:
+                  - generic [aria-hidden] [ref=f7e68]: ✓
+                  - text: online
+              - listitem [ref=f7e69]:
+                - generic [ref=f7e70]: Kovai Mart - RS Puram
+                - generic [ref=f7e71]:
+                  - generic [aria-hidden] [ref=f7e72]: ✓
+                  - text: online
+            - generic [ref=f7e73]:
+              - generic [ref=f7e74]:
+                - term [ref=f7e75]: Global model version
+                - definition [ref=f7e76]: v4
+              - generic [ref=f7e77]:
+                - term [ref=f7e78]: Quorum
+                - definition [ref=f7e79]: 2 nodes
+              - generic [ref=f7e80]:
+                - term [ref=f7e81]: GTINs with a regional demand index
+                - definition [ref=f7e82]: "109"
+            - paragraph [ref=f7e83]: Nodes upload only LSTM weights, a sample count and coarse growth ratios. Raw sales never leave a store.
+        - generic [ref=f7e84]:
+          - heading "Federated rounds (FedAvg)" [level=3] [ref=f7e86]
+          - table [ref=f7e89]:
+            - rowgroup [ref=f7e90]:
+              - row [ref=f7e91]:
+                - columnheader "Round" [ref=f7e92]
+                - columnheader "Base" [ref=f7e93]
+                - columnheader "Status" [ref=f7e94]
+                - columnheader "Nodes" [ref=f7e95]
+                - columnheader "Mean val loss" [ref=f7e96]
+                - columnheader "Share per node" [ref=f7e97]
+                - columnheader "Opened" [ref=f7e98]
+            - rowgroup [ref=f7e99]:
+              - row [ref=f7e100]:
+                - cell "#3" [ref=f7e101]
+                - cell "v3" [ref=f7e102]
+                - cell "COMPLETED" [ref=f7e103]
+                - cell "3/2+" [ref=f7e105]
+                - cell "0.053932" [ref=f7e106]
+                - cell "33% / 33% / 33%" [ref=f7e107]
+                - cell "11m ago" [ref=f7e108]
+              - row [ref=f7e109]:
+                - cell "#2" [ref=f7e110]
+                - cell "v2" [ref=f7e111]
+                - cell "COMPLETED" [ref=f7e112]
+                - cell "3/2+" [ref=f7e114]
+                - cell "0.058111" [ref=f7e115]
+                - cell "33% / 33% / 33%" [ref=f7e116]
+                - cell "12m ago" [ref=f7e117]
+              - row [ref=f7e118]:
+                - cell "#1" [ref=f7e119]
+                - cell "v1" [ref=f7e120]
+                - cell "COMPLETED" [ref=f7e121]
+                - cell "3/2+" [ref=f7e123]
+                - cell "0.064548" [ref=f7e124]
+                - cell "33% / 33% / 33%" [ref=f7e125]
+                - cell "12m ago" [ref=f7e126]
+      - generic [ref=f7e127]:
+        - heading "Forecast models (per retailer)" [level=3] [ref=f7e129]
+        - table [ref=f7e132]:
+          - rowgroup [ref=f7e133]:
+            - row [ref=f7e134]:
+              - columnheader "Retailer" [ref=f7e135]
+              - columnheader "Version" [ref=f7e136]
+              - columnheader "Ensemble MAE" [ref=f7e137]
+              - columnheader "MAPE %" [ref=f7e138]
+              - columnheader "LSTM MAE" [ref=f7e139]
+              - columnheader "Transformer MAE" [ref=f7e140]
+              - columnheader "XGBoost MAE" [ref=f7e141]
+              - columnheader "Seasonal-naive MAE" [ref=f7e142]
+              - columnheader "Trained" [ref=f7e143]
+          - rowgroup [ref=f7e144]:
+            - row [ref=f7e145]:
+              - cell "Erode Fresh Mart" [ref=f7e146]
+              - cell "v1" [ref=f7e147]
+              - cell "1.7263" [ref=f7e148]
+              - cell "46.847" [ref=f7e149]
+              - cell "1.855" [ref=f7e150]
+              - cell "1.6947" [ref=f7e151]
+              - cell "1.725" [ref=f7e152]
+              - cell "2.2798" [ref=f7e153]
+              - cell "9m ago" [ref=f7e154]
+            - row [ref=f7e155]:
+              - cell "Kovai Mart - Gandhipuram" [ref=f7e156]
+              - cell "v1" [ref=f7e157]
+              - cell "1.6886" [ref=f7e158]
+              - cell "50.217" [ref=f7e159]
+              - cell "1.7746" [ref=f7e160]
+              - cell "1.6739" [ref=f7e161]
+              - cell "1.7038" [ref=f7e162]
+              - cell "2.1723" [ref=f7e163]
+              - cell "8m ago" [ref=f7e164]
+            - row [ref=f7e165]:
+              - cell "Kovai Mart - RS Puram" [ref=f7e166]
+              - cell "v1" [ref=f7e167]
+              - cell "1.5295" [ref=f7e168]
+              - cell "49.233" [ref=f7e169]
+              - cell "1.5972" [ref=f7e170]
+              - cell "1.5154" [ref=f7e171]
+              - cell "1.538" [ref=f7e172]
+              - cell "1.9712" [ref=f7e173]
+              - cell "7m ago" [ref=f7e174]
+      - paragraph [ref=f7e175]: Metrics are computed on a chronological 80/20 hold-out of synthetic data (scaled-down benchmark, not the paper's 43,000-SKU Dunnhumby setup).
