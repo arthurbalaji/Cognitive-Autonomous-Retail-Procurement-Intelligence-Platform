@@ -1,0 +1,40 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]: C
+      - generic [ref=e8]:
+        - heading "CARPIP" [level=1] [ref=e9]
+        - paragraph [ref=e10]: Cognitive Autonomous Retail Procurement Intelligence Platform
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]: Email
+        - textbox "Email" [active] [ref=e14]
+      - generic [ref=e15]:
+        - generic [ref=e16]: Password
+        - textbox "Password" [ref=e17]
+      - button "Sign in" [ref=e18] [cursor=pointer]
+  - generic [ref=e19]:
+    - heading "Demo accounts" [level=2] [ref=e20]
+    - paragraph [ref=e21]: One click signs you in. Each role sees a different side of the platform.
+    - generic [ref=e22]:
+      - button "Platform admin admin@carpip.local" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: Platform admin
+        - generic [ref=e25]: admin@carpip.local
+      - button "Retailer - Gandhipuram (Shopify POS) retailer1@carpip.demo" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: Retailer - Gandhipuram (Shopify POS)
+        - generic [ref=e28]: retailer1@carpip.demo
+      - button "Retailer - RS Puram (Shopify POS) retailer2@carpip.demo" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: Retailer - RS Puram (Shopify POS)
+        - generic [ref=e31]: retailer2@carpip.demo
+      - button "Retailer - Erode (legacy POS) retailer3@carpip.demo" [ref=e32] [cursor=pointer]:
+        - generic [ref=e33]: Retailer - Erode (legacy POS)
+        - generic [ref=e34]: retailer3@carpip.demo
+      - button "Wholesaler - Kovai Distributors (Zoho) wholesaler-a@carpip.demo" [ref=e35] [cursor=pointer]:
+        - generic [ref=e36]: Wholesaler - Kovai Distributors (Zoho)
+        - generic [ref=e37]: wholesaler-a@carpip.demo
+      - button "Wholesaler - Sri Murugan (custom REST) wholesaler-b@carpip.demo" [ref=e38] [cursor=pointer]:
+        - generic [ref=e39]: Wholesaler - Sri Murugan (custom REST)
+        - generic [ref=e40]: wholesaler-b@carpip.demo
+      - button "Wholesaler - Chennai Bulk (custom REST) wholesaler-c@carpip.demo" [ref=e41] [cursor=pointer]:
+        - generic [ref=e42]: Wholesaler - Chennai Bulk (custom REST)
+        - generic [ref=e43]: wholesaler-c@carpip.demo

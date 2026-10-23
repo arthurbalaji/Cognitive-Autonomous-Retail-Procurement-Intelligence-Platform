@@ -5,14 +5,15 @@ import logging
 import os
 import threading
 
-from flask import Flask, jsonify
 
 from .config import settings
 
 _started = threading.Event()
 
 
-def create_app() -> Flask:
+def create_app():
+    from flask import Flask, jsonify   # lazy: the pure-math modules (and their tests) must import without Flask installed
+
     logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"), format="%(asctime)s %(levelname)s [%(threadName)s] %(name)s: %(message)s")
     logging.getLogger("apscheduler").setLevel(logging.WARNING)
     logging.getLogger("werkzeug").setLevel(logging.WARNING)

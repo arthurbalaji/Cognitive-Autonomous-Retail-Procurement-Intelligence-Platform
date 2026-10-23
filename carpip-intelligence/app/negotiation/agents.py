@@ -11,6 +11,7 @@ from ..llm.bedrock import TURN_SCHEMA, LlmError, LlmClient
 from .protocol import RuleVoice, Turn, VoiceOut
 
 _CTRL = re.compile(r"[\x00-\x1f\x7f]+")
+_TAGS = re.compile(r"<[^>]*>")
 _MARKUP = re.compile(r"[<>{}\[\]`]")
 
 SYSTEM = """You are the {role} agent in a bounded B2B price negotiation for ONE retail product, speaking for {side}.
@@ -24,8 +25,29 @@ Rules (enforced by software - violations are silently overridden, so follow them
 Market context: "marketPressure" near 1.0 means a seller's market (scarce supply, strong demand); near 0.0 a buyer's market."""
 
 
+_AMOUNT = re.compile(r"(?:INR|₹|Rs\.?)\s*([\d,]+(?:\.\d+)?)|([\d,]+(?:\.\d+)?)\s*(?:INR|rupees?|per unit|/unit)", re.I)
+_INJECTION = re.compile(r"ignore (all |any )?(previous|prior|above)|system prompt|disregard|you are now|as an ai", re.I)
+
+
+def message_consistent(message: str, allowed: list[float], lo: float | None, hi: float | None) -> bool:
+    """The wording must not contradict the numbers: every currency amount it mentions has to equal the price band or a price
+    already on the table (+-0.6 %), and obvious prompt-injection phrases are rejected. Prices themselves are clamped elsewhere;
+    this keeps the human-readable transcript honest too."""
+    if _INJECTION.search(message):
+        return False
+    for m in _AMOUNT.finditer(message):
+        try:
+            x = float((m.group(1) or m.group(2)).replace(",", ""))
+        except ValueError:
+            continue
+        in_band = lo is not None and hi is not None and lo * 0.994 <= x <= hi * 1.006
+        if not in_band and not any(abs(x - a) <= max(0.01, a * 0.006) for a in allowed if a):
+            return False
+    return True
+
+
 def clean_text(s: str | None, limit: int) -> str:
-    s = _MARKUP.sub("", _CTRL.sub(" ", str(s or "")))
+    s = _MARKUP.sub("", _TAGS.sub(" ", _CTRL.sub(" ", str(s or ""))))
     return re.sub(r"\s+", " ", s).strip()[:limit]
 
 
@@ -76,6 +98,11 @@ class LlmVoice:
         except (InvalidOperation, ValueError):
             price = None
         message = clean_text(out.get("message"), 280)
+        if message and not wrong:
+            table = [float(t.price) for t in history if t.price is not None]
+            table += [float(x) for x in (ctx.get("basePrice"), det_price) if x is not None]
+            if not message_consistent(message, table, float(lo) if lo is not None else None, float(hi) if hi is not None else None):
+                return VoiceOut(proposed_price=det_price, message=rule_out.message, source="LLM", wrong_action=True, reason="INCONSISTENT_MESSAGE")
         if wrong or not message:
             # keep the deterministic wording; the voice tried to change the action or sent nothing usable
             return VoiceOut(proposed_price=price if not wrong else det_price, message=rule_out.message, source="LLM",

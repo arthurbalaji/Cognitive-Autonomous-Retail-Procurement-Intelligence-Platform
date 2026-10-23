@@ -1,0 +1,23 @@
+- generic [ref=f3e4]:
+  - generic [ref=f3e5]:
+    - generic [ref=f3e6]: POS
+    - generic [ref=f3e7]:
+      - heading "Retail POS terminal" [level=1] [ref=f3e8]
+      - paragraph [ref=f3e9]: Demo point-of-sale system (separate product from CARPIP)
+  - paragraph [ref=f3e10]: Choose your store
+  - generic [ref=f3e11]:
+    - button "Kovai Mart - Gandhipuram Coimbatore · store-1.myshopify.local Shopify-compatible API" [ref=f3e12] [cursor=pointer]:
+      - generic [ref=f3e13]:
+        - text: Kovai Mart - Gandhipuram
+        - generic [ref=f3e14]: Coimbatore · store-1.myshopify.local
+      - generic [ref=f3e15]: Shopify-compatible API
+    - button "Kovai Mart - RS Puram Coimbatore · store-2.myshopify.local Shopify-compatible API" [ref=f3e16] [cursor=pointer]:
+      - generic [ref=f3e17]:
+        - text: Kovai Mart - RS Puram
+        - generic [ref=f3e18]: Coimbatore · store-2.myshopify.local
+      - generic [ref=f3e19]: Shopify-compatible API
+    - button "Erode Fresh Mart Erode · store-3.legacy.local Legacy system" [ref=f3e20] [cursor=pointer]:
+      - generic [ref=f3e21]:
+        - text: Erode Fresh Mart
+        - generic [ref=f3e22]: Erode · store-3.legacy.local
+      - generic [ref=f3e23]: Legacy system

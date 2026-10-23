@@ -1,0 +1,52 @@
+- generic [ref=f1e3]:
+  - complementary [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - generic [ref=f1e6]: C
+      - generic [ref=f1e7]:
+        - generic [ref=f1e8]: CARPIP
+        - generic [ref=f1e9]: Procurement Intelligence
+    - navigation [ref=f1e10]:
+      - link "Dashboard" [ref=f1e11] [cursor=pointer]:
+        - /url: /
+        - generic [aria-hidden] [ref=f1e12]: ▦
+        - text: Dashboard
+      - link "Inventory" [ref=f1e13] [cursor=pointer]:
+        - /url: /inventory
+        - generic [aria-hidden] [ref=f1e14]: ▤
+        - text: Inventory
+      - link "Purchase orders" [ref=f1e15] [cursor=pointer]:
+        - /url: /orders
+        - generic [aria-hidden] [ref=f1e16]: ☰
+        - text: Purchase orders
+      - link "Approvals" [ref=f1e17] [cursor=pointer]:
+        - /url: /approvals
+        - generic [aria-hidden] [ref=f1e18]: ✔
+        - text: Approvals
+      - link "Negotiations" [ref=f1e19] [cursor=pointer]:
+        - /url: /negotiations
+        - generic [aria-hidden] [ref=f1e20]: ⇄
+        - text: Negotiations
+      - link "Suppliers" [ref=f1e21] [cursor=pointer]:
+        - /url: /suppliers
+        - generic [aria-hidden] [ref=f1e22]: ⌂
+        - text: Suppliers
+      - link "Integrations" [ref=f1e23] [cursor=pointer]:
+        - /url: /integrations
+        - generic [aria-hidden] [ref=f1e24]: ⚙
+        - text: Integrations
+      - link "Settings" [ref=f1e25] [cursor=pointer]:
+        - /url: /settings
+        - generic [aria-hidden] [ref=f1e26]: ☷
+        - text: Settings
+    - generic [ref=f1e27]:
+      - generic [ref=f1e28]: Kovai Mart - Gandhipuram
+      - generic [ref=f1e29]: retailer1@carpip.demo
+      - generic [ref=f1e30]:
+        - generic [ref=f1e31]: offline
+        - button "Sign out" [ref=f1e33] [cursor=pointer]
+  - generic [ref=f1e34]:
+    - banner [ref=f1e35]:
+      - generic [ref=f1e36]: RETAILER
+      - generic [ref=f1e37]: INR · IST
+    - main [ref=f1e39]:
+      - generic [ref=f1e40]: Loading…

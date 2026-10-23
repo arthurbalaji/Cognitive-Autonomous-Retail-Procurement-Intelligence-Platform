@@ -1,0 +1,389 @@
+- generic [ref=f3e44]:
+  - banner [ref=f3e45]:
+    - generic [ref=f3e46]:
+      - generic [ref=f3e47]: POS
+      - generic [ref=f3e48]:
+        - generic [ref=f3e49]: Kovai Mart - Gandhipuram
+        - generic [ref=f3e50]: store-1.myshopify.local · cashier Cashier 1
+    - navigation [ref=f3e51]:
+      - button "Register" [ref=f3e52] [cursor=pointer]
+      - button "Orders" [ref=f3e53] [cursor=pointer]
+      - button "Incoming stock" [ref=f3e54] [cursor=pointer]
+      - button "Stock" [ref=f3e55] [cursor=pointer]
+      - button "Integration log" [ref=f3e56] [cursor=pointer]
+    - button "Sign out" [ref=f3e57] [cursor=pointer]
+  - main [ref=f3e58]:
+    - generic [ref=f3e59]:
+      - generic [ref=f3e60]:
+        - textbox "Search or scan" [active] [ref=f3e62]:
+          - /placeholder: Scan barcode or search product…  (Enter adds an exact match)
+        - generic [ref=f3e63]:
+          - button "A4 Paper Ream 500 sheets SKU-0003 ₹295.31 75 left" [ref=f3e64] [cursor=pointer]:
+            - generic [ref=f3e65]: A4 Paper Ream 500 sheets
+            - generic [ref=f3e66]: SKU-0003
+            - generic [ref=f3e67]:
+              - generic [ref=f3e68]: ₹295.31
+              - generic [ref=f3e69]: 75 left
+          - button "Aashirvaad Atta 5kg SKU-0001 ₹293.99 160 left" [ref=f3e70] [cursor=pointer]:
+            - generic [ref=f3e71]: Aashirvaad Atta 5kg
+            - generic [ref=f3e72]: SKU-0001
+            - generic [ref=f3e73]:
+              - generic [ref=f3e74]: ₹293.99
+              - generic [ref=f3e75]: 160 left
+          - button "Amul Butter 500g SKU-0017 ₹300.98 162 left" [ref=f3e76] [cursor=pointer]:
+            - generic [ref=f3e77]: Amul Butter 500g
+            - generic [ref=f3e78]: SKU-0017
+            - generic [ref=f3e79]:
+              - generic [ref=f3e80]: ₹300.98
+              - generic [ref=f3e81]: 162 left
+          - button "Amul Cheese Slices 200g SKU-0089 ₹186.33 162 left" [ref=f3e82] [cursor=pointer]:
+            - generic [ref=f3e83]: Amul Cheese Slices 200g
+            - generic [ref=f3e84]: SKU-0089
+            - generic [ref=f3e85]:
+              - generic [ref=f3e86]: ₹186.33
+              - generic [ref=f3e87]: 162 left
+          - button "Amul Ghee 1L SKU-0103 ₹907.65 57 left" [ref=f3e88] [cursor=pointer]:
+            - generic [ref=f3e89]: Amul Ghee 1L
+            - generic [ref=f3e90]: SKU-0103
+            - generic [ref=f3e91]:
+              - generic [ref=f3e92]: ₹907.65
+              - generic [ref=f3e93]: 57 left
+          - button "Amul Gold UHT Milk 1L SKU-0087 ₹95.91 316 left" [ref=f3e94] [cursor=pointer]:
+            - generic [ref=f3e95]: Amul Gold UHT Milk 1L
+            - generic [ref=f3e96]: SKU-0087
+            - generic [ref=f3e97]:
+              - generic [ref=f3e98]: ₹95.91
+              - generic [ref=f3e99]: 316 left
+          - button "Amul Lassi 200ml SKU-0120 ₹25.95 245 left" [ref=f3e100] [cursor=pointer]:
+            - generic [ref=f3e101]: Amul Lassi 200ml
+            - generic [ref=f3e102]: SKU-0120
+            - generic [ref=f3e103]:
+              - generic [ref=f3e104]: ₹25.95
+              - generic [ref=f3e105]: 245 left
+          - button "Apsara Eraser 20-pack SKU-0023 ₹115.84 8 left" [ref=f3e106] [cursor=pointer]:
+            - generic [ref=f3e107]: Apsara Eraser 20-pack
+            - generic [ref=f3e108]: SKU-0023
+            - generic [ref=f3e109]:
+              - generic [ref=f3e110]: ₹115.84
+              - generic [ref=f3e111]: 8 left
+          - button "Ariel Matic 2kg SKU-0032 ₹513.24 60 left" [ref=f3e112] [cursor=pointer]:
+            - generic [ref=f3e113]: Ariel Matic 2kg
+            - generic [ref=f3e114]: SKU-0032
+            - generic [ref=f3e115]:
+              - generic [ref=f3e116]: ₹513.24
+              - generic [ref=f3e117]: 60 left
+          - button "Bath Towel 2-pack SKU-0068 ₹688.92 7 left" [ref=f3e118] [cursor=pointer]:
+            - generic [ref=f3e119]: Bath Towel 2-pack
+            - generic [ref=f3e120]: SKU-0068
+            - generic [ref=f3e121]:
+              - generic [ref=f3e122]: ₹688.92
+              - generic [ref=f3e123]: 7 left
+          - button "Bisleri Water 20L SKU-0094 ₹101.40 91 left" [ref=f3e124] [cursor=pointer]:
+            - generic [ref=f3e125]: Bisleri Water 20L
+            - generic [ref=f3e126]: SKU-0094
+            - generic [ref=f3e127]:
+              - generic [ref=f3e128]: ₹101.40
+              - generic [ref=f3e129]: 91 left
+          - button "Bluetooth Earbuds SKU-0078 ₹1,691.97 22 left" [ref=f3e130] [cursor=pointer]:
+            - generic [ref=f3e131]: Bluetooth Earbuds
+            - generic [ref=f3e132]: SKU-0078
+            - generic [ref=f3e133]:
+              - generic [ref=f3e134]: ₹1,691.97
+              - generic [ref=f3e135]: 22 left
+          - button "Bluetooth Speaker Mini SKU-0042 ₹1,132.38 7 left" [ref=f3e136] [cursor=pointer]:
+            - generic [ref=f3e137]: Bluetooth Speaker Mini
+            - generic [ref=f3e138]: SKU-0042
+            - generic [ref=f3e139]:
+              - generic [ref=f3e140]: ₹1,132.38
+              - generic [ref=f3e141]: 7 left
+          - button "Bournvita 500g SKU-0084 ₹344.19 15 left" [ref=f3e142] [cursor=pointer]:
+            - generic [ref=f3e143]: Bournvita 500g
+            - generic [ref=f3e144]: SKU-0084
+            - generic [ref=f3e145]:
+              - generic [ref=f3e146]: ₹344.19
+              - generic [ref=f3e147]: 15 left
+          - button "Box File A4 3-pack SKU-0043 ₹369.41 101 left" [ref=f3e148] [cursor=pointer]:
+            - generic [ref=f3e149]: Box File A4 3-pack
+            - generic [ref=f3e150]: SKU-0043
+            - generic [ref=f3e151]:
+              - generic [ref=f3e152]: ₹369.41
+              - generic [ref=f3e153]: 101 left
+          - button "Britannia Good Day 600g SKU-0029 ₹139.08 170 left" [ref=f3e154] [cursor=pointer]:
+            - generic [ref=f3e155]: Britannia Good Day 600g
+            - generic [ref=f3e156]: SKU-0029
+            - generic [ref=f3e157]:
+              - generic [ref=f3e158]: ₹139.08
+              - generic [ref=f3e159]: 170 left
+          - button "Bru Instant Coffee 200g SKU-0033 ₹459.74 125 left" [ref=f3e160] [cursor=pointer]:
+            - generic [ref=f3e161]: Bru Instant Coffee 200g
+            - generic [ref=f3e162]: SKU-0033
+            - generic [ref=f3e163]:
+              - generic [ref=f3e164]: ₹459.74
+              - generic [ref=f3e165]: 125 left
+          - button "Cadbury Dairy Milk 150g SKU-0112 ₹178.91 120 left" [ref=f3e166] [cursor=pointer]:
+            - generic [ref=f3e167]: Cadbury Dairy Milk 150g
+            - generic [ref=f3e168]: SKU-0112
+            - generic [ref=f3e169]:
+              - generic [ref=f3e170]: ₹178.91
+              - generic [ref=f3e171]: 120 left
+          - button "Calculator 12-digit SKU-0067 ₹402.85 47 left" [ref=f3e172] [cursor=pointer]:
+            - generic [ref=f3e173]: Calculator 12-digit
+            - generic [ref=f3e174]: SKU-0067
+            - generic [ref=f3e175]:
+              - generic [ref=f3e176]: ₹402.85
+              - generic [ref=f3e177]: 47 left
+          - button "Camlin Marker 10-pack SKU-0027 ₹286.32 61 left" [ref=f3e178] [cursor=pointer]:
+            - generic [ref=f3e179]: Camlin Marker 10-pack
+            - generic [ref=f3e180]: SKU-0027
+            - generic [ref=f3e181]:
+              - generic [ref=f3e182]: ₹286.32
+              - generic [ref=f3e183]: 61 left
+          - button "Cello Tape 24-pack SKU-0079 ₹486.57 128 left" [ref=f3e184] [cursor=pointer]:
+            - generic [ref=f3e185]: Cello Tape 24-pack
+            - generic [ref=f3e186]: SKU-0079
+            - generic [ref=f3e187]:
+              - generic [ref=f3e188]: ₹486.57
+              - generic [ref=f3e189]: 128 left
+          - button "Chings Schezwan Chutney 250g SKU-0105 ₹108.37 34 left" [ref=f3e190] [cursor=pointer]:
+            - generic [ref=f3e191]: Chings Schezwan Chutney 250g
+            - generic [ref=f3e192]: SKU-0105
+            - generic [ref=f3e193]:
+              - generic [ref=f3e194]: ₹108.37
+              - generic [ref=f3e195]: 34 left
+          - button "Classmate Notebook 6-pack SKU-0007 ₹383.58 56 left" [ref=f3e196] [cursor=pointer]:
+            - generic [ref=f3e197]: Classmate Notebook 6-pack
+            - generic [ref=f3e198]: SKU-0007
+            - generic [ref=f3e199]:
+              - generic [ref=f3e200]: ₹383.58
+              - generic [ref=f3e201]: 56 left
+          - button "Clinic Plus Shampoo 340ml SKU-0016 ₹270.02 35 left" [ref=f3e202] [cursor=pointer]:
+            - generic [ref=f3e203]: Clinic Plus Shampoo 340ml
+            - generic [ref=f3e204]: SKU-0016
+            - generic [ref=f3e205]:
+              - generic [ref=f3e206]: ₹270.02
+              - generic [ref=f3e207]: 35 left
+          - button "Coca-Cola 2L SKU-0092 ₹121.31 274 left" [ref=f3e208] [cursor=pointer]:
+            - generic [ref=f3e209]: Coca-Cola 2L
+            - generic [ref=f3e210]: SKU-0092
+            - generic [ref=f3e211]:
+              - generic [ref=f3e212]: ₹121.31
+              - generic [ref=f3e213]: 274 left
+          - button "Colgate Strong Teeth 500g SKU-0020 ₹288.56 181 left" [ref=f3e214] [cursor=pointer]:
+            - generic [ref=f3e215]: Colgate Strong Teeth 500g
+            - generic [ref=f3e216]: SKU-0020
+            - generic [ref=f3e217]:
+              - generic [ref=f3e218]: ₹288.56
+              - generic [ref=f3e219]: 181 left
+          - button "Dabur Honey 500g SKU-0061 ₹279.73 82 left" [ref=f3e220] [cursor=pointer]:
+            - generic [ref=f3e221]: Dabur Honey 500g
+            - generic [ref=f3e222]: SKU-0061
+            - generic [ref=f3e223]:
+              - generic [ref=f3e224]: ₹279.73
+              - generic [ref=f3e225]: 82 left
+          - button "Del Monte Ketchup 1kg SKU-0107 ₹173.63 117 left" [ref=f3e226] [cursor=pointer]:
+            - generic [ref=f3e227]: Del Monte Ketchup 1kg
+            - generic [ref=f3e228]: SKU-0107
+            - generic [ref=f3e229]:
+              - generic [ref=f3e230]: ₹173.63
+              - generic [ref=f3e231]: 117 left
+          - button "Desk Organizer SKU-0071 ₹466.53 57 left" [ref=f3e232] [cursor=pointer]:
+            - generic [ref=f3e233]: Desk Organizer
+            - generic [ref=f3e234]: SKU-0071
+            - generic [ref=f3e235]:
+              - generic [ref=f3e236]: ₹466.53
+              - generic [ref=f3e237]: 57 left
+          - button "Dettol Soap 4-pack SKU-0004 ₹207.94 100 left" [ref=f3e238] [cursor=pointer]:
+            - generic [ref=f3e239]: Dettol Soap 4-pack
+            - generic [ref=f3e240]: SKU-0004
+            - generic [ref=f3e241]:
+              - generic [ref=f3e242]: ₹207.94
+              - generic [ref=f3e243]: 100 left
+          - button "Door Mat SKU-0083 ₹188.09 108 left" [ref=f3e244] [cursor=pointer]:
+            - generic [ref=f3e245]: Door Mat
+            - generic [ref=f3e246]: SKU-0083
+            - generic [ref=f3e247]:
+              - generic [ref=f3e248]: ₹188.09
+              - generic [ref=f3e249]: 108 left
+          - button "Dove Shampoo 650ml SKU-0012 ₹475.02 101 left" [ref=f3e250] [cursor=pointer]:
+            - generic [ref=f3e251]: Dove Shampoo 650ml
+            - generic [ref=f3e252]: SKU-0012
+            - generic [ref=f3e253]:
+              - generic [ref=f3e254]: ₹475.02
+              - generic [ref=f3e255]: 101 left
+          - button "Duracell AA Batteries 10-pack SKU-0026 ₹498.33 37 left" [ref=f3e256] [cursor=pointer]:
+            - generic [ref=f3e257]: Duracell AA Batteries 10-pack
+            - generic [ref=f3e258]: SKU-0026
+            - generic [ref=f3e259]:
+              - generic [ref=f3e260]: ₹498.33
+              - generic [ref=f3e261]: 37 left
+          - button "Eveready AAA Batteries 10-pack SKU-0030 ₹244.76 69 left" [ref=f3e262] [cursor=pointer]:
+            - generic [ref=f3e263]: Eveready AAA Batteries 10-pack
+            - generic [ref=f3e264]: SKU-0030
+            - generic [ref=f3e265]:
+              - generic [ref=f3e266]: ₹244.76
+              - generic [ref=f3e267]: 69 left
+          - button "Everest Turmeric Powder 200g SKU-0069 ₹89.37 90 left" [ref=f3e268] [cursor=pointer]:
+            - generic [ref=f3e269]: Everest Turmeric Powder 200g
+            - generic [ref=f3e270]: SKU-0069
+            - generic [ref=f3e271]:
+              - generic [ref=f3e272]: ₹89.37
+              - generic [ref=f3e273]: 90 left
+          - button "Extension Board 4-socket SKU-0034 ₹303.24 28 left" [ref=f3e274] [cursor=pointer]:
+            - generic [ref=f3e275]: Extension Board 4-socket
+            - generic [ref=f3e276]: SKU-0034
+            - generic [ref=f3e277]:
+              - generic [ref=f3e278]: ₹303.24
+              - generic [ref=f3e279]: 28 left
+          - button "Fast Charger 20W SKU-0018 ₹592.81 11 left" [ref=f3e280] [cursor=pointer]:
+            - generic [ref=f3e281]: Fast Charger 20W
+            - generic [ref=f3e282]: SKU-0018
+            - generic [ref=f3e283]:
+              - generic [ref=f3e284]: ₹592.81
+              - generic [ref=f3e285]: 11 left
+          - button "Fevicol 200g SKU-0031 ₹77.51 15 left" [ref=f3e286] [cursor=pointer]:
+            - generic [ref=f3e287]: Fevicol 200g
+            - generic [ref=f3e288]: SKU-0031
+            - generic [ref=f3e289]:
+              - generic [ref=f3e290]: ₹77.51
+              - generic [ref=f3e291]: 15 left
+          - button "File Folder 10-pack SKU-0075 ₹236.16 49 left" [ref=f3e292] [cursor=pointer]:
+            - generic [ref=f3e293]: File Folder 10-pack
+            - generic [ref=f3e294]: SKU-0075
+            - generic [ref=f3e295]:
+              - generic [ref=f3e296]: ₹236.16
+              - generic [ref=f3e297]: 49 left
+          - button "Fortune Sunflower Oil 1L SKU-0009 ₹186.54 84 left" [ref=f3e298] [cursor=pointer]:
+            - generic [ref=f3e299]: Fortune Sunflower Oil 1L
+            - generic [ref=f3e300]: SKU-0009
+            - generic [ref=f3e301]:
+              - generic [ref=f3e302]: ₹186.54
+              - generic [ref=f3e303]: 84 left
+          - button "Geometry Box SKU-0055 ₹104.45 54 left" [ref=f3e304] [cursor=pointer]:
+            - generic [ref=f3e305]: Geometry Box
+            - generic [ref=f3e306]: SKU-0055
+            - generic [ref=f3e307]:
+              - generic [ref=f3e308]: ₹104.45
+              - generic [ref=f3e309]: 54 left
+          - button "Good Knight Refill 12-pack SKU-0048 ₹395.89 154 left" [ref=f3e310] [cursor=pointer]:
+            - generic [ref=f3e311]: Good Knight Refill 12-pack
+            - generic [ref=f3e312]: SKU-0048
+            - generic [ref=f3e313]:
+              - generic [ref=f3e314]: ₹395.89
+              - generic [ref=f3e315]: 154 left
+          - button "HDMI Cable 2m SKU-0038 ₹351.70 68 left" [ref=f3e316] [cursor=pointer]:
+            - generic [ref=f3e317]: HDMI Cable 2m
+            - generic [ref=f3e318]: SKU-0038
+            - generic [ref=f3e319]:
+              - generic [ref=f3e320]: ₹351.70
+              - generic [ref=f3e321]: 68 left
+          - button "Hair Dryer 1000W SKU-0090 ₹745.89 95 left" [ref=f3e322] [cursor=pointer]:
+            - generic [ref=f3e323]: Hair Dryer 1000W
+            - generic [ref=f3e324]: SKU-0090
+            - generic [ref=f3e325]:
+              - generic [ref=f3e326]: ₹745.89
+              - generic [ref=f3e327]: 95 left
+          - button "Haldiram Bhujia 400g SKU-0053 ₹129.56 112 left" [ref=f3e328] [cursor=pointer]:
+            - generic [ref=f3e329]: Haldiram Bhujia 400g
+            - generic [ref=f3e330]: SKU-0053
+            - generic [ref=f3e331]:
+              - generic [ref=f3e332]: ₹129.56
+              - generic [ref=f3e333]: 112 left
+          - button "Haldiram Soan Papdi 500g SKU-0111 ₹235.66 110 left" [ref=f3e334] [cursor=pointer]:
+            - generic [ref=f3e335]: Haldiram Soan Papdi 500g
+            - generic [ref=f3e336]: SKU-0111
+            - generic [ref=f3e337]:
+              - generic [ref=f3e338]: ₹235.66
+              - generic [ref=f3e339]: 110 left
+          - button "Harpic 1L SKU-0040 ₹228.38 49 left" [ref=f3e340] [cursor=pointer]:
+            - generic [ref=f3e341]: Harpic 1L
+            - generic [ref=f3e342]: SKU-0040
+            - generic [ref=f3e343]:
+              - generic [ref=f3e344]: ₹228.38
+              - generic [ref=f3e345]: 49 left
+          - button "Highlighters 5-pack SKU-0051 ₹123.43 163 left" [ref=f3e346] [cursor=pointer]:
+            - generic [ref=f3e347]: Highlighters 5-pack
+            - generic [ref=f3e348]: SKU-0051
+            - generic [ref=f3e349]:
+              - generic [ref=f3e350]: ₹123.43
+              - generic [ref=f3e351]: 163 left
+          - button "Hit Spray 700ml SKU-0052 ₹240.29 27 left" [ref=f3e352] [cursor=pointer]:
+            - generic [ref=f3e353]: Hit Spray 700ml
+            - generic [ref=f3e354]: SKU-0052
+            - generic [ref=f3e355]:
+              - generic [ref=f3e356]: ₹240.29
+              - generic [ref=f3e357]: 27 left
+          - button "Horlicks Classic 1kg SKU-0081 ₹590.41 182 left" [ref=f3e358] [cursor=pointer]:
+            - generic [ref=f3e359]: Horlicks Classic 1kg
+            - generic [ref=f3e360]: SKU-0081
+            - generic [ref=f3e361]:
+              - generic [ref=f3e362]: ₹590.41
+              - generic [ref=f3e363]: 182 left
+          - button "India Gate Basmati Rice 5kg SKU-0045 ₹802.07 11 left" [ref=f3e364] [cursor=pointer]:
+            - generic [ref=f3e365]: India Gate Basmati Rice 5kg
+            - generic [ref=f3e366]: SKU-0045
+            - generic [ref=f3e367]:
+              - generic [ref=f3e368]: ₹802.07
+              - generic [ref=f3e369]: 11 left
+          - button "Kelloggs Corn Flakes 875g SKU-0099 ₹461.54 159 left" [ref=f3e370] [cursor=pointer]:
+            - generic [ref=f3e371]: Kelloggs Corn Flakes 875g
+            - generic [ref=f3e372]: SKU-0099
+            - generic [ref=f3e373]:
+              - generic [ref=f3e374]: ₹461.54
+              - generic [ref=f3e375]: 159 left
+          - button "Keyboard Mouse Combo SKU-0054 ₹1,047.70 34 left" [ref=f3e376] [cursor=pointer]:
+            - generic [ref=f3e377]: Keyboard Mouse Combo
+            - generic [ref=f3e378]: SKU-0054
+            - generic [ref=f3e379]:
+              - generic [ref=f3e380]: ₹1,047.70
+              - generic [ref=f3e381]: 34 left
+          - button "Kissan Ketchup 950g SKU-0108 ₹162.75 282 left" [ref=f3e382] [cursor=pointer]:
+            - generic [ref=f3e383]: Kissan Ketchup 950g
+            - generic [ref=f3e384]: SKU-0108
+            - generic [ref=f3e385]:
+              - generic [ref=f3e386]: ₹162.75
+              - generic [ref=f3e387]: 282 left
+          - button "Kissan Mixed Fruit Jam 500g SKU-0057 ₹193.40 5 left" [ref=f3e388] [cursor=pointer]:
+            - generic [ref=f3e389]: Kissan Mixed Fruit Jam 500g
+            - generic [ref=f3e390]: SKU-0057
+            - generic [ref=f3e391]:
+              - generic [ref=f3e392]: ₹193.40
+              - generic [ref=f3e393]: 5 left
+          - button "Knorr Tomato Soup 12-pack SKU-0106 ₹213.61 159 left" [ref=f3e394] [cursor=pointer]:
+            - generic [ref=f3e395]: Knorr Tomato Soup 12-pack
+            - generic [ref=f3e396]: SKU-0106
+            - generic [ref=f3e397]:
+              - generic [ref=f3e398]: ₹213.61
+              - generic [ref=f3e399]: 159 left
+          - button "Kurkure Masala Munch 12-pack SKU-0096 ₹297.46 216 left" [ref=f3e400] [cursor=pointer]:
+            - generic [ref=f3e401]: Kurkure Masala Munch 12-pack
+            - generic [ref=f3e402]: SKU-0096
+            - generic [ref=f3e403]:
+              - generic [ref=f3e404]: ₹297.46
+              - generic [ref=f3e405]: 216 left
+          - button "LED Torch SKU-0085 ₹288.32 37 left" [ref=f3e406] [cursor=pointer]:
+            - generic [ref=f3e407]: LED Torch
+            - generic [ref=f3e408]: SKU-0085
+            - generic [ref=f3e409]:
+              - generic [ref=f3e410]: ₹288.32
+              - generic [ref=f3e411]: 37 left
+          - button "Lays Classic 52g 24-pack SKU-0095 ₹586.27 74 left" [ref=f3e412] [cursor=pointer]:
+            - generic [ref=f3e413]: Lays Classic 52g 24-pack
+            - generic [ref=f3e414]: SKU-0095
+            - generic [ref=f3e415]:
+              - generic [ref=f3e416]: ₹586.27
+              - generic [ref=f3e417]: 74 left
+          - button "Lifebuoy Soap 4-pack SKU-0008 ₹171.89 98 left" [ref=f3e418] [cursor=pointer]:
+            - generic [ref=f3e419]: Lifebuoy Soap 4-pack
+            - generic [ref=f3e420]: SKU-0008
+            - generic [ref=f3e421]:
+              - generic [ref=f3e422]: ₹171.89
+              - generic [ref=f3e423]: 98 left
+      - complementary [ref=f3e424]:
+        - heading "Current sale" [level=2] [ref=f3e425]
+        - list [ref=f3e426]:
+          - listitem [ref=f3e427]: Cart is empty
+        - generic [ref=f3e428]:
+          - generic [ref=f3e429]:
+            - generic [ref=f3e430]: Total
+            - generic [ref=f3e431]: ₹0.00
+          - button "Charge" [disabled] [ref=f3e432]

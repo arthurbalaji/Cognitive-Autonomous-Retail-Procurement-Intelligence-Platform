@@ -1,0 +1,543 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e3]:
+    - complementary [ref=f2e4]:
+      - generic [ref=f2e5]:
+        - generic [ref=f2e6]: C
+        - generic [ref=f2e7]:
+          - generic [ref=f2e8]: CARPIP
+          - generic [ref=f2e9]: Procurement Intelligence
+      - navigation [ref=f2e10]:
+        - link "Overview" [ref=f2e11] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=f2e12]: ▦
+          - text: Overview
+        - link "System health" [ref=f2e13] [cursor=pointer]:
+          - /url: /admin/health
+          - generic [aria-hidden] [ref=f2e14]: ♥
+          - text: System health
+        - link "Demo control panel" [ref=f2e15] [cursor=pointer]:
+          - /url: /admin/control
+          - generic [aria-hidden] [ref=f2e16]: ▶
+          - text: Demo control panel
+        - link "CDIN & forecasting" [ref=f2e17] [cursor=pointer]:
+          - /url: /admin/cdin
+          - generic [aria-hidden] [ref=f2e18]: ◎
+          - text: CDIN & forecasting
+        - link "All purchase orders" [ref=f2e19] [cursor=pointer]:
+          - /url: /orders
+          - generic [aria-hidden] [ref=f2e20]: ☰
+          - text: All purchase orders
+        - link "Negotiations" [ref=f2e21] [cursor=pointer]:
+          - /url: /negotiations
+          - generic [aria-hidden] [ref=f2e22]: ⇄
+          - text: Negotiations
+        - link "All inventory" [ref=f2e23] [cursor=pointer]:
+          - /url: /inventory
+          - generic [aria-hidden] [ref=f2e24]: ▤
+          - text: All inventory
+        - link "Integrations" [ref=f2e25] [cursor=pointer]:
+          - /url: /integrations
+          - generic [aria-hidden] [ref=f2e26]: ⚙
+          - text: Integrations
+        - link "Dead letters" [ref=f2e27] [cursor=pointer]:
+          - /url: /admin/dlq
+          - generic [aria-hidden] [ref=f2e28]: ☠
+          - text: Dead letters
+        - link "Metrics" [ref=f2e29] [cursor=pointer]:
+          - /url: /admin/metrics
+          - generic [aria-hidden] [ref=f2e30]: ∑
+          - text: Metrics
+        - link "Audit log" [ref=f2e31] [cursor=pointer]:
+          - /url: /admin/audit
+          - generic [aria-hidden] [ref=f2e32]: ✎
+          - text: Audit log
+        - link "Tenants" [ref=f2e33] [cursor=pointer]:
+          - /url: /admin/tenants
+          - generic [aria-hidden] [ref=f2e34]: ☺
+          - text: Tenants
+      - generic [ref=f2e35]:
+        - generic [ref=f2e36]: CARPIP Platform
+        - generic [ref=f2e37]: admin@carpip.local
+        - generic [ref=f2e38]:
+          - generic [ref=f2e39]: live feed
+          - button "Sign out" [ref=f2e41] [cursor=pointer]
+    - generic [ref=f2e42]:
+      - banner [ref=f2e43]:
+        - generic [ref=f2e44]: ADMIN
+        - generic [ref=f2e45]:
+          - generic "us.anthropic.claude-sonnet-5-5 · us-east-1" [ref=f2e107]: "✓ LLM: Claude via Bedrock"
+          - generic [ref=f2e46]: INR · IST
+      - main [ref=f2e47]:
+        - generic [ref=f2e109]:
+          - heading "CPO-2026-001001" [level=1] [ref=f2e110]
+          - paragraph [ref=f2e111]:
+            - link "Purchase orders" [ref=f2e112] [cursor=pointer]:
+              - /url: /orders
+            - text: / Box File A4 3-pack · raised autonomously (THRESHOLD)
+        - generic [ref=f2e114]:
+          - generic [ref=f2e115]:
+            - generic [ref=f2e116]: CLOSED
+            - generic [ref=f2e117]: "negotiation: accepted"
+          - list "Order progress" [ref=f2e118]:
+            - listitem [ref=f2e119]:
+              - generic "23 Oct 2026, 21:19" [ref=f2e120]: ✓ negotiating
+              - generic [ref=f2e121]: ›
+            - listitem [ref=f2e122]:
+              - generic [ref=f2e123]: ✓ pending approval
+              - generic [ref=f2e124]: ›
+            - listitem [ref=f2e125]:
+              - generic "23 Oct 2026, 21:19" [ref=f2e126]: ✓ approved
+              - generic [ref=f2e127]: ›
+            - listitem [ref=f2e128]:
+              - generic "23 Oct 2026, 21:19" [ref=f2e129]: ✓ submitted
+              - generic [ref=f2e130]: ›
+            - listitem [ref=f2e131]:
+              - generic "23 Oct 2026, 21:20" [ref=f2e132]: ✓ confirmed
+              - generic [ref=f2e133]: ›
+            - listitem [ref=f2e134]:
+              - generic "23 Oct 2026, 21:20" [ref=f2e135]: ✓ shipped
+              - generic [ref=f2e136]: ›
+            - listitem [ref=f2e137]:
+              - generic "23 Oct 2026, 21:20" [ref=f2e138]: ✓ delivered
+              - generic [ref=f2e139]: ›
+            - listitem [ref=f2e140]:
+              - generic "23 Oct 2026, 21:20" [ref=f2e141]: ✓ received
+              - generic [ref=f2e142]: ›
+            - listitem [ref=f2e143]:
+              - generic "23 Oct 2026, 21:20" [ref=f2e144]: ● closed
+        - generic [ref=f2e145]:
+          - generic [ref=f2e146]:
+            - generic [ref=f2e147]: Supplier
+            - generic [ref=f2e148]: Kovai Distributors
+          - generic [ref=f2e149]:
+            - generic [ref=f2e150]: Quantity
+            - generic [ref=f2e151]: "54"
+            - generic [ref=f2e152]: confirmed 54
+          - generic [ref=f2e153]:
+            - generic [ref=f2e154]: Unit price
+            - generic [ref=f2e155]: ₹225.28
+            - generic [ref=f2e156]: list ₹258.19
+          - generic [ref=f2e157]:
+            - generic [ref=f2e158]: Total
+            - generic [ref=f2e159]: ₹12,165
+          - generic [ref=f2e160]:
+            - generic [ref=f2e161]: Saved vs list
+            - generic [ref=f2e162]: ₹1,777
+          - generic [ref=f2e163]:
+            - generic [ref=f2e164]: Delivery
+            - generic [ref=f2e165]: 2026-10-24
+            - generic [ref=f2e166]: shipped 54 · received 54
+        - generic [ref=f2e167]:
+          - heading "AI summary" [level=3] [ref=f2e169]
+          - paragraph [ref=f2e171]: (AI-generated, non-authoritative) Kovai Distributors was chosen because it offered the lowest agreed unit price of 225.28 and had the top score of 0.9854, beating Sri Murugan Wholesale at 226.72 and Chennai Bulk Traders at 235.93. Against the list price of 258.19, the retailer saves 32.91 per unit, which comes to 1,777.14 across the 54 units ordered. With planned urgency and market pressure of 0.2844, there was no need to pay a premium for speed.
+        - generic [ref=f2e172]:
+          - generic [ref=f2e173]:
+            - 'heading "Decision: quantity & timeline" [level=3] [ref=f2e175]'
+            - generic [ref=f2e177]:
+              - generic [ref=f2e178]:
+                - term [ref=f2e179]: Optimal quantity
+                - definition [ref=f2e180]: "54"
+              - generic [ref=f2e181]:
+                - term [ref=f2e182]: Paper floor (2×gap, min 50)
+                - definition [ref=f2e183]: "50"
+              - generic [ref=f2e184]: PACK ROUNDED
+              - generic [ref=f2e186]:
+                - term [ref=f2e187]: Stock-out forecast
+                - definition [ref=f2e188]:
+                  - text: 2026-10-31
+                  - generic [ref=f2e189]: (8d)
+              - generic [ref=f2e190]:
+                - term [ref=f2e191]: Order by
+                - definition [ref=f2e192]: 2026-10-27
+              - generic [ref=f2e193]:
+                - term [ref=f2e194]: Expected delivery
+                - definition [ref=f2e195]: 2026-10-26
+              - generic [ref=f2e196]:
+                - term [ref=f2e197]: Urgency
+                - definition [ref=f2e198]:
+                  - generic [ref=f2e199]: PLANNED
+              - generic [ref=f2e200]:
+                - term [ref=f2e201]: Market pulse
+                - definition [ref=f2e202]:
+                  - text: "0.2844"
+                  - generic [ref=f2e203]: STABLE
+              - generic [ref=f2e204]:
+                - term [ref=f2e205]: Negotiation mode
+                - definition [ref=f2e206]:
+                  - generic [ref=f2e207]: LLM
+          - generic [ref=f2e208]:
+            - heading "Ranked suppliers" [level=3] [ref=f2e210]
+            - table [ref=f2e213]:
+              - rowgroup [ref=f2e214]:
+                - row [ref=f2e215]:
+                  - columnheader "Rank" [ref=f2e216]
+                  - columnheader "Supplier" [ref=f2e217]
+                  - columnheader "Outcome" [ref=f2e218]
+                  - columnheader "Agreed price" [ref=f2e219]
+                  - columnheader "Qty" [ref=f2e220]
+                  - columnheader "Score" [ref=f2e221]
+                  - columnheader "Price" [ref=f2e222]
+                  - columnheader "Reliab." [ref=f2e223]
+                  - columnheader "Expiry" [ref=f2e224]
+                  - columnheader "Lead" [ref=f2e225]
+                  - columnheader "Notes" [ref=f2e226]
+              - rowgroup [ref=f2e227]:
+                - row [ref=f2e228]:
+                  - cell "1" [ref=f2e229]
+                  - cell "Kovai Distributors" [ref=f2e230]
+                  - cell "ACCEPTED" [ref=f2e231]
+                  - cell "₹225.28" [ref=f2e233]
+                  - cell "54" [ref=f2e234]
+                  - cell "0.9854" [ref=f2e235]
+                  - cell "1" [ref=f2e236]
+                  - cell "0.93" [ref=f2e237]
+                  - cell "1" [ref=f2e238]
+                  - cell "1" [ref=f2e239]
+                  - cell "pack rounded" [ref=f2e240]
+                - row [ref=f2e241]:
+                  - cell "2" [ref=f2e242]
+                  - cell "Sri Murugan Wholesale" [ref=f2e243]
+                  - cell "ACCEPTED" [ref=f2e244]
+                  - cell "₹226.72" [ref=f2e246]
+                  - cell "18" [ref=f2e247]
+                  - cell "0.8385" [ref=f2e248]
+                  - cell "0.8648" [ref=f2e249]
+                  - cell "0.841" [ref=f2e250]
+                  - cell "1" [ref=f2e251]
+                  - cell "0.75" [ref=f2e252]
+                  - cell "pack rounded, partial availability" [ref=f2e253]
+                - row [ref=f2e254]:
+                  - cell "3" [ref=f2e255]
+                  - cell "Chennai Bulk Traders" [ref=f2e256]
+                  - cell "ACCEPTED" [ref=f2e257]
+                  - cell "₹235.93" [ref=f2e259]
+                  - cell "54" [ref=f2e260]
+                  - cell "0.2704" [ref=f2e261]
+                  - cell "0" [ref=f2e262]
+                  - cell "0.698" [ref=f2e263]
+                  - cell "1" [ref=f2e264]
+                  - cell "0" [ref=f2e265]
+                  - cell "pack rounded" [ref=f2e266]
+        - generic [ref=f2e267]:
+          - generic [ref=f2e268]:
+            - heading "Negotiation with Kovai Distributors ACCEPTED selected" [level=3] [ref=f2e269]:
+              - generic [ref=f2e270]:
+                - text: Negotiation with Kovai Distributors
+                - generic [ref=f2e271]: ACCEPTED
+                - generic [ref=f2e272]: selected
+            - generic [ref=f2e273]: LLM · 8096 ms · 3,285↓ / 311↑ tokens
+          - generic [ref=f2e276]:
+            - generic [ref=f2e277]:
+              - generic [ref=f2e279]:
+                - img [ref=f2e280]:
+                  - generic [ref=f2e284]:
+                    - generic [ref=f2e285]: Turn 1
+                    - generic [ref=f2e287]: Turn 2
+                    - generic [ref=f2e289]: Turn 3
+                  - generic [ref=f2e292]:
+                    - generic [ref=f2e293]: ₹205
+                    - generic [ref=f2e295]: ₹220
+                    - generic [ref=f2e297]: ₹235
+                    - generic [ref=f2e299]: ₹264
+                  - generic [ref=f2e301]: Ceiling (list)
+                  - generic [ref=f2e303]: Floor
+                  - generic [ref=f2e305]: Retailer max
+                - list [ref=f2e312]:
+                  - listitem [ref=f2e313]: Retailer offers
+                  - listitem [ref=f2e315]: Wholesaler offers
+              - generic [ref=f2e317]:
+                - generic [ref=f2e318]:
+                  - term [ref=f2e319]: List (ceiling)
+                  - definition [ref=f2e320]: ₹258.19
+                - generic [ref=f2e321]:
+                  - term [ref=f2e322]: Retailer target
+                  - definition [ref=f2e323]: ₹211.72
+                - generic [ref=f2e324]:
+                  - term [ref=f2e325]: Market pulse used
+                  - definition [ref=f2e326]: "0.2924"
+                - generic [ref=f2e327]:
+                  - term [ref=f2e328]: Supplier floor
+                  - definition [ref=f2e329]: ₹219.47
+                - generic [ref=f2e330]:
+                  - term [ref=f2e331]: Retailer max (RMAP)
+                  - definition [ref=f2e332]: ₹258.19
+                - generic [ref=f2e333]:
+                  - term [ref=f2e334]: Guardrail overrides
+                  - definition [ref=f2e335]: "0"
+            - list "Negotiation transcript" [ref=f2e336]:
+              - listitem [ref=f2e337]:
+                - generic [ref=f2e338]:
+                  - generic [ref=f2e339]:
+                    - generic [ref=f2e340]: Retailer agent
+                    - text: · turn 1 · offer
+                    - generic [ref=f2e341]: ₹211.72
+                    - generic [ref=f2e342]: LLM
+                  - generic [ref=f2e343]: We'd like to place an order for 54 units of the Box File A4 3-pack at 211.72 INR per unit. We're ready to move quickly and build a steady ordering relationship.
+              - listitem [ref=f2e344]:
+                - generic [ref=f2e345]:
+                  - generic [ref=f2e346]:
+                    - generic [ref=f2e347]: Wholesaler agent
+                    - text: · turn 1 · counter
+                    - generic [ref=f2e348]: ₹238.83
+                    - generic [ref=f2e349]: LLM
+                  - generic [ref=f2e350]: Thank you for your offer. For 54 units of the Box File A4 3-pack, we can offer 238.83 per unit, which reflects current stock levels and our quality standards./br
+              - listitem [ref=f2e351]:
+                - generic [ref=f2e352]:
+                  - generic [ref=f2e353]:
+                    - generic [ref=f2e354]: Retailer agent
+                    - text: · turn 2 · offer
+                    - generic [ref=f2e355]: ₹225.28
+                    - generic [ref=f2e356]: LLM
+                  - generic [ref=f2e357]: Thank you for your counter. With an order of 54 units and a softer market, we can move to 225.28 per unit and would welcome your confirmation.
+              - listitem [ref=f2e358]:
+                - generic [ref=f2e359]:
+                  - generic [ref=f2e360]:
+                    - generic [ref=f2e361]: Wholesaler agent
+                    - text: · turn 2 · accept
+                    - generic [ref=f2e362]: ₹225.28
+                    - generic [ref=f2e363]: LLM
+                  - generic [ref=f2e364]: Thank you for the revised offer. We accept your price of INR 225.28 per unit for the Box File A4 3-pack and look forward to confirming the order.
+        - generic [ref=f2e365]:
+          - generic [ref=f2e366]:
+            - heading "Negotiation with Sri Murugan Wholesale ACCEPTED" [level=3] [ref=f2e367]:
+              - generic [ref=f2e368]:
+                - text: Negotiation with Sri Murugan Wholesale
+                - generic [ref=f2e369]: ACCEPTED
+            - generic [ref=f2e370]: LLM · 9422 ms · 3,285↓ / 324↑ tokens
+          - generic [ref=f2e373]:
+            - generic [ref=f2e374]:
+              - generic [ref=f2e376]:
+                - img [ref=f2e377]:
+                  - generic [ref=f2e381]:
+                    - generic [ref=f2e382]: Turn 1
+                    - generic [ref=f2e384]: Turn 2
+                    - generic [ref=f2e386]: Turn 3
+                  - generic [ref=f2e389]:
+                    - generic [ref=f2e390]: ₹207
+                    - generic [ref=f2e392]: ₹222
+                    - generic [ref=f2e394]: ₹237
+                    - generic [ref=f2e396]: ₹252
+                    - generic [ref=f2e398]: ₹267
+                  - generic [ref=f2e400]: Ceiling (list)
+                  - generic [ref=f2e402]: Floor
+                  - generic [ref=f2e404]: Retailer max
+                - list [ref=f2e411]:
+                  - listitem [ref=f2e412]: Retailer offers
+                  - listitem [ref=f2e414]: Wholesaler offers
+              - generic [ref=f2e416]:
+                - generic [ref=f2e417]:
+                  - term [ref=f2e418]: List (ceiling)
+                  - definition [ref=f2e419]: ₹261.25
+                - generic [ref=f2e420]:
+                  - term [ref=f2e421]: Retailer target
+                  - definition [ref=f2e422]: ₹214.23
+                - generic [ref=f2e423]:
+                  - term [ref=f2e424]: Market pulse used
+                  - definition [ref=f2e425]: "0.3124"
+                - generic [ref=f2e426]:
+                  - term [ref=f2e427]: Supplier floor
+                  - definition [ref=f2e428]: ₹217.17
+                - generic [ref=f2e429]:
+                  - term [ref=f2e430]: Retailer max (RMAP)
+                  - definition [ref=f2e431]: ₹261.25
+                - generic [ref=f2e432]:
+                  - term [ref=f2e433]: Guardrail overrides
+                  - definition [ref=f2e434]: "0"
+            - list "Negotiation transcript" [ref=f2e435]:
+              - listitem [ref=f2e436]:
+                - generic [ref=f2e437]:
+                  - generic [ref=f2e438]:
+                    - generic [ref=f2e439]: Retailer agent
+                    - text: · turn 1 · offer
+                    - generic [ref=f2e440]: ₹214.23
+                    - generic [ref=f2e441]: LLM
+                  - generic [ref=f2e442]: Thank you for the opportunity. For 18 units of the Box File A4 3-pack, we propose 214.23 INR per unit and look forward to a smooth, long-term supply relationship.
+              - listitem [ref=f2e443]:
+                - generic [ref=f2e444]:
+                  - generic [ref=f2e445]:
+                    - generic [ref=f2e446]: Wholesaler agent
+                    - text: · turn 1 · counter
+                    - generic [ref=f2e447]: ₹239.21
+                    - generic [ref=f2e448]: LLM
+                  - generic [ref=f2e449]: Thank you for your offer. For 18 units of the Box File A4 3-pack, we can meet you at 239.21 per unit, which reflects the quality and current supply conditions.
+              - listitem [ref=f2e450]:
+                - generic [ref=f2e451]:
+                  - generic [ref=f2e452]:
+                    - generic [ref=f2e453]: Retailer agent
+                    - text: · turn 2 · offer
+                    - generic [ref=f2e454]: ₹226.72
+                    - generic [ref=f2e455]: LLM
+                  - generic [ref=f2e456]: Thank you for your counter. Considering our order volume of 18 units and current market conditions, we can move to 226.72 per unit and are ready to close promptly at that level.
+              - listitem [ref=f2e457]:
+                - generic [ref=f2e458]:
+                  - generic [ref=f2e459]:
+                    - generic [ref=f2e460]: Wholesaler agent
+                    - text: · turn 2 · accept
+                    - generic [ref=f2e461]: ₹226.72
+                    - generic [ref=f2e462]: LLM
+                  - generic [ref=f2e463]: Thank you for your offer. We are pleased to accept 226.72 INR per unit for 18 units of the Box File A4 3-pack. We look forward to working with you.
+        - generic [ref=f2e464]:
+          - generic [ref=f2e465]:
+            - heading "Negotiation with Chennai Bulk Traders ACCEPTED" [level=3] [ref=f2e466]:
+              - generic [ref=f2e467]:
+                - text: Negotiation with Chennai Bulk Traders
+                - generic [ref=f2e468]: ACCEPTED
+            - generic [ref=f2e469]: LLM · 7366 ms · 3,285↓ / 302↑ tokens
+          - generic [ref=f2e472]:
+            - generic [ref=f2e473]:
+              - generic [ref=f2e475]:
+                - img [ref=f2e476]:
+                  - generic [ref=f2e480]:
+                    - generic [ref=f2e481]: Turn 1
+                    - generic [ref=f2e483]: Turn 2
+                    - generic [ref=f2e485]: Turn 3
+                  - generic [ref=f2e488]:
+                    - generic [ref=f2e489]: ₹216
+                    - generic [ref=f2e491]: ₹236
+                    - generic [ref=f2e493]: ₹256
+                    - generic [ref=f2e495]: ₹278
+                  - generic [ref=f2e497]: Ceiling (list)
+                  - generic [ref=f2e499]: Floor
+                  - generic [ref=f2e501]: Retailer max
+                - list [ref=f2e508]:
+                  - listitem [ref=f2e509]: Retailer offers
+                  - listitem [ref=f2e511]: Wholesaler offers
+              - generic [ref=f2e513]:
+                - generic [ref=f2e514]:
+                  - term [ref=f2e515]: List (ceiling)
+                  - definition [ref=f2e516]: ₹271.61
+                - generic [ref=f2e517]:
+                  - term [ref=f2e518]: Retailer target
+                  - definition [ref=f2e519]: ₹222.72
+                - generic [ref=f2e520]:
+                  - term [ref=f2e521]: Market pulse used
+                  - definition [ref=f2e522]: "0.3446"
+                - generic [ref=f2e523]:
+                  - term [ref=f2e524]: Supplier floor
+                  - definition [ref=f2e525]: ₹226.65
+                - generic [ref=f2e526]:
+                  - term [ref=f2e527]: Retailer max (RMAP)
+                  - definition [ref=f2e528]: ₹271.61
+                - generic [ref=f2e529]:
+                  - term [ref=f2e530]: Guardrail overrides
+                  - definition [ref=f2e531]: "0"
+            - list "Negotiation transcript" [ref=f2e532]:
+              - listitem [ref=f2e533]:
+                - generic [ref=f2e534]:
+                  - generic [ref=f2e535]:
+                    - generic [ref=f2e536]: Retailer agent
+                    - text: · turn 1 · offer
+                    - generic [ref=f2e537]: ₹222.72
+                    - generic [ref=f2e538]: LLM
+                  - generic [ref=f2e539]: Thank you for working with us. For 54 units of the Box File A4 3-pack, we propose 222.72 INR per unit and look forward to building a lasting partnership.
+              - listitem [ref=f2e540]:
+                - generic [ref=f2e541]:
+                  - generic [ref=f2e542]:
+                    - generic [ref=f2e543]: Wholesaler agent
+                    - text: · turn 1 · counter
+                    - generic [ref=f2e544]: ₹249.13
+                    - generic [ref=f2e545]: LLM
+                  - generic [ref=f2e546]: Thank you for your offer. For 54 units of the Box File A4 3-pack, we can offer 249.13 per unit, which reflects the quality and our current stock position.
+              - listitem [ref=f2e547]:
+                - generic [ref=f2e548]:
+                  - generic [ref=f2e549]:
+                    - generic [ref=f2e550]: Retailer agent
+                    - text: · turn 2 · offer
+                    - generic [ref=f2e551]: ₹235.93
+                    - generic [ref=f2e552]: LLM
+                  - generic [ref=f2e553]: Thank you for your counter. For an order of 54 units, we can move to 235.93 per unit and would be glad to confirm quickly at that price.
+              - listitem [ref=f2e554]:
+                - generic [ref=f2e555]:
+                  - generic [ref=f2e556]:
+                    - generic [ref=f2e557]: Wholesaler agent
+                    - text: · turn 2 · accept
+                    - generic [ref=f2e558]: ₹235.93
+                    - generic [ref=f2e559]: LLM
+                  - generic [ref=f2e560]: Thank you for your offer. We accept the price of INR 235.93 per unit for the Box File A4 3-pack and look forward to confirming the order.
+        - generic [ref=f2e561]:
+          - generic [ref=f2e562]:
+            - heading "Status history" [level=3] [ref=f2e564]
+            - table [ref=f2e567]:
+              - rowgroup [ref=f2e568]:
+                - row [ref=f2e569]:
+                  - columnheader "When" [ref=f2e570]
+                  - columnheader "From → to" [ref=f2e571]
+                  - columnheader "By" [ref=f2e572]
+                  - columnheader "Reason" [ref=f2e573]
+              - rowgroup [ref=f2e574]:
+                - row [ref=f2e575]:
+                  - cell "23 Oct 2026, 21:19" [ref=f2e576]
+                  - cell "NEGOTIATING" [ref=f2e577]
+                  - cell "system" [ref=f2e578]
+                  - cell "trigger=THRESHOLD" [ref=f2e579]
+                - row [ref=f2e580]:
+                  - cell "23 Oct 2026, 21:19" [ref=f2e581]
+                  - cell "NEGOTIATING → APPROVED" [ref=f2e582]
+                  - cell "system" [ref=f2e583]
+                  - cell "negotiation ACCEPTED at 225.28 x 54" [ref=f2e584]
+                - row [ref=f2e585]:
+                  - cell "23 Oct 2026, 21:19" [ref=f2e586]
+                  - cell "APPROVED → SUBMITTED" [ref=f2e587]
+                  - cell "system" [ref=f2e588]
+                  - cell "submitted to supplier ERP" [ref=f2e589]
+                - row [ref=f2e590]:
+                  - cell "23 Oct 2026, 21:20" [ref=f2e591]
+                  - cell "SUBMITTED → CONFIRMED" [ref=f2e592]
+                  - cell "erp" [ref=f2e593]
+                  - cell "supplier confirmed 54" [ref=f2e594]
+                - row [ref=f2e595]:
+                  - cell "23 Oct 2026, 21:20" [ref=f2e596]
+                  - cell "CONFIRMED → SHIPPED" [ref=f2e597]
+                  - cell "erp" [ref=f2e598]
+                  - cell "shipment 54" [ref=f2e599]
+                - row [ref=f2e600]:
+                  - cell "23 Oct 2026, 21:20" [ref=f2e601]
+                  - cell "SHIPPED → DELIVERED" [ref=f2e602]
+                  - cell "erp" [ref=f2e603]
+                  - cell "delivered 54" [ref=f2e604]
+                - row [ref=f2e605]:
+                  - cell "23 Oct 2026, 21:20" [ref=f2e606]
+                  - cell "DELIVERED → RECEIVED" [ref=f2e607]
+                  - cell "system" [ref=f2e608]
+                  - cell "received 54" [ref=f2e609]
+                - row [ref=f2e610]:
+                  - cell "23 Oct 2026, 21:20" [ref=f2e611]
+                  - cell "RECEIVED → CLOSED" [ref=f2e612]
+                  - cell "system" [ref=f2e613]
+                  - cell "fully received" [ref=f2e614]
+          - generic [ref=f2e615]:
+            - heading "Integration writebacks (ERP / POS)" [level=3] [ref=f2e617]
+            - table [ref=f2e620]:
+              - rowgroup [ref=f2e621]:
+                - row [ref=f2e622]:
+                  - columnheader "Action" [ref=f2e623]
+                  - columnheader "Status" [ref=f2e624]
+                  - columnheader "Attempts" [ref=f2e625]
+                  - columnheader "Last error" [ref=f2e626]
+              - rowgroup [ref=f2e627]:
+                - row [ref=f2e628]:
+                  - cell "submit po" [ref=f2e629]
+                  - cell "DONE" [ref=f2e630]
+                  - cell "0" [ref=f2e632]
+                  - cell [ref=f2e633]
+                - row [ref=f2e634]:
+                  - cell "push incoming" [ref=f2e635]
+                  - cell "DONE" [ref=f2e636]
+                  - cell "0" [ref=f2e638]
+                  - cell [ref=f2e639]
+                - row [ref=f2e640]:
+                  - cell "push incoming" [ref=f2e641]
+                  - cell "DONE" [ref=f2e642]
+                  - cell "0" [ref=f2e644]
+                  - cell [ref=f2e645]
+                - row [ref=f2e646]:
+                  - cell "push incoming" [ref=f2e647]
+                  - cell "DONE" [ref=f2e648]
+                  - cell "0" [ref=f2e650]
+                  - cell [ref=f2e651]
+                - row [ref=f2e652]:
+                  - cell "adjust stock" [ref=f2e653]
+                  - cell "DONE" [ref=f2e654]
+                  - cell "0" [ref=f2e656]
+                  - cell [ref=f2e657]
+  - generic [aria-hidden] [ref=f2e658]: ₹216

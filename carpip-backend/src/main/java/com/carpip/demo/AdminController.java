@@ -344,6 +344,43 @@ public class AdminController {
         return out;
     }
 
+    // ----------------------------------------------------------------- pass-through to the cognitive engine (admin console)
+    @GetMapping("/engine/cdin")
+    public Map<String, Object> engineCdin() {
+        TenantContext.requireRole("ADMIN");
+        return engine.get("/api/cdin/status");
+    }
+
+    @PostMapping("/engine/cdin/round")
+    public Map<String, Object> engineCdinRound() {
+        TenantContext.requireRole("ADMIN");
+        return engine.post("/api/cdin/rounds", Map.of());
+    }
+
+    @GetMapping("/engine/forecast")
+    public Map<String, Object> engineForecast() {
+        TenantContext.requireRole("ADMIN");
+        return engine.get("/api/forecast/status");
+    }
+
+    @PostMapping("/engine/forecast/train")
+    public Map<String, Object> engineTrain() {
+        TenantContext.requireRole("ADMIN");
+        return engine.post("/api/forecast/train", Map.of("tenantId", "all"));
+    }
+
+    @PostMapping("/engine/llm/check")
+    public Map<String, Object> engineLlmCheck() {
+        TenantContext.requireRole("ADMIN");
+        return engine.post("/api/llm/check", Map.of());
+    }
+
+    @PostMapping("/engine/mpi/run")
+    public Map<String, Object> engineMpi() {
+        TenantContext.requireRole("ADMIN");
+        return engine.post("/api/mpi/recompute", Map.of());
+    }
+
     @GetMapping("/tenant-stats")
     public List<Map<String, Object>> tenantStats() {
         TenantContext.requireRole("ADMIN");

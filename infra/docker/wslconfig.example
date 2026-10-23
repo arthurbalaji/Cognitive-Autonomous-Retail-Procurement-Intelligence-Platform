@@ -1,0 +1,9 @@
+# Copy to %UserProfile%\.wslconfig, then run `wsl --shutdown` and restart Docker Desktop.
+# The full stack needs ~3 GB at rest and ~5-6 GB while models train / images build.
+[wsl2]
+memory=10GB
+processors=6
+swap=4GB
+
+[experimental]
+autoMemoryReclaim=gradual

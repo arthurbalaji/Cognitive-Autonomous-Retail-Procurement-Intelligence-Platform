@@ -1,0 +1,43 @@
+- generic [ref=f4e26]:
+  - banner [ref=f4e27]:
+    - generic [ref=f4e28]:
+      - generic [ref=f4e29]: ERP
+      - generic [ref=f4e30]:
+        - generic [ref=f4e31]: Sri Murugan Wholesale
+        - generic [ref=f4e32]: Custom REST · signed webhooks · GraphQL · Sri Murugan Wholesale Manager
+    - navigation [ref=f4e33]:
+      - button "Dashboard" [ref=f4e34] [cursor=pointer]
+      - button "Sales orders" [active] [ref=f4e35] [cursor=pointer]
+      - button "Catalog & stock" [ref=f4e36] [cursor=pointer]
+      - button "Demand insights" [ref=f4e37] [cursor=pointer]
+      - button "Integration" [ref=f4e38] [cursor=pointer]
+    - button "Sign out" [ref=f4e39] [cursor=pointer]
+  - main [ref=f4e40]:
+    - generic [ref=f4e92]:
+      - button "All" [ref=f4e93] [cursor=pointer]
+      - button "To confirm" [ref=f4e94] [cursor=pointer]
+      - button "To ship" [ref=f4e95] [cursor=pointer]
+      - button "In transit" [ref=f4e96] [cursor=pointer]
+      - button "Delivered" [ref=f4e97] [cursor=pointer]
+      - button "Rejected / cancelled" [ref=f4e98] [cursor=pointer]
+    - table [ref=f4e100]:
+      - rowgroup [ref=f4e101]:
+        - row [ref=f4e102]:
+          - columnheader "Sales order" [ref=f4e103]
+          - columnheader "PO number" [ref=f4e104]
+          - columnheader "Customer" [ref=f4e105]
+          - columnheader "Items" [ref=f4e106]
+          - columnheader "Value" [ref=f4e107]
+          - columnheader "Promised" [ref=f4e108]
+          - columnheader "Status" [ref=f4e109]
+          - columnheader "Updated" [ref=f4e110]
+      - rowgroup [ref=f4e111]:
+        - row [ref=f4e112] [cursor=pointer]:
+          - cell "SO-00001" [ref=f4e113]
+          - cell "CPO-2026-001000" [ref=f4e114]
+          - cell "Kovai Mart - Gandhipuram" [ref=f4e115]
+          - cell "Haldiram Bhujia 400g x54" [ref=f4e116]
+          - cell "₹4,199.04" [ref=f4e117]
+          - cell "2026-10-25" [ref=f4e118]
+          - cell "DELIVERED" [ref=f4e119]
+          - cell "23/10/26, 20:56" [ref=f4e120]

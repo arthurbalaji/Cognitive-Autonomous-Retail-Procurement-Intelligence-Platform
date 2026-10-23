@@ -1,0 +1,22 @@
+- generic [ref=f3e4]:
+  - generic [ref=f3e5]:
+    - generic [ref=f3e6]: POS
+    - generic [ref=f3e7]:
+      - heading "Retail POS terminal" [level=1] [ref=f3e8]
+      - paragraph [ref=f3e9]: Demo point-of-sale system (separate product from CARPIP)
+  - button "← Kovai Mart - Gandhipuram" [ref=f3e24] [cursor=pointer]
+  - paragraph [ref=f3e25]: Enter cashier PIN
+  - generic "PIN" [ref=f3e26]
+  - generic [ref=f3e31]:
+    - button "1" [ref=f3e32] [cursor=pointer]
+    - button "2" [ref=f3e33] [cursor=pointer]
+    - button "3" [ref=f3e34] [cursor=pointer]
+    - button "4" [ref=f3e35] [cursor=pointer]
+    - button "5" [ref=f3e36] [cursor=pointer]
+    - button "6" [ref=f3e37] [cursor=pointer]
+    - button "7" [ref=f3e38] [cursor=pointer]
+    - button "8" [ref=f3e39] [cursor=pointer]
+    - button "9" [ref=f3e40] [cursor=pointer]
+    - button "⌫" [ref=f3e41] [cursor=pointer]
+    - button "0" [ref=f3e42] [cursor=pointer]
+    - button "✓" [ref=f3e43] [cursor=pointer]

@@ -1,0 +1,220 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e44]:
+    - complementary [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]: C
+        - generic [ref=e48]:
+          - generic [ref=e49]: CARPIP
+          - generic [ref=e50]: Procurement Intelligence
+      - navigation [ref=e51]:
+        - link "Dashboard" [ref=e52] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=e53]: ▦
+          - text: Dashboard
+        - link "Inventory" [ref=e54] [cursor=pointer]:
+          - /url: /inventory
+          - generic [aria-hidden] [ref=e55]: ▤
+          - text: Inventory
+        - link "Purchase orders" [ref=e56] [cursor=pointer]:
+          - /url: /orders
+          - generic [aria-hidden] [ref=e57]: ☰
+          - text: Purchase orders
+        - link "Approvals" [ref=e58] [cursor=pointer]:
+          - /url: /approvals
+          - generic [aria-hidden] [ref=e59]: ✔
+          - text: Approvals
+        - link "Negotiations" [ref=e60] [cursor=pointer]:
+          - /url: /negotiations
+          - generic [aria-hidden] [ref=e61]: ⇄
+          - text: Negotiations
+        - link "Suppliers" [ref=e62] [cursor=pointer]:
+          - /url: /suppliers
+          - generic [aria-hidden] [ref=e63]: ⌂
+          - text: Suppliers
+        - link "Integrations" [ref=e64] [cursor=pointer]:
+          - /url: /integrations
+          - generic [aria-hidden] [ref=e65]: ⚙
+          - text: Integrations
+        - link "Settings" [ref=e66] [cursor=pointer]:
+          - /url: /settings
+          - generic [aria-hidden] [ref=e67]: ☷
+          - text: Settings
+      - generic [ref=e68]:
+        - generic [ref=e69]: Kovai Mart - Gandhipuram
+        - generic [ref=e70]: retailer1@carpip.demo
+        - generic [ref=e71]:
+          - generic [ref=e72]: live feed
+          - button "Sign out" [ref=e74] [cursor=pointer]
+    - generic [ref=e75]:
+      - banner [ref=e76]:
+        - generic [ref=e77]: RETAILER
+        - generic [ref=e78]: INR · IST
+      - main [ref=e80]:
+        - generic [ref=e82]:
+          - heading "Welcome, Kovai Mart - Gandhipuram" [level=1] [ref=e83]
+          - paragraph [ref=e84]: Your autonomous procurement loop at a glance
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - generic [ref=e87]: Products tracked
+            - generic [ref=e88]: "120"
+          - generic [ref=e89]:
+            - generic [ref=e90]: At / below reorder
+            - generic [ref=e91]: "0"
+            - generic [ref=e92]: inventory position ≤ ROP
+          - generic [ref=e93]:
+            - generic [ref=e94]: Stocked out
+            - generic [ref=e95]: "0"
+          - generic [ref=e96]:
+            - generic [ref=e97]: Avg market pulse
+            - generic [ref=e98]: "0.22"
+            - generic [ref=e99]: 0 buyer's · 1 seller's market
+          - generic [ref=e100]:
+            - generic [ref=e101]: Negotiated savings
+            - generic [ref=e102]: ₹635
+            - generic [ref=e103]: 1 orders
+          - generic [ref=e104]:
+            - generic [ref=e105]: Awaiting approval
+            - generic [ref=e106]: "0"
+            - link "review" [ref=e108] [cursor=pointer]:
+              - /url: /approvals
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - heading "Units sold per day (last 30 days)" [level=3] [ref=e112]
+            - generic [ref=e115]:
+              - img [ref=e116]:
+                - generic [ref=e120]:
+                  - generic [ref=e121]: 09-26
+                  - generic [ref=e123]: 09-29
+                  - generic [ref=e125]: 10-02
+                  - generic [ref=e127]: 10-05
+                  - generic [ref=e129]: 10-08
+                  - generic [ref=e131]: 10-11
+                  - generic [ref=e133]: 10-14
+                  - generic [ref=e135]: 10-17
+                  - generic [ref=e137]: 10-20
+                  - generic [ref=e139]: 10-23
+                - generic [ref=e142]:
+                  - generic [ref=e143]: "0"
+                  - generic [ref=e145]: "200"
+                  - generic [ref=e147]: "400"
+                  - generic [ref=e149]: "600"
+                  - generic [ref=e151]: "800"
+              - generic:
+                - generic:
+                  - paragraph: 2026-10-21
+                  - list:
+                    - listitem: "Units sold : 513"
+          - generic [ref=e157]:
+            - generic [ref=e158]:
+              - heading "Live event stream" [level=3] [ref=e159]
+              - generic [ref=e160]: ● connected
+            - generic [ref=e162]: Waiting for events… ring up a sale on the POS or wait for the next MPI cycle.
+        - generic [ref=e164]:
+          - generic [ref=e165]:
+            - heading "Closest to reorder point" [level=3] [ref=e167]
+            - table [ref=e170]:
+              - rowgroup [ref=e171]:
+                - row [ref=e172]:
+                  - columnheader "Product" [ref=e173]
+                  - columnheader "Stock" [ref=e174]
+                  - columnheader "On order" [ref=e175]
+                  - columnheader "ROP" [ref=e176]
+                  - columnheader "MPI" [ref=e177]
+              - rowgroup [ref=e178]:
+                - row [ref=e179]:
+                  - cell [ref=e180]:
+                    - link "Haldiram Soan Papdi 500g" [ref=e181] [cursor=pointer]:
+                      - /url: /inventory/260746f0-3853-4959-a43a-a3af2ca02d3f
+                  - cell "110" [ref=e182]
+                  - cell "0" [ref=e183]
+                  - cell "93" [ref=e184]
+                  - cell "0.22" [ref=e185]
+                - row [ref=e186]:
+                  - cell [ref=e187]:
+                    - link "Stapler Medium" [ref=e188] [cursor=pointer]:
+                      - /url: /inventory/1c65ac0a-1174-4704-93cf-50d31087437e
+                  - cell "6" [ref=e189]
+                  - cell "0" [ref=e190]
+                  - cell "5" [ref=e191]
+                  - cell "0.27" [ref=e192]
+                - row [ref=e193]:
+                  - cell [ref=e194]:
+                    - link "Amul Cheese Slices 200g" [ref=e195] [cursor=pointer]:
+                      - /url: /inventory/0d37d9ee-0a0d-431f-9648-18f676379e29
+                  - cell "162" [ref=e196]
+                  - cell "0" [ref=e197]
+                  - cell "133" [ref=e198]
+                  - cell "0.23" [ref=e199]
+                - row [ref=e200]:
+                  - cell [ref=e201]:
+                    - link "Kissan Mixed Fruit Jam 500g" [ref=e202] [cursor=pointer]:
+                      - /url: /inventory/62f4d208-2685-44d0-9cd6-4cc9d5493a64
+                  - cell "5" [ref=e203]
+                  - cell "0" [ref=e204]
+                  - cell "4" [ref=e205]
+                  - cell "0.24" [ref=e206]
+                - row [ref=e207]:
+                  - cell [ref=e208]:
+                    - link "Patanjali Cow Ghee 1L" [ref=e209] [cursor=pointer]:
+                      - /url: /inventory/8c656da4-599b-4126-9c8e-4e47b6a31650
+                  - cell "100" [ref=e210]
+                  - cell "0" [ref=e211]
+                  - cell "78" [ref=e212]
+                  - cell "0.24" [ref=e213]
+                - row [ref=e214]:
+                  - cell [ref=e215]:
+                    - link "Fortune Sunflower Oil 1L" [ref=e216] [cursor=pointer]:
+                      - /url: /inventory/65b11325-487b-4a26-a57c-3b3e0553e7e2
+                  - cell "84" [ref=e217]
+                  - cell "0" [ref=e218]
+                  - cell "65" [ref=e219]
+                  - cell "0.24" [ref=e220]
+                - row [ref=e221]:
+                  - cell [ref=e222]:
+                    - link "Lizol 2L" [ref=e223] [cursor=pointer]:
+                      - /url: /inventory/04a0279c-69eb-41b7-adaf-3cbdedfdf05f
+                  - cell "64" [ref=e224]
+                  - cell "0" [ref=e225]
+                  - cell "48" [ref=e226]
+                  - cell "0.29" [ref=e227]
+                - row [ref=e228]:
+                  - cell [ref=e229]:
+                    - link "Fast Charger 20W" [ref=e230] [cursor=pointer]:
+                      - /url: /inventory/ce3635cd-57c5-43cf-9a96-58a63e2dd6ca
+                  - cell "11" [ref=e231]
+                  - cell "0" [ref=e232]
+                  - cell "8" [ref=e233]
+                  - cell "0.34" [ref=e234]
+          - generic [ref=e235]:
+            - heading "Open purchase orders" [level=3] [ref=e237]
+            - generic [ref=e238]:
+              - generic [ref=e239]: No open orders.
+              - generic [ref=e240]: "Negotiations: 3/3 accepted · avg 12,005 ms · 0 guardrail interventions"
+        - generic [ref=e241]:
+          - heading "Recent purchase orders" [level=3] [ref=e243]
+          - table [ref=e246]:
+            - rowgroup [ref=e247]:
+              - row [ref=e248]:
+                - columnheader "PO" [ref=e249]
+                - columnheader "Product" [ref=e250]
+                - columnheader "Supplier" [ref=e251]
+                - columnheader "Qty" [ref=e252]
+                - columnheader "Unit price" [ref=e253]
+                - columnheader "Total" [ref=e254]
+                - columnheader "Savings" [ref=e255]
+                - columnheader "Status" [ref=e256]
+                - columnheader "Created" [ref=e257]
+            - rowgroup [ref=e258]:
+              - row [ref=e259]:
+                - cell [ref=e260]:
+                  - link "CPO-2026-001000" [ref=e261] [cursor=pointer]:
+                    - /url: /orders/db5e1284-3eab-4c6e-a725-6f31d28f6f52
+                - cell "Haldiram Bhujia 400g" [ref=e262]
+                - cell "Sri Murugan Wholesale" [ref=e263]
+                - cell "54" [ref=e264]
+                - cell "₹77.76" [ref=e265]
+                - cell "₹4,199" [ref=e266]
+                - cell "₹635" [ref=e267]
+                - cell "CLOSED" [ref=e268]
+                - cell "22m ago" [ref=e270]
+  - generic [aria-hidden] [ref=e271]: "0"

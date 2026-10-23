@@ -1,0 +1,22 @@
+- generic [ref=f4e4]:
+  - generic [ref=f4e5]:
+    - generic [ref=f4e6]: ERP
+    - generic [ref=f4e7]:
+      - heading "Wholesale ERP" [level=1] [ref=f4e8]
+      - paragraph [ref=f4e9]: Demo supplier system (separate product from CARPIP)
+  - generic [ref=f4e10]:
+    - textbox "Email" [ref=f4e11]
+    - textbox "Password" [ref=f4e12]
+    - button "Sign in" [ref=f4e13] [cursor=pointer]
+  - generic [ref=f4e14]:
+    - paragraph [ref=f4e15]: Demo companies (password Demo@12345)
+    - generic [ref=f4e16]:
+      - button "Kovai Distributors (Zoho-style API) a@erp.demo" [ref=f4e17] [cursor=pointer]:
+        - generic [ref=f4e18]: Kovai Distributors (Zoho-style API)
+        - generic [ref=f4e19]: a@erp.demo
+      - button "Sri Murugan Wholesale (custom REST) b@erp.demo" [ref=f4e20] [cursor=pointer]:
+        - generic [ref=f4e21]: Sri Murugan Wholesale (custom REST)
+        - generic [ref=f4e22]: b@erp.demo
+      - button "Chennai Bulk Traders (custom REST) c@erp.demo" [ref=f4e23] [cursor=pointer]:
+        - generic [ref=f4e24]: Chennai Bulk Traders (custom REST)
+        - generic [ref=f4e25]: c@erp.demo

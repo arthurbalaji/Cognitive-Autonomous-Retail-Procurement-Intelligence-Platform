@@ -1,0 +1,68 @@
+- generic [ref=f4e26]:
+  - banner [ref=f4e27]:
+    - generic [ref=f4e28]:
+      - generic [ref=f4e29]: ERP
+      - generic [ref=f4e30]:
+        - generic [ref=f4e31]: Sri Murugan Wholesale
+        - generic [ref=f4e32]: Custom REST · signed webhooks · GraphQL · Sri Murugan Wholesale Manager
+    - navigation [ref=f4e33]:
+      - button "Dashboard" [ref=f4e34] [cursor=pointer]
+      - button "Sales orders" [ref=f4e35] [cursor=pointer]
+      - button "Catalog & stock" [ref=f4e36] [cursor=pointer]
+      - button "Demand insights" [ref=f4e37] [cursor=pointer]
+      - button "Integration" [ref=f4e38] [cursor=pointer]
+    - button "Sign out" [ref=f4e39] [cursor=pointer]
+  - main [ref=f4e40]:
+    - generic [ref=f4e41]:
+      - generic [ref=f4e42]:
+        - generic [ref=f4e43]:
+          - generic [ref=f4e44]: Catalog items
+          - generic [ref=f4e45]: "115"
+        - generic [ref=f4e46]:
+          - generic [ref=f4e47]: Awaiting confirmation
+          - generic [ref=f4e48]: "0"
+        - generic [ref=f4e49]:
+          - generic [ref=f4e50]: Delivered value
+          - generic [ref=f4e51]: ₹4,199
+        - generic [ref=f4e52]:
+          - generic [ref=f4e53]: On-time reliability
+          - generic [ref=f4e54]: 84.1%
+        - generic [ref=f4e55]:
+          - generic [ref=f4e56]: Webhooks pending
+          - generic [ref=f4e57]: "0"
+      - generic [ref=f4e58]:
+        - generic [ref=f4e59]:
+          - heading "Orders by status" [level=3] [ref=f4e60]
+          - generic [ref=f4e61]:
+            - generic [ref=f4e62]: DELIVERED
+            - generic [ref=f4e63]: "1"
+          - button "Open orders →" [ref=f4e64] [cursor=pointer]
+        - generic [ref=f4e65]:
+          - heading "Lowest stock" [level=3] [ref=f4e66]
+          - generic [ref=f4e67]:
+            - generic [ref=f4e68]: boAt Rockerz Wired Earphones
+            - generic [ref=f4e69]: "9"
+          - generic [ref=f4e70]:
+            - generic [ref=f4e71]: Lunch Box 3-tier
+            - generic [ref=f4e72]: "12"
+          - generic [ref=f4e73]:
+            - generic [ref=f4e74]: Desk Organizer
+            - generic [ref=f4e75]: "12"
+          - generic [ref=f4e76]:
+            - generic [ref=f4e77]: Good Knight Refill 12-pack
+            - generic [ref=f4e78]: "12"
+          - generic [ref=f4e79]:
+            - generic [ref=f4e80]: Cadbury Dairy Milk 150g
+            - generic [ref=f4e81]: "18"
+          - generic [ref=f4e82]:
+            - generic [ref=f4e83]: Screen Guard Pack
+            - generic [ref=f4e84]: "18"
+      - generic [ref=f4e85]:
+        - heading "Warehouse automation" [level=3] [ref=f4e86]
+        - paragraph [ref=f4e87]: Confirm / ship / deliver automatically (so a demo needs no clicking), or do it by hand on the Orders screen.
+        - generic [ref=f4e88]:
+          - checkbox "Auto-confirm incoming orders" [checked] [ref=f4e89]
+          - text: Auto-confirm incoming orders
+        - generic [ref=f4e90]:
+          - checkbox "Auto-ship & deliver" [ref=f4e91]
+          - text: Auto-ship & deliver
