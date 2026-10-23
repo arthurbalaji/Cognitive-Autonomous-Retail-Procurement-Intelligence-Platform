@@ -130,7 +130,11 @@ public class ProductSyncService {
             p.basePrice = Money.round2(new BigDecimal(item.get("cost").asText()));
         }
         p.perishable = "FOOD_BEVERAGE".equals(p.category);
-        p.shelfLifeDays = item.hasNonNull("shelfLifeDays") ? item.get("shelfLifeDays").asInt() : (p.perishable ? 180 : null);
+        if (item.hasNonNull("shelfLifeDays")) {
+            p.shelfLifeDays = item.get("shelfLifeDays").asInt();   // explicit branches: a mixed int/null ternary would NPE on unboxing
+        } else if (p.perishable) {
+            p.shelfLifeDays = 180;
+        }
         return Optional.of(products.saveAndFlush(p));
     }
 }

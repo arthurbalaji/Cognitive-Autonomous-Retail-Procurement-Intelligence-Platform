@@ -133,6 +133,168 @@ services:
     networks: [core, db, edge]
     logging: *logging
 
+  # ------------------------------------------------------------------ cognitive intelligence engine (Flask)
+  carpip-intelligence:
+    build: ./carpip-intelligence
+    image: carpip-ml:latest
+    restart: unless-stopped
+    environment:
+      DB_URL: postgresql+psycopg2://carpip_intel:${CARPIP_INTEL_DB_PASSWORD}@postgres:5432/carpip
+      REDIS_URL: redis://redis:6379/0
+      KAFKA_BOOTSTRAP: kafka:9092
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN}
+      CARPIP_BACKEND_URL: http://carpip-backend:8080
+      AWS_REGION: ${AWS_REGION}
+      AWS_CREDENTIALS_FILE: /aws/credentials.json
+      BEDROCK_MODEL_ID: ${BEDROCK_MODEL_ID}
+      LLM_EFFORT: ${LLM_EFFORT}
+      LLM_MAX_TOKENS: ${LLM_MAX_TOKENS}
+      LLM_TIMEOUT_S: ${LLM_TIMEOUT_S}
+      LLM_MAX_CONCURRENCY: ${LLM_MAX_CONCURRENCY}
+      LLM_PRICE_FLEX_PCT: ${LLM_PRICE_FLEX_PCT}
+      LLM_DAILY_TOKEN_BUDGET: ${LLM_DAILY_TOKEN_BUDGET}
+      NEGOTIATION_DEADLINE_S: ${NEGOTIATION_DEADLINE_S}
+      FEATURE_MPI: ${FEATURE_MPI}
+      FEATURE_CDIN: ${FEATURE_CDIN}
+      MPI_INTERVAL_S: ${MPI_INTERVAL_S}
+      FORECAST_LSTM_EPOCHS: ${FORECAST_LSTM_EPOCHS}
+      FORECAST_TRANSFORMER_EPOCHS: ${FORECAST_TRANSFORMER_EPOCHS}
+      CDIN_MIN_QUORUM: ${CDIN_MIN_QUORUM}
+      CDIN_ROUND_DEADLINE_S: ${CDIN_ROUND_DEADLINE_S}
+      SEED: ${SEED}
+      TORCH_NUM_THREADS: "2"
+      MODEL_DIR: /models
+      DEMO_MODE: ${DEMO_MODE}
+    volumes:
+      - models:/models
+      - ./.demo/aws:/aws:ro
+    depends_on:
+      carpip-backend: { condition: service_healthy }
+    ports: ["127.0.0.1:${INTEL_HOST_PORT:-5050}:5000"]
+    mem_limit: 1536m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/ready', timeout=4)"]
+      interval: 10s
+      timeout: 6s
+      retries: 30
+      start_period: 40s
+    networks: [core, db]
+    logging: *logging
+
+  # ------------------------------------------------------------------ CDIN federated nodes (same image, different command)
+  cdin-node-1: &cdin-node
+    image: carpip-ml:latest
+    pull_policy: never
+    restart: unless-stopped
+    command: ["python", "-m", "cdin_node"]
+    environment: &cdin-env
+      NODE_NAME: cdin-node-1
+      CREDS_FILE: /creds/cdin-node-1.json
+      INTELLIGENCE_URL: http://carpip-intelligence:5000
+      CARPIP_BACKEND_URL: http://carpip-backend:8080
+      TORCH_NUM_THREADS: "1"
+      FORECAST_HORIZON_DAYS: "14"
+      FORECAST_WINDOW_DAYS: "30"
+      SEED: ${SEED}
+    volumes:
+      - bootstrap-out:/creds:ro
+    depends_on:
+      carpip-intelligence: { condition: service_healthy }
+    mem_limit: 448m
+    profiles: [cdin]
+    networks: [core]
+    logging: *logging
+  cdin-node-2:
+    <<: *cdin-node
+    environment:
+      <<: *cdin-env
+      NODE_NAME: cdin-node-2
+      CREDS_FILE: /creds/cdin-node-2.json
+  cdin-node-3:
+    <<: *cdin-node
+    environment:
+      <<: *cdin-env
+      NODE_NAME: cdin-node-3
+      CREDS_FILE: /creds/cdin-node-3.json
+
+  # ------------------------------------------------------------------ Demo Retail POS (Node/TypeScript, Shopify Admin API mimic)
+  pos-backend:
+    build: ./pos-backend
+    restart: unless-stopped
+    environment:
+      DB_URL: postgres://pos_app:${POS_DB_PASSWORD}@postgres:5432/pos
+      POS_ADMIN_TOKEN: ${POS_ADMIN_TOKEN}
+      UI_SECRET: ${POS_ADMIN_TOKEN}
+      PORT: "4000"
+    depends_on:
+      postgres: { condition: service_healthy }
+    ports: ["127.0.0.1:4000:4000"]
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:4000/healthz | grep -q UP"]
+      interval: 10s
+      timeout: 4s
+      retries: 20
+      start_period: 15s
+    networks:
+      db: {}
+      edge:
+        aliases: [store-1.myshopify.local, store-2.myshopify.local, store-3.legacy.local]
+    logging: *logging
+
+  # ------------------------------------------------------------------ Demo Wholesale ERP (Python/FastAPI, Zoho-style + custom REST)
+  erp-backend:
+    build: ./erp-backend
+    restart: unless-stopped
+    environment:
+      DB_URL: postgresql+psycopg2://erp_app:${ERP_DB_PASSWORD}@postgres:5432/erp
+      ERP_ADMIN_TOKEN: ${ERP_ADMIN_TOKEN}
+      UI_SECRET: ${ERP_ADMIN_TOKEN}
+      CARPIP_GRAPHQL_URL: http://carpip-backend:8080/graphql
+    depends_on:
+      postgres: { condition: service_healthy }
+    ports: ["127.0.0.1:8000:8000"]
+    mem_limit: 320m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    networks: [db, edge]
+    logging: *logging
+
+  # ------------------------------------------------------------------ one-shot provisioning of POS + ERP + CARPIP (idempotent)
+  bootstrap:
+    build:
+      context: ./scripts
+      dockerfile: bootstrap/Dockerfile
+    restart: "no"
+    environment:
+      CARPIP_URL: http://carpip-backend:8080
+      POS_URL: http://pos-backend:4000
+      ERP_URL: http://erp-backend:8000
+      INTELLIGENCE_URL: http://carpip-intelligence:5000
+      CARPIP_ADMIN_EMAIL: ${CARPIP_ADMIN_EMAIL}
+      CARPIP_ADMIN_PASSWORD: ${CARPIP_ADMIN_PASSWORD}
+      POS_ADMIN_TOKEN: ${POS_ADMIN_TOKEN}
+      ERP_ADMIN_TOKEN: ${ERP_ADMIN_TOKEN}
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN}
+      SEED: ${SEED}
+      SKU_COUNT: ${SKU_COUNT}
+      HISTORY_DAYS: ${HISTORY_DAYS}
+      SKIP_ML: ${SKIP_ML:-false}
+    volumes:
+      - bootstrap-out:/out
+      - ./.demo:/demo
+    depends_on:
+      carpip-backend: { condition: service_healthy }
+      carpip-intelligence: { condition: service_healthy }
+      pos-backend: { condition: service_healthy }
+      erp-backend: { condition: service_healthy }
+    mem_limit: 384m
+    networks: [core, edge]
+
 networks:
   core: {}
   db: {}
@@ -141,3 +303,5 @@ networks:
 volumes:
   pgdata: {}
   kafkadata: {}
+  models: {}
+  bootstrap-out: {}

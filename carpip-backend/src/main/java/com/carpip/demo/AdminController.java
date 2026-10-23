@@ -223,6 +223,21 @@ public class AdminController {
         return Map.of("imported", imported, "skippedUnknownGtin", skipped);
     }
 
+    @PostMapping("/import/competitor-prices")
+    public Map<String, Object> importCompetitorPrices(@RequestBody byte[] raw) {
+        TenantContext.requireRole("ADMIN");
+        List<Object[]> batch = new ArrayList<>();
+        for (String line : new String(raw, java.nio.charset.StandardCharsets.UTF_8).split("\n")) {
+            if (line.isBlank()) {
+                continue;
+            }
+            JsonNode n = Json.read(line);
+            batch.add(new Object[]{n.get("gtin").asText(), new BigDecimal(n.get("price").asText()), n.path("daysAgo").asInt(0)});
+        }
+        jdbc.batchUpdate("INSERT INTO competitor_price(gtin, price, at) VALUES (?,?, now() - make_interval(days => ?))", batch);
+        return Map.of("imported", batch.size());
+    }
+
     // ----------------------------------------------------------------- scenarios
     public record Scenario(Map<String, Object> params) {
     }
@@ -327,6 +342,13 @@ public class AdminController {
         out.put("stockMovements24h", jdbc.queryForList("SELECT reason, count(*) AS n FROM stock_movement WHERE at > now() - interval '24 hours' GROUP BY reason ORDER BY n DESC"));
         out.put("audit24h", jdbc.queryForList("SELECT action, count(*) AS n FROM audit_log WHERE at > now() - interval '24 hours' GROUP BY action ORDER BY n DESC LIMIT 15"));
         return out;
+    }
+
+    @GetMapping("/tenant-stats")
+    public List<Map<String, Object>> tenantStats() {
+        TenantContext.requireRole("ADMIN");
+        return jdbc.queryForList("SELECT t.id, t.name, t.type, (SELECT count(*) FROM product p WHERE p.tenant_id = t.id) AS products, " +
+                "(SELECT count(*) FROM supplier_offer o WHERE o.wholesaler_tenant_id = t.id AND o.active) AS offers FROM tenant t WHERE t.type <> 'ADMIN' ORDER BY t.name");
     }
 
     @GetMapping("/audit")
