@@ -13,3 +13,7 @@ models/
 .idea/
 .vscode/
 .playwright-mcp/
+
+# research papers (kept local only)
+CARPIP Research Paper*
+plan/reference/paper.txt
