@@ -150,7 +150,7 @@ public class CatalogController {
     @GetMapping("/api/suppliers/offers")
     public List<Map<String, Object>> offers(@RequestParam(required = false) String gtin) {
         Principal pr = TenantContext.requireUser();
-        String sql = "SELECT o.id, o.wholesaler_tenant_id, t.name AS supplier, o.supplier_sku, o.gtin, o.name, o.category, o.pack_size, o.moq, o.list_price, o.price_tiers, " +
+        String sql = "SELECT o.id, o.wholesaler_tenant_id, t.name AS supplier, o.supplier_sku, o.gtin, o.name, o.category, o.pack_size, o.moq, o.list_price, o.price_tiers::text AS price_tiers, " +
                 "o.available_qty, o.lead_time_days, o.shipping_reliability, o.nearest_expiry, o.max_discount_pct, o.active, o.synced_at FROM supplier_offer o " +
                 "JOIN tenant t ON t.id = o.wholesaler_tenant_id WHERE o.active ";
         List<Object> args = new ArrayList<>();
@@ -166,7 +166,15 @@ public class CatalogController {
             args.add(gtin);
         }
         sql += "ORDER BY o.name, o.list_price LIMIT 500";
-        return jdbc.queryForList(sql, args.toArray());
+        List<Map<String, Object>> rows = jdbc.queryForList(sql, args.toArray());
+        List<Map<String, Object>> out = new ArrayList<>(rows.size());
+        for (Map<String, Object> r : rows) {
+            Map<String, Object> m = new LinkedHashMap<>(r);
+            Object tiers = r.get("price_tiers"); // jsonb read as text: a raw PGobject would serialise as {"type","value"} and break the UI
+            m.put("price_tiers", tiers == null ? List.of() : com.carpip.common.Json.read(tiers.toString()));
+            out.add(m);
+        }
+        return out;
     }
 
     @PostMapping("/api/products/recompute-rop")

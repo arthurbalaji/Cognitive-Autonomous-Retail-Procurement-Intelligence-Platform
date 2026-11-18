@@ -2,7 +2,7 @@
 
 Loop: heartbeat/poll the coordinator -> for a new round download the global LSTM -> fetch THIS tenant's daily sales from the
 CARPIP API (never leaves the node) -> train locally with a FedProx proximal term -> upload weights, sample count and coarse
-per-GTIN growth ratios.  Raw sales and tenant identity beyond the API key are never transmitted.
+per-GTIN sales-velocity ratios.  Raw sales and tenant identity beyond the API key are never transmitted.
 """
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ from safetensors.torch import save as st_save
 from app.config import settings
 from app.forecasting import data as D
 from app.forecasting import models as M
+from cdin_node.growth import velocity_growth
 
 NAME = os.getenv("NODE_NAME", "cdin-node")
 CREDS = os.getenv("CREDS_FILE", "/creds/cdin-node.json")
@@ -122,15 +123,8 @@ class Node:
         if not res.get("ok"):
             log.error("local training failed: %s", res.get("reason"))
             return
-        # coarse regional-signal: predicted next-14-day mean vs the last 14 actual days, bucketed to 0.05 (no raw values leave)
-        x_inf = D.last_window(units, scales, D.dow_features(start, n_days), W)
-        pred = M.predict(model, x_inf) * scales[:, None]
-        growth = {}
-        for i, g in enumerate(gtins):
-            recent = float(units[i, -14:].mean())
-            if recent >= 0.5:
-                ratio = float(np.clip(pred[i, :14].mean() / recent, 0.5, 2.0))
-                growth[g] = round(round(ratio / 0.05) * 0.05, 2)
+        # coarse regional signal: sales velocity (last 7 days / previous 28 days), bucketed to 0.05 (no raw values leave)
+        growth = velocity_growth(units, gtins)
         state = {k: v.detach().cpu().contiguous() for k, v in model.state_dict().items()}
         blob = st_save(state)
         meta = {"baseVersion": base, "numSamples": int(len(xtr)), "valLoss": res.get("val_loss"), "growth": growth,

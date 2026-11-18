@@ -325,6 +325,12 @@ def cancel_by_carpip(company: dict, po_number: str, reason: str = "cancelled by 
 
 
 # ------------------------------------------------------------------ stock / price maintenance
+def _insert_lot(c, company_id: int, item_id: int, qty: int, expiry: date | None, lot_no: str | None, warehouse_id: int | None = None) -> int:
+    wh = warehouse_id or db.scalar("SELECT id FROM warehouses WHERE company_id=:c ORDER BY id LIMIT 1", c, c=company_id)
+    return db.one("INSERT INTO stock_lots(item_id, warehouse_id, lot_no, qty_on_hand, expiry_date) VALUES (:i,:w,:l,:q,:e) RETURNING id",
+                  c, i=item_id, w=wh, l=lot_no or f"L{uuid.uuid4().hex[:6].upper()}", q=qty, e=expiry)["id"]
+
+
 def receive_lot(company: dict, item_id: int, qty: int, expiry: date | None, lot_no: str | None, warehouse_id: int | None = None) -> dict:
     if qty <= 0:
         raise ErpError(422, "INVALID_QUANTITY", "quantity must be positive")
@@ -332,11 +338,96 @@ def receive_lot(company: dict, item_id: int, qty: int, expiry: date | None, lot_
         it = db.one("SELECT * FROM items WHERE id=:i AND company_id=:c", c, i=item_id, c=company["id"])
         if not it:
             raise ErpError(404, "NOT_FOUND", "item not found")
-        wh = warehouse_id or db.scalar("SELECT id FROM warehouses WHERE company_id=:c ORDER BY id LIMIT 1", c, c=company["id"])
-        db.execute("INSERT INTO stock_lots(item_id, warehouse_id, lot_no, qty_on_hand, expiry_date) VALUES (:i,:w,:l,:q,:e)", c, i=item_id, w=wh, l=lot_no or f"L{uuid.uuid4().hex[:6].upper()}", q=qty, e=expiry)
+        _insert_lot(c, company["id"], item_id, qty, expiry, lot_no, warehouse_id)
         _emit_stock(c, company["id"], [item_id])
         mark_dirty(c, company["id"])
     return {"sku": it["sku"], "available": available(None, item_id)}
+
+
+def _write_prices(c, item_id: int, tiers: list[dict]) -> None:
+    if not tiers or not any(int(t["minQty"]) <= 1 for t in tiers):
+        raise ErpError(422, "INVALID_TIERS", "a list price tier with minQty 1 is required")
+    db.execute("DELETE FROM item_prices WHERE item_id=:i", c, i=item_id)
+    for t in tiers:
+        if d(t["unitPrice"]) <= 0:
+            raise ErpError(422, "INVALID_PRICE", "prices must be positive")
+        db.execute("INSERT INTO item_prices(item_id, min_qty, unit_price) VALUES (:i,:m,:p)", c, i=item_id, m=max(int(t["minQty"]), 1), p=q2(t["unitPrice"]))
+
+
+def create_item(company: dict, data: dict, actor: str = "user") -> dict:
+    """New catalog item with its list price (+ optional volume tiers and an opening stock lot). CARPIP sees it on the next catalog sync."""
+    sku = str(data.get("sku") or "").strip()
+    name = str(data.get("name") or "").strip()
+    gtin = str(data.get("gtin") or "").strip() or None
+    if not sku or not name:
+        raise ErpError(422, "INVALID_VALUE", "sku and name are required")
+    pack, moq, lead = int(data.get("packSize") or 1), int(data.get("moq") or 1), int(data.get("leadTimeDays") if data.get("leadTimeDays") is not None else 3)
+    disc = float(data.get("maxDiscountPct") if data.get("maxDiscountPct") is not None else 0.2)
+    if pack < 1 or moq < 1 or lead < 0:
+        raise ErpError(422, "INVALID_VALUE", "moq/packSize must be >= 1 and leadTimeDays >= 0")
+    if not (0 <= disc <= 0.5):
+        raise ErpError(422, "INVALID_VALUE", "maxDiscountPct must be within 0..0.5")
+    shelf = int(data["shelfLifeDays"]) if data.get("shelfLifeDays") else None
+    if data.get("listPrice") is None or d(data["listPrice"]) <= 0:
+        raise ErpError(422, "INVALID_PRICE", "a list price greater than 0 is required")
+    tiers =[{"minQty": 1, "unitPrice": data.get("listPrice")}] + [t for t in (data.get("tiers") or []) if int(t["minQty"]) > 1]
+    qty = int(data.get("openingQty") or 0)
+    if qty < 0:
+        raise ErpError(422, "INVALID_QUANTITY", "opening quantity cannot be negative")
+    with db.tx() as c:
+        if db.one("SELECT 1 AS x FROM items WHERE company_id=:c AND sku=:s", c, c=company["id"], s=sku):
+            raise ErpError(409, "DUPLICATE_SKU", f"SKU {sku} already exists")
+        if gtin and db.one("SELECT 1 AS x FROM items WHERE company_id=:c AND gtin=:g", c, c=company["id"], g=gtin):
+            raise ErpError(409, "DUPLICATE_GTIN", f"barcode {gtin} already belongs to another item")
+        item_id = db.one("""INSERT INTO items(company_id, sku, gtin, name, category, uom, pack_size, moq, shelf_life_days, lead_time_days, max_discount_pct)
+                            VALUES (:c,:s,:g,:n,:cat,:u,:p,:m,:sl,:l,:d) RETURNING id""", c, c=company["id"], s=sku, g=gtin, n=name, cat=(data.get("category") or None),
+                        u=data.get("uom") or "EA", p=pack, m=moq, sl=shelf, l=lead, d=disc)["id"]
+        _write_prices(c, item_id, tiers)
+        if qty > 0:
+            exp = date.today() + timedelta(days=int(data["openingExpiryDays"])) if data.get("openingExpiryDays") else None
+            _insert_lot(c, company["id"], item_id, qty, exp, f"{sku}-OPEN")
+        mark_dirty(c, company["id"])
+        db.execute("INSERT INTO integration_log(company_id, direction, method, path, status, note) VALUES (:c,'INTERNAL','ITEM',:p,201,:n)", c, c=company["id"], p=sku, n=f"item created by {actor}")
+    return {"id": item_id, "sku": sku}
+
+
+def create_purchase_bill(company: dict, vendor: str, bill_no: str, bill_date: date | None, lines: list[dict], actor: str = "user") -> dict:
+    """One transaction: bill header + a stock lot per line (FEFO-ready) + one `stock.changed` event for CARPIP."""
+    vendor, bill_no = (vendor or "").strip(), (bill_no or "").strip()
+    if not vendor or not bill_no:
+        raise ErpError(422, "INVALID_VALUE", "vendor and bill number are required")
+    if not lines:
+        raise ErpError(422, "INVALID_VALUE", "a purchase bill needs at least one line")
+    with db.tx() as c:
+        if db.one("SELECT 1 AS x FROM purchase_bills WHERE company_id=:c AND vendor=:v AND bill_no=:b", c, c=company["id"], v=vendor, b=bill_no):
+            raise ErpError(409, "DUPLICATE_BILL", f"bill {bill_no} from {vendor} is already recorded")
+        prepared, total = [], Decimal("0")
+        for n, ln in enumerate(lines, 1):
+            qty, cost = int(ln["qty"]), q2(ln["unitCost"])
+            if qty <= 0 or cost < 0:
+                raise ErpError(422, "INVALID_VALUE", "quantity must be positive and unit cost cannot be negative")
+            it = db.one("SELECT id, sku, name FROM items WHERE id=:i AND company_id=:c", c, i=int(ln["itemId"]), c=company["id"])
+            if not it:
+                raise ErpError(404, "NOT_FOUND", f"item {ln['itemId']} not found")
+            exp = date.fromisoformat(ln["expiryDate"]) if ln.get("expiryDate") else None
+            prepared.append((it, qty, cost, (ln.get("lotNo") or "").strip() or f"{bill_no}-{n}", exp))
+            total += qty * cost
+        bill_id = db.one("INSERT INTO purchase_bills(company_id, vendor, bill_no, bill_date, total, created_by) VALUES (:c,:v,:b,COALESCE(:d, current_date),:t,:a) RETURNING id",
+                         c, c=company["id"], v=vendor, b=bill_no, d=bill_date, t=q2(total), a=actor)["id"]
+        for it, qty, cost, lot_no, exp in prepared:
+            lot_id = _insert_lot(c, company["id"], it["id"], qty, exp, lot_no)
+            db.execute("INSERT INTO purchase_bill_lines(bill_id, item_id, qty, unit_cost, lot_no, expiry_date, stock_lot_id) VALUES (:b,:i,:q,:u,:l,:e,:s)",
+                       c, b=bill_id, i=it["id"], q=qty, u=cost, l=lot_no, e=exp, s=lot_id)
+        _emit_stock(c, company["id"], [p[0]["id"] for p in prepared])
+        mark_dirty(c, company["id"])
+    return {"id": bill_id, "vendor": vendor, "bill_no": bill_no, "total": str(q2(total)), "lines": len(prepared)}
+
+
+def list_purchase_bills(company_id: int) -> list[dict]:
+    return db.rows("""SELECT b.id, b.vendor, b.bill_no, b.bill_date, b.total::text AS total, b.created_by, b.created_at,
+                             (SELECT COALESCE(json_agg(json_build_object('name', i.name, 'sku', i.sku, 'qty', l.qty, 'unit_cost', l.unit_cost::text, 'lot_no', l.lot_no,
+                                      'expiry_date', l.expiry_date) ORDER BY l.id), '[]'::json) FROM purchase_bill_lines l JOIN items i ON i.id = l.item_id WHERE l.bill_id = b.id) AS lines
+                      FROM purchase_bills b WHERE b.company_id=:c ORDER BY b.id DESC LIMIT 60""", c=company_id)
 
 
 def set_prices(company: dict, item_id: int, tiers: list[dict]) -> None:
@@ -346,11 +437,7 @@ def set_prices(company: dict, item_id: int, tiers: list[dict]) -> None:
         it = db.one("SELECT sku FROM items WHERE id=:i AND company_id=:c", c, i=item_id, c=company["id"])
         if not it:
             raise ErpError(404, "NOT_FOUND", "item not found")
-        db.execute("DELETE FROM item_prices WHERE item_id=:i", c, i=item_id)
-        for t in tiers:
-            if d(t["unitPrice"]) <= 0:
-                raise ErpError(422, "INVALID_PRICE", "prices must be positive")
-            db.execute("INSERT INTO item_prices(item_id, min_qty, unit_price) VALUES (:i,:m,:p)", c, i=item_id, m=max(int(t["minQty"]), 1), p=q2(t["unitPrice"]))
+        _write_prices(c, item_id, tiers)
         base = list_price(c, item_id)
         emit(c, company["id"], "price_list.updated", {"items": [{"supplierSku": it["sku"], "listPrice": str(base),
              "priceTiers": [{"minQty": t["minQty"], "unitPrice": str(q2(t["unitPrice"]))} for t in tiers if int(t["minQty"]) > 1]}]})

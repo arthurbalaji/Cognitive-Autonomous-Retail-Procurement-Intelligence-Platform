@@ -74,6 +74,7 @@ def main() -> int:
     pieces = [min(3, need - i) for i in range(0, need, 3)]
     def sell(q: int):
         return httpx.post(f"{POS}/pos/api/shops/{args.store}/checkout", json={"items": [{"sku": sku["sku"], "qty": q}]}, headers=ph, timeout=60)
+    before = {p["id"] for p in req(c, "GET", f"{CARPIP}/api/purchase-orders?limit=100", headers=h) if p["product_id"] == sku["id"]}   # earlier POs of this SKU are not new
     t_sale = time.time()
     with cf.ThreadPoolExecutor(8) as ex:
         res = list(ex.map(sell, pieces if not args.no_concurrency else pieces))
@@ -88,7 +89,7 @@ def main() -> int:
     for _ in range(90):
         time.sleep(1)
         cur = req(c, "GET", f"{CARPIP}/api/products/{sku['id']}", headers=h)
-        pos_list = [p for p in req(c, "GET", f"{CARPIP}/api/purchase-orders?limit=100", headers=h) if p["product_id"] == sku["id"] and p["origin"] == "AI"]
+        pos_list = [p for p in req(c, "GET", f"{CARPIP}/api/purchase-orders?limit=100", headers=h) if p["product_id"] == sku["id"] and p["origin"] == "AI" and p["id"] not in before]
         if cur["current_stock"] == expected and pos_list:
             po = pos_list[0]
             break

@@ -84,6 +84,91 @@ export async function setLevel(client: pg.PoolClient, shop: Shop, itemId: number
   return { inventory_item_id: itemId, location_id: locationId, available: rows[0].available, updated_at: new Date(rows[0].updated_at).toISOString() };
 }
 
+/** A business-rule failure the HTTP layer maps to a status code + machine-readable code. */
+export class HttpError extends Error {
+  constructor(public statusCode: number, public code: string, message: string) {
+    super(message);
+  }
+}
+
+export interface NewProduct {
+  sku: string;
+  title: string;
+  product_type?: string | null;
+  barcode?: string | null;
+  price: string | number;
+  cost?: string | number | null;
+  stock?: number;
+  tags?: string;
+}
+
+/**
+ * Creates product + variant + inventory item + stock level in the caller's transaction (shared by the admin catalog loader and the
+ * cashier "add product" screen). The opening level is always published, so CARPIP learns about the new item right away: a Shopify
+ * shop also announces `products/update` (CARPIP then re-syncs the catalog), a legacy shop's REST push carries the product name.
+ */
+export async function createProduct(c: pg.PoolClient, shop: Shop, p: NewProduct, publish = true): Promise<{ sku: string; inventory_item_id: number }> {
+  if ((await q('SELECT 1 FROM variants WHERE shop_id=$1 AND sku=$2', [shop.id, p.sku], c)).length) {
+    throw new HttpError(409, 'DUPLICATE_SKU', `SKU ${p.sku} already exists`);
+  }
+  if (publish && p.barcode && (await q('SELECT 1 FROM variants WHERE shop_id=$1 AND barcode=$2', [shop.id, p.barcode], c)).length) {
+    throw new HttpError(409, 'DUPLICATE_BARCODE', `barcode ${p.barcode} already belongs to another product`);
+  }
+  const loc = await shopLocation(c, shop.id);
+  const prod = (await q<any>('INSERT INTO products(shop_id, title, product_type, tags) VALUES ($1,$2,$3,$4) RETURNING id', [shop.id, p.title, p.product_type ?? null, p.tags ?? ''], c))[0];
+  const ii = (await q<any>('INSERT INTO inventory_items(shop_id, sku, cost) VALUES ($1,$2,$3) RETURNING id', [shop.id, p.sku, p.cost ?? null], c))[0];
+  await q('INSERT INTO variants(product_id, shop_id, sku, barcode, price, inventory_item_id) VALUES ($1,$2,$3,$4,$5,$6)', [prod.id, shop.id, p.sku, p.barcode ?? null, p.price, ii.id], c);
+  await q(`INSERT INTO inventory_levels(inventory_item_id, location_id, available, updated_at) VALUES ($1,$2,0, now() - interval '1 hour')`, [ii.id, loc], c);
+  if (publish) {
+    await setLevel(c, shop, ii.id, loc, p.stock ?? 0, 'OPENING_STOCK');
+    if (shop.mode === 'SHOPIFY') {
+      await enqueueWebhook(c, shop, 'products/update', { id: prod.id, title: p.title, product_type: p.product_type ?? null, updated_at: new Date().toISOString() });
+    }
+  } else if (p.stock) {
+    await q('UPDATE inventory_levels SET available=$3 WHERE inventory_item_id=$1 AND location_id=$2', [ii.id, loc, p.stock], c);
+  }
+  return { sku: p.sku, inventory_item_id: ii.id };
+}
+
+export interface PurchaseLineIn { sku: string; qty: number; unitCost: string | number }
+
+/** One purchase bill = one transaction: header + lines + stock-in per SKU (race-safe `adjustLevel`, so CARPIP is told of every new level). */
+export async function recordPurchase(shop: Shop, b: { supplier: string; invoiceNo: string; invoiceDate?: string; lines: PurchaseLineIn[] }, user: string): Promise<any> {
+  const merged = new Map<string, { qty: number; costCents: number }>();
+  for (const l of b.lines) {
+    if (!l.sku || !Number.isInteger(l.qty) || l.qty <= 0) throw new HttpError(400, 'BAD_REQUEST', `invalid quantity for ${l.sku || 'line'}`);
+    const cost = toCents(l.unitCost);
+    if (!Number.isFinite(cost) || cost < 0) throw new HttpError(400, 'BAD_REQUEST', `invalid unit cost for ${l.sku}`);
+    const cur = merged.get(l.sku);
+    if (cur) { cur.qty += l.qty; cur.costCents = cost; } else merged.set(l.sku, { qty: l.qty, costCents: cost });
+  }
+  if (!merged.size) throw new HttpError(400, 'BAD_REQUEST', 'a purchase needs at least one line');
+  return tx(async (c) => {
+    if ((await q('SELECT 1 FROM purchases WHERE shop_id=$1 AND supplier=$2 AND invoice_no=$3', [shop.id, b.supplier, b.invoiceNo], c)).length) {
+      throw new HttpError(409, 'DUPLICATE_INVOICE', `invoice ${b.invoiceNo} from ${b.supplier} is already recorded`);
+    }
+    const loc = await shopLocation(c, shop.id);
+    const skus = [...merged.keys()].sort(); // fixed lock order, same rule as checkout
+    let totalCents = 0;
+    const resolved: { sku: string; title: string; itemId: number; qty: number; costCents: number }[] = [];
+    for (const sku of skus) {
+      const v = (await q<any>('SELECT v.inventory_item_id, p.title FROM variants v JOIN products p ON p.id=v.product_id WHERE v.shop_id=$1 AND v.sku=$2', [shop.id, sku], c))[0];
+      if (!v) throw new HttpError(404, 'UNKNOWN_SKU', `unknown SKU ${sku}`);
+      const m = merged.get(sku)!;
+      resolved.push({ sku, title: v.title, itemId: v.inventory_item_id, qty: m.qty, costCents: m.costCents });
+      totalCents += m.qty * m.costCents;
+    }
+    const head = (await q<any>(`INSERT INTO purchases(shop_id, supplier, invoice_no, invoice_date, total, created_by) VALUES ($1,$2,$3,COALESCE($4::date, current_date),$5,$6) RETURNING id, invoice_date, created_at`,
+      [shop.id, b.supplier, b.invoiceNo, b.invoiceDate ?? null, fromCents(totalCents), user], c))[0];
+    for (const r of resolved) {
+      await q('INSERT INTO purchase_lines(purchase_id, sku, title, quantity, unit_cost) VALUES ($1,$2,$3,$4,$5)', [head.id, r.sku, r.title, r.qty, fromCents(r.costCents)], c);
+      await q('UPDATE inventory_items SET cost=$2 WHERE id=$1', [r.itemId, fromCents(r.costCents)], c); // latest purchase cost
+      await adjustLevel(c, shop, r.itemId, loc, r.qty, 'PURCHASE', b.invoiceNo, `purchase:${head.id}:${r.sku}`);
+    }
+    return { id: head.id, supplier: b.supplier, invoice_no: b.invoiceNo, invoice_date: head.invoice_date, total: fromCents(totalCents), lines: resolved.length };
+  });
+}
+
 export interface CartItem { sku: string; qty: number }
 
 /** One transaction: stock decrement(s) + order + order webhook(s). Rolls back everything if any line is out of stock. */

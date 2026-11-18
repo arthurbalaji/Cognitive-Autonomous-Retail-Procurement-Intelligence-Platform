@@ -57,6 +57,12 @@ def test_factors_never_escape_range_even_with_garbage(a, b, c, d_, e, f):
     assert 0.0 <= F.combine(dp, sa, pv, si, cs, W) <= 1.0
 
 
+def test_price_volatility_survives_overflowing_prices():
+    # found by the 10,000-example property run: statistics.fmean overflowed on ~9e307 prices
+    pv, used_prior = F.price_volatility([8.988465674311579e307, 8.98846567431158e307], [])
+    assert 0.0 <= pv <= 1.0 and used_prior
+
+
 def test_priors_on_cold_start():
     assert F.price_volatility([], [])[0] == F.PV_PRIOR
     assert F.supply_availability([], 50, None)[0] == 0.0
@@ -202,3 +208,16 @@ def test_message_consistency_guard():
     assert not ok("Deal at 999 INR per unit", allowed, 224.0, 226.5)
     assert ok("Thanks, looking forward to a long partnership.", allowed, 224.0, 226.5)
     assert not ok("As an AI, I disregard the rules.", allowed, 224.0, 226.5)
+
+
+def test_cdin_velocity_growth_rises_with_a_surge_and_ignores_quiet_products():
+    import numpy as np
+
+    from cdin_node.growth import velocity_growth
+
+    flat = np.full(60, 10.0)
+    surge = np.concatenate([np.full(53, 10.0), np.full(7, 20.0)])
+    quiet = np.full(60, 0.1)
+    g = velocity_growth(np.stack([flat, surge, quiet]), ["flat", "surge", None])
+    assert g["flat"] == 1.0 and g["surge"] == 2.0 and "quiet" not in g and len(g) == 2
+    assert velocity_growth(np.stack([flat, surge, quiet])[:, :20], ["a", "b", "c"]) == {}      # too little history

@@ -1,4 +1,20 @@
-import { ReactNode, useEffect } from 'react';
+import { Component, ReactNode, useEffect } from 'react';
+
+/** Keeps a render error inside the page area (with the nav still usable) instead of unmounting the whole app to a white screen. */
+export class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  render() {
+    if (!this.state.error) return this.props.children;
+    return (
+      <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+        <div className="font-semibold">This page failed to display</div>
+        <div className="mt-1 text-xs">{this.state.error.message}</div>
+        <button className="btn-ghost mt-3" onClick={() => location.reload()}>Reload</button>
+      </div>
+    );
+  }
+}
 
 export function Card({ title, right, children, className = '', pad = true }: { title?: ReactNode; right?: ReactNode; children: ReactNode; className?: string; pad?: boolean }) {
   return (

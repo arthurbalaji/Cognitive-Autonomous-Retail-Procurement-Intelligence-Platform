@@ -36,6 +36,7 @@ cd carpip-intelligence && python -m pytest tests -q       # math + property test
 cd carpip-backend && mvn -q -DskipTests compile            # fast compile check
 cd carpip-frontend && npx tsc --noEmit                     # same for pos-frontend / erp-frontend / pos-backend
 ```
+Paper experiments (read `docs/results/README.md`): `bash scripts/bench/run_in_docker.sh -m scripts.bench.<module>` runs a benchmark inside the engine image; the revised paper is rebuilt from `docs/results/*.json` with `python scripts/paper/build.py` (original `.docx` is never edited; Word is only used to check pages/export PDF).
 After code changes rebuild only what changed: `docker compose up -d --build <service>`.
 
 ## Architecture in one page

@@ -192,6 +192,29 @@ CREATE TABLE IF NOT EXISTS integration_log (
 );
 CREATE INDEX IF NOT EXISTS idx_ilog_company ON integration_log(company_id, id DESC);
 
+-- purchase bills: stock received from the company's own vendors (each line becomes a stock lot)
+CREATE TABLE IF NOT EXISTS purchase_bills (
+  id serial PRIMARY KEY,
+  company_id int NOT NULL REFERENCES companies(id),
+  vendor text NOT NULL,
+  bill_no text NOT NULL,
+  bill_date date NOT NULL DEFAULT current_date,
+  total numeric(14,2) NOT NULL,
+  created_by text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (company_id, vendor, bill_no)
+);
+CREATE TABLE IF NOT EXISTS purchase_bill_lines (
+  id serial PRIMARY KEY,
+  bill_id int NOT NULL REFERENCES purchase_bills(id) ON DELETE CASCADE,
+  item_id int NOT NULL REFERENCES items(id),
+  qty int NOT NULL CHECK (qty > 0),
+  unit_cost numeric(12,2) NOT NULL CHECK (unit_cost >= 0),
+  lot_no text NOT NULL,
+  expiry_date date,
+  stock_lot_id int REFERENCES stock_lots(id) ON DELETE SET NULL
+);
+
 CREATE TABLE IF NOT EXISTS settings (key text PRIMARY KEY, value text NOT NULL);
 INSERT INTO settings(key, value) VALUES ('partial_pct', '0'), ('zoho_token_ttl', '3600'), ('progress_delays', '3,6,10')
 ON CONFLICT DO NOTHING;

@@ -40,3 +40,20 @@ Transactional outbox, dead-letter topics with replay, idempotent consumers, opti
 * Because the protocol fixes the actions and the LLM may only nudge prices by 1 %, LLM-mode and rule-mode negotiation outcomes are nearly identical **by design**; the LLM contributes natural-language negotiation, explanations and flexibility, not price authority.
 * zk-SNARKs, GNN forecasting, reinforcement-learned bargaining and a live retail pilot (the paper's future work) are out of scope.
 * Federated learning here is FedAvg/FedProx over three containers on one machine; privacy is architectural (only weights and coarse ratios leave a node), without differential-privacy noise or secure aggregation.
+
+## 5. How the revised paper was aligned with this prototype
+The camera-ready paper originally described results and components this prototype does not have. The revised paper replaces them with what was measured (see `docs/results/README.md`):
+
+| Original statement | Revised paper |
+|---|---|
+| 43,000 SKUs, 42 nodes, Dunnhumby Complete Journey, GPU instances | 120 synthetic SKUs, 3 stores, deterministic Dunnhumby-shaped generator, 10 seeds, laptop CPU |
+| LangChain agents, Llama-3-70B and GPT-4o at temperature 0.2 | deterministic three-turn protocol; Claude Sonnet 5.5 on AWS Bedrock only words messages (+-1 % price flex, clamped); rule fallback |
+| SAP, Oracle and Zoho connectors, "Universal API Middleware" | Shopify-Admin-API-compatible and Zoho-Inventory-style adapters validated on the demo POS/ERP, plus open REST/GraphQL; no SAP or Oracle connector |
+| 4-term MPI with regression-derived weights, DP = max(ROP,1)/max(ROP-stock,1), floor without discount cap, final test Floor <= 0.9 Base | 5-term MPI with hand-set weights (0.315/0.225/0.18/0.18/0.10), bounded monotone DP, floor with supplier discount cap, RMAP-based rejection test (see section 1) |
+| SA starts at 0.65 / PV normalised to 0.42 | computed factors; 0.65 / 0.42 are priors used only when data is missing |
+| CDIN predicts shortages 2-3 weeks ahead | CDIN shares weights and coarse growth ratios; measured early warning is weak (about a quarter of planted surges, about half false alarms) and the federated LSTM is about 4 % less accurate than local-only |
+| Tables 1.1-1.3 (MAPE 4.3 %, stockouts 14.8 % -> 3.2 %, ablation 94.5 % negotiation success, t = 8.42) | Measured tables from `forecast_eval`, `procurement_sim`; fulfilment-cycle-time and waste rows replaced by purchase price and lost sales because the former cannot be measured honestly |
+| 75.4 % token reduction, 88.8 % cost saving, 42.1 ms CRUD | 97.9 % input-token reduction (30 live calls per variant, baseline-dependent), cost from assumed list prices, latencies measured on the laptop |
+| i7-12700K, 32 GB, RTX 3070, PyTorch 2.1, XGBoost 1.7, LangChain 0.1 | i5-1235U, 16 GB, no GPU, PyTorch 2.4.1 (CPU), XGBoost 2.1.1 |
+
+The 15 cited references were checked against Crossref/DataCite (`scripts/paper/check_refs.py`): all DOIs resolve and match the cited title, first author and year. Documented limitation: with the rule voice the transcript repeats the stored product name verbatim (a benign echo of untrusted text that never reaches the LLM prompt un-sanitised).

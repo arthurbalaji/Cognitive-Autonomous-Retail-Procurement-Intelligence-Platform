@@ -1,0 +1,2938 @@
+{
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "world": {
+    "stores": 12,
+    "days": 210,
+    "train_end": 150,
+    "surge_skus": 16,
+    "precursor_start": 160,
+    "late_start": 180
+  },
+  "hardware": {
+    "cpu": "12th Gen Intel(R) Core(TM) i5-1235U",
+    "container_cpus": 12,
+    "torch_threads": 4,
+    "python": "3.11.18",
+    "torch": "2.4.1+cpu",
+    "xgboost": "2.1.1",
+    "numpy": "1.26.4"
+  },
+  "elapsed_s": 5986.8,
+  "per_seed": [
+    {
+      "seed": 0,
+      "early_stores": [
+        4,
+        6,
+        9,
+        11
+      ],
+      "late_stores": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        7,
+        8,
+        10
+      ],
+      "surge_idx": [
+        8,
+        12,
+        20,
+        33,
+        37,
+        40,
+        42,
+        46,
+        50,
+        55,
+        58,
+        72,
+        76,
+        99,
+        101,
+        116
+      ],
+      "accuracy": {
+        "LOCAL_pre": {
+          "mae": 1.4675,
+          "rmse": 2.1701,
+          "mape": 48.505,
+          "smape": 77.492,
+          "wape": 38.18
+        },
+        "LOCAL_pre_surge_skus": {
+          "mae": 2.1522,
+          "rmse": 2.9966,
+          "mape": 46.615,
+          "smape": 43.08,
+          "wape": 31.723
+        },
+        "LOCAL_pre_other_skus": {
+          "mae": 1.3622,
+          "rmse": 2.0131,
+          "mape": 48.88,
+          "smape": 82.786,
+          "wape": 40.167
+        },
+        "LOCAL_pre_per_store_mae": [
+          1.4085,
+          1.714,
+          1.6501,
+          1.2994,
+          1.4278,
+          1.3053,
+          1.5167,
+          1.3986,
+          1.5466,
+          1.1282,
+          1.7941,
+          1.4214
+        ],
+        "LOCAL_all": {
+          "mae": 1.6417,
+          "rmse": 2.7307,
+          "mape": 48.231,
+          "smape": 77.766,
+          "wape": 39.528
+        },
+        "LOCAL_all_surge_skus": {
+          "mae": 3.4981,
+          "rmse": 5.4754,
+          "mape": 43.751,
+          "smape": 45.552,
+          "wape": 37.824
+        },
+        "LOCAL_all_other_skus": {
+          "mae": 1.3561,
+          "rmse": 1.9979,
+          "mape": 49.132,
+          "smape": 82.722,
+          "wape": 40.248
+        },
+        "LOCAL_all_per_store_mae": [
+          1.5296,
+          1.9122,
+          1.8626,
+          1.4671,
+          1.6403,
+          1.4033,
+          1.7931,
+          1.5241,
+          1.7464,
+          1.2445,
+          1.9001,
+          1.6773
+        ],
+        "FEDERATED_pre": {
+          "mae": 1.5335,
+          "rmse": 2.3052,
+          "mape": 49.746,
+          "smape": 77.863,
+          "wape": 39.895
+        },
+        "FEDERATED_pre_surge_skus": {
+          "mae": 2.2783,
+          "rmse": 3.2276,
+          "mape": 48.223,
+          "smape": 44.092,
+          "wape": 33.581
+        },
+        "FEDERATED_pre_other_skus": {
+          "mae": 1.4189,
+          "rmse": 2.1281,
+          "mape": 50.048,
+          "smape": 83.058,
+          "wape": 41.839
+        },
+        "FEDERATED_pre_per_store_mae": [
+          1.4853,
+          1.8138,
+          1.7312,
+          1.3604,
+          1.4849,
+          1.3404,
+          1.583,
+          1.4697,
+          1.6126,
+          1.1571,
+          1.8795,
+          1.4839
+        ],
+        "FEDERATED_all": {
+          "mae": 1.7097,
+          "rmse": 2.8883,
+          "mape": 49.288,
+          "smape": 78.056,
+          "wape": 41.167
+        },
+        "FEDERATED_all_surge_skus": {
+          "mae": 3.643,
+          "rmse": 5.8013,
+          "mape": 44.979,
+          "smape": 46.331,
+          "wape": 39.391
+        },
+        "FEDERATED_all_other_skus": {
+          "mae": 1.4123,
+          "rmse": 2.109,
+          "mape": 50.155,
+          "smape": 82.937,
+          "wape": 41.916
+        },
+        "FEDERATED_all_per_store_mae": [
+          1.5761,
+          1.9998,
+          1.9557,
+          1.5228,
+          1.6987,
+          1.4512,
+          1.9087,
+          1.5801,
+          1.8359,
+          1.267,
+          1.9928,
+          1.7281
+        ],
+        "MOVING_AVG_7_all": {
+          "mae": 1.7052,
+          "rmse": 2.6921,
+          "mape": 52.857,
+          "smape": 73.928,
+          "wape": 41.056
+        }
+      },
+      "warning": {
+        "A": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.125,
+          "lead_days_first": [
+            20,
+            15
+          ],
+          "delay_days_first": [
+            0,
+            5
+          ],
+          "detected_share_sustained3": 0.0625,
+          "lead_days_sustained3": [
+            18
+          ],
+          "delay_days_sustained3": [
+            2
+          ],
+          "spurious_surge_before_precursor": 0.0,
+          "fp_nonsurge_sku_share_post": 0.5416666666666666,
+          "fp_nonsurge_sku_share_whole": 0.5833333333333334,
+          "fp_nonsurge_skuday_share_pre": 0.10191082802547771,
+          "fp_nonsurge_skuday_share_post": 0.10163377890939954,
+          "auc_surge_vs_other_days170_179": 0.12439903846153846,
+          "trajectory": {
+            "150": {
+              "surge": 0.4814701075665696,
+              "other": 0.5033705162443434
+            },
+            "159": {
+              "surge": 0.470580238260615,
+              "other": 0.4911637010874486
+            },
+            "165": {
+              "surge": 0.48951045726653597,
+              "other": 0.5114962827180103
+            },
+            "170": {
+              "surge": 0.4603141407200658,
+              "other": 0.523671870784134
+            },
+            "175": {
+              "surge": 0.4171070627866188,
+              "other": 0.4989610018008511
+            },
+            "180": {
+              "surge": 0.37920987281756974,
+              "other": 0.490590477277742
+            },
+            "190": {
+              "surge": 0.30318038496836036,
+              "other": 0.4989934009254479
+            },
+            "200": {
+              "surge": 0.20885321378828642,
+              "other": 0.5003451304803476
+            },
+            "209": {
+              "surge": 0.2022584735396163,
+              "other": 0.5020401064081559
+            }
+          }
+        },
+        "A3": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.0,
+          "lead_days_first": [],
+          "delay_days_first": [],
+          "detected_share_sustained3": 0.0,
+          "lead_days_sustained3": [],
+          "delay_days_sustained3": [],
+          "spurious_surge_before_precursor": 0.0,
+          "fp_nonsurge_sku_share_post": 0.4895833333333333,
+          "fp_nonsurge_sku_share_whole": 0.4895833333333333,
+          "fp_nonsurge_skuday_share_pre": 0.10934182590233546,
+          "fp_nonsurge_skuday_share_post": 0.11988117971568003,
+          "auc_surge_vs_other_days170_179": 0.0859375,
+          "trajectory": {
+            "150": {
+              "surge": 0.47196619011578866,
+              "other": 0.51455849808085
+            },
+            "159": {
+              "surge": 0.4665225882885944,
+              "other": 0.521258819015897
+            },
+            "165": {
+              "surge": 0.4803880835642116,
+              "other": 0.5249453027590896
+            },
+            "170": {
+              "surge": 0.4524557881059676,
+              "other": 0.5279809968497232
+            },
+            "175": {
+              "surge": 0.41326748473297575,
+              "other": 0.5078389137846377
+            },
+            "180": {
+              "surge": 0.3883677144509169,
+              "other": 0.5204122817584703
+            },
+            "190": {
+              "surge": 0.30402850419491867,
+              "other": 0.5118806333264783
+            },
+            "200": {
+              "surge": 0.2064001557535869,
+              "other": 0.5239463446496253
+            },
+            "209": {
+              "surge": 0.18147530252662297,
+              "other": 0.5213345104396688
+            }
+          }
+        },
+        "B": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 1.0,
+          "lead_days_first": [
+            14,
+            8,
+            13,
+            10,
+            11,
+            13,
+            14,
+            16,
+            13,
+            12,
+            9,
+            10,
+            11,
+            14,
+            5,
+            18
+          ],
+          "delay_days_first": [
+            6,
+            12,
+            7,
+            10,
+            9,
+            7,
+            6,
+            4,
+            7,
+            8,
+            11,
+            10,
+            9,
+            6,
+            15,
+            2
+          ],
+          "detected_share_sustained3": 1.0,
+          "lead_days_sustained3": [
+            14,
+            8,
+            13,
+            10,
+            11,
+            13,
+            12,
+            16,
+            13,
+            12,
+            9,
+            10,
+            11,
+            14,
+            5,
+            18
+          ],
+          "delay_days_sustained3": [
+            6,
+            12,
+            7,
+            10,
+            9,
+            7,
+            8,
+            4,
+            7,
+            8,
+            11,
+            10,
+            9,
+            6,
+            15,
+            2
+          ],
+          "spurious_surge_before_precursor": 0.5625,
+          "fp_nonsurge_sku_share_post": 0.9479166666666666,
+          "fp_nonsurge_sku_share_whole": 0.9583333333333334,
+          "fp_nonsurge_skuday_share_pre": 0.33014861995753714,
+          "fp_nonsurge_skuday_share_post": 0.29026098026734565,
+          "auc_surge_vs_other_days170_179": 0.9158653846153846,
+          "trajectory": {
+            "150": {
+              "surge": 0.5370070201708661,
+              "other": 0.554343344912111
+            },
+            "159": {
+              "surge": 0.5024045832925893,
+              "other": 0.5579825522466225
+            },
+            "165": {
+              "surge": 0.5316134054864694,
+              "other": 0.5246572156469097
+            },
+            "170": {
+              "surge": 0.6581243916641204,
+              "other": 0.5370776866568747
+            },
+            "175": {
+              "surge": 0.7424668964162997,
+              "other": 0.5389577883744733
+            },
+            "180": {
+              "surge": 0.7417288398789375,
+              "other": 0.5568401142760968
+            },
+            "190": {
+              "surge": 0.9044683891778069,
+              "other": 0.5672373671779587
+            },
+            "200": {
+              "surge": 0.9155897519509067,
+              "other": 0.5498687775825033
+            },
+            "209": {
+              "surge": 0.8299685385937186,
+              "other": 0.5409936558026684
+            }
+          }
+        }
+      },
+      "threshold_sweep": {
+        "A": {
+          "0.6": {
+            "detected_share_first": 0.125,
+            "detected_share_sustained3": 0.0625,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.5416666666666666,
+            "fp_nonsurge_skuday_share_post": 0.10163377890939954
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.17708333333333334,
+            "fp_nonsurge_skuday_share_post": 0.01103331211542542
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.020833333333333332,
+            "fp_nonsurge_skuday_share_post": 0.000424358158285593
+          }
+        },
+        "A3": {
+          "0.6": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.4895833333333333,
+            "fp_nonsurge_skuday_share_post": 0.11988117971568003
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.19791666666666666,
+            "fp_nonsurge_skuday_share_post": 0.012306386590282199
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.0,
+            "fp_nonsurge_skuday_share_post": 0.0
+          }
+        },
+        "B": {
+          "0.6": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.5625,
+            "fp_nonsurge_sku_share_post": 0.9479166666666666,
+            "fp_nonsurge_skuday_share_post": 0.29026098026734565
+          },
+          "0.7": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.125,
+            "fp_nonsurge_sku_share_post": 0.6354166666666666,
+            "fp_nonsurge_skuday_share_post": 0.14406959473795883
+          },
+          "0.8": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.34375,
+            "fp_nonsurge_skuday_share_post": 0.07659664757054954
+          }
+        }
+      },
+      "uplift_mae": {
+        "none": {
+          "surge": 4.1204135200086744,
+          "other": 1.4010408277937643
+        },
+        "A": {
+          "surge": 4.631207353960042,
+          "other": 1.4062775958040934
+        },
+        "A3": {
+          "surge": 4.66346987595264,
+          "other": 1.4074894129103375
+        },
+        "B": {
+          "surge": 3.4423665451358714,
+          "other": 1.4160358488049993
+        },
+        "oracle": {
+          "surge": 3.229261330108946,
+          "other": 1.4010408277937643
+        }
+      },
+      "replenishment": {
+        "none": {
+          "surge": {
+            "stockout_day_share": 0.014118975903614458,
+            "lost_unit_share": 0.010156641155854374,
+            "stock_per_daily_demand": 3.663829482869609
+          },
+          "other": {
+            "stockout_day_share": 0.002502988643156007,
+            "lost_unit_share": 0.0010041600918089227,
+            "stock_per_daily_demand": 6.533121343980618
+          }
+        },
+        "A": {
+          "surge": {
+            "stockout_day_share": 0.0365210843373494,
+            "lost_unit_share": 0.02968314140619412,
+            "stock_per_daily_demand": 3.114870180959874
+          },
+          "other": {
+            "stockout_day_share": 0.0026897788404064557,
+            "lost_unit_share": 0.0010121296163470887,
+            "stock_per_daily_demand": 6.513229410733356
+          }
+        },
+        "A3": {
+          "surge": {
+            "stockout_day_share": 0.038780120481927714,
+            "lost_unit_share": 0.03206136900078678,
+            "stock_per_daily_demand": 3.1036227737643944
+          },
+          "other": {
+            "stockout_day_share": 0.0023535564853556486,
+            "lost_unit_share": 0.0009563429445799263,
+            "stock_per_daily_demand": 6.472018999346499
+          }
+        },
+        "B": {
+          "surge": {
+            "stockout_day_share": 0.0037650602409638554,
+            "lost_unit_share": 0.0035762820971318218,
+            "stock_per_daily_demand": 4.648630283956798
+          },
+          "other": {
+            "stockout_day_share": 0.0019052600119545727,
+            "lost_unit_share": 0.0007810134047402732,
+            "stock_per_daily_demand": 6.622077176875628
+          }
+        },
+        "oracle": {
+          "surge": {
+            "stockout_day_share": 0.0035768072289156625,
+            "lost_unit_share": 0.003272298118875617,
+            "stock_per_daily_demand": 4.755865102639296
+          },
+          "other": {
+            "stockout_day_share": 0.002502988643156007,
+            "lost_unit_share": 0.0010041600918089227,
+            "stock_per_daily_demand": 6.533121343980618
+          }
+        }
+      },
+      "state_bytes": 122680,
+      "seconds": 1142.6
+    },
+    {
+      "seed": 1,
+      "early_stores": [
+        0,
+        1,
+        3,
+        8
+      ],
+      "late_stores": [
+        2,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11
+      ],
+      "surge_idx": [
+        16,
+        24,
+        27,
+        35,
+        44,
+        50,
+        58,
+        67,
+        78,
+        82,
+        83,
+        88,
+        105,
+        110,
+        113,
+        119
+      ],
+      "accuracy": {
+        "LOCAL_pre": {
+          "mae": 1.5378,
+          "rmse": 2.3362,
+          "mape": 47.549,
+          "smape": 75.813,
+          "wape": 36.476
+        },
+        "LOCAL_pre_surge_skus": {
+          "mae": 2.0379,
+          "rmse": 2.869,
+          "mape": 48.166,
+          "smape": 44.505,
+          "wape": 34.16
+        },
+        "LOCAL_pre_other_skus": {
+          "mae": 1.4609,
+          "rmse": 2.2431,
+          "mape": 47.428,
+          "smape": 80.63,
+          "wape": 37.014
+        },
+        "LOCAL_pre_per_store_mae": [
+          1.8044,
+          1.8942,
+          1.3326,
+          1.4213,
+          1.2465,
+          1.8183,
+          1.5358,
+          1.4739,
+          1.9087,
+          1.2705,
+          1.344,
+          1.4038
+        ],
+        "LOCAL_all": {
+          "mae": 1.6898,
+          "rmse": 2.7898,
+          "mape": 46.911,
+          "smape": 76.329,
+          "wape": 37.392
+        },
+        "LOCAL_all_surge_skus": {
+          "mae": 3.184,
+          "rmse": 5.0594,
+          "mape": 44.978,
+          "smape": 47.084,
+          "wape": 38.586
+        },
+        "LOCAL_all_other_skus": {
+          "mae": 1.4599,
+          "rmse": 2.2456,
+          "mape": 47.294,
+          "smape": 80.828,
+          "wape": 37.008
+        },
+        "LOCAL_all_per_store_mae": [
+          2.0503,
+          2.2087,
+          1.428,
+          1.6009,
+          1.2837,
+          1.9924,
+          1.6608,
+          1.5773,
+          2.1641,
+          1.4214,
+          1.3989,
+          1.4916
+        ],
+        "FEDERATED_pre": {
+          "mae": 1.6181,
+          "rmse": 2.5224,
+          "mape": 47.826,
+          "smape": 76.208,
+          "wape": 38.381
+        },
+        "FEDERATED_pre_surge_skus": {
+          "mae": 2.1467,
+          "rmse": 3.0775,
+          "mape": 49.332,
+          "smape": 45.861,
+          "wape": 35.983
+        },
+        "FEDERATED_pre_other_skus": {
+          "mae": 1.5368,
+          "rmse": 2.4257,
+          "mape": 47.531,
+          "smape": 80.877,
+          "wape": 38.938
+        },
+        "FEDERATED_pre_per_store_mae": [
+          1.9186,
+          2.0092,
+          1.3919,
+          1.4758,
+          1.3018,
+          1.9359,
+          1.611,
+          1.5346,
+          2.0545,
+          1.3315,
+          1.394,
+          1.4589
+        ],
+        "FEDERATED_all": {
+          "mae": 1.7757,
+          "rmse": 3.0029,
+          "mape": 47.305,
+          "smape": 76.749,
+          "wape": 39.291
+        },
+        "FEDERATED_all_surge_skus": {
+          "mae": 3.3245,
+          "rmse": 5.3795,
+          "mape": 46.02,
+          "smape": 48.239,
+          "wape": 40.289
+        },
+        "FEDERATED_all_other_skus": {
+          "mae": 1.5374,
+          "rmse": 2.4399,
+          "mape": 47.559,
+          "smape": 81.136,
+          "wape": 38.97
+        },
+        "FEDERATED_all_per_store_mae": [
+          2.1887,
+          2.3381,
+          1.4971,
+          1.6811,
+          1.3333,
+          2.1029,
+          1.7429,
+          1.6422,
+          2.3328,
+          1.4678,
+          1.4383,
+          1.5426
+        ],
+        "MOVING_AVG_7_all": {
+          "mae": 1.7902,
+          "rmse": 2.8696,
+          "mape": 51.354,
+          "smape": 75.803,
+          "wape": 39.612
+        }
+      },
+      "warning": {
+        "A": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.125,
+          "lead_days_first": [
+            20,
+            19
+          ],
+          "delay_days_first": [
+            0,
+            1
+          ],
+          "detected_share_sustained3": 0.0,
+          "lead_days_sustained3": [],
+          "delay_days_sustained3": [],
+          "spurious_surge_before_precursor": 0.3125,
+          "fp_nonsurge_sku_share_post": 0.6534653465346535,
+          "fp_nonsurge_sku_share_whole": 0.6732673267326733,
+          "fp_nonsurge_skuday_share_pre": 0.14404145077720207,
+          "fp_nonsurge_skuday_share_post": 0.14484332849138826,
+          "auc_surge_vs_other_days170_179": 0.1466346153846154,
+          "trajectory": {
+            "150": {
+              "surge": 0.5163513709998833,
+              "other": 0.5195639020568933
+            },
+            "159": {
+              "surge": 0.5308737553704546,
+              "other": 0.5252408506453519
+            },
+            "165": {
+              "surge": 0.4964726932123229,
+              "other": 0.5281797817552545
+            },
+            "170": {
+              "surge": 0.4720830070466726,
+              "other": 0.5229453942323239
+            },
+            "175": {
+              "surge": 0.44209285518638264,
+              "other": 0.5284148967912415
+            },
+            "180": {
+              "surge": 0.43639626191496195,
+              "other": 0.5180143194435901
+            },
+            "190": {
+              "surge": 0.32727115058449213,
+              "other": 0.5269270091975866
+            },
+            "200": {
+              "surge": 0.24031672830363796,
+              "other": 0.5284192629038732
+            },
+            "209": {
+              "surge": 0.23298344870061882,
+              "other": 0.5208612458381868
+            }
+          }
+        },
+        "A3": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.0,
+          "lead_days_first": [],
+          "delay_days_first": [],
+          "detected_share_sustained3": 0.0,
+          "lead_days_sustained3": [],
+          "delay_days_sustained3": [],
+          "spurious_surge_before_precursor": 0.0,
+          "fp_nonsurge_sku_share_post": 0.46534653465346537,
+          "fp_nonsurge_sku_share_whole": 0.4752475247524752,
+          "fp_nonsurge_skuday_share_pre": 0.14715025906735751,
+          "fp_nonsurge_skuday_share_post": 0.14484332849138826,
+          "auc_surge_vs_other_days170_179": 0.10516826923076923,
+          "trajectory": {
+            "150": {
+              "surge": 0.47594852975530133,
+              "other": 0.5124403497002482
+            },
+            "159": {
+              "surge": 0.4818677470773538,
+              "other": 0.508695091905193
+            },
+            "165": {
+              "surge": 0.4568727278089842,
+              "other": 0.5161340848835761
+            },
+            "170": {
+              "surge": 0.45001465381991546,
+              "other": 0.517935366077417
+            },
+            "175": {
+              "surge": 0.42399965148078245,
+              "other": 0.514987324278477
+            },
+            "180": {
+              "surge": 0.40653113893695236,
+              "other": 0.5079955402306686
+            },
+            "190": {
+              "surge": 0.319536042779047,
+              "other": 0.5189366287565679
+            },
+            "200": {
+              "surge": 0.247825638210409,
+              "other": 0.51199221012987
+            },
+            "209": {
+              "surge": 0.22402432988047838,
+              "other": 0.5078767005768724
+            }
+          }
+        },
+        "B": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 1.0,
+          "lead_days_first": [
+            20,
+            8,
+            15,
+            17,
+            15,
+            9,
+            14,
+            20,
+            15,
+            17,
+            11,
+            4,
+            20,
+            12,
+            15,
+            19
+          ],
+          "delay_days_first": [
+            0,
+            12,
+            5,
+            3,
+            5,
+            11,
+            6,
+            0,
+            5,
+            3,
+            9,
+            16,
+            0,
+            8,
+            5,
+            1
+          ],
+          "detected_share_sustained3": 1.0,
+          "lead_days_sustained3": [
+            20,
+            6,
+            0,
+            17,
+            12,
+            9,
+            12,
+            20,
+            15,
+            14,
+            11,
+            4,
+            20,
+            12,
+            15,
+            19
+          ],
+          "delay_days_sustained3": [
+            0,
+            14,
+            20,
+            3,
+            8,
+            11,
+            8,
+            0,
+            5,
+            6,
+            9,
+            16,
+            0,
+            8,
+            5,
+            1
+          ],
+          "spurious_surge_before_precursor": 0.375,
+          "fp_nonsurge_sku_share_post": 0.9504950495049505,
+          "fp_nonsurge_sku_share_whole": 0.9504950495049505,
+          "fp_nonsurge_skuday_share_pre": 0.2932642487046632,
+          "fp_nonsurge_skuday_share_post": 0.30109981323926127,
+          "auc_surge_vs_other_days170_179": 0.8629807692307693,
+          "trajectory": {
+            "150": {
+              "surge": 0.48072089585700006,
+              "other": 0.5545018543037062
+            },
+            "159": {
+              "surge": 0.5218730601099648,
+              "other": 0.5351423576143117
+            },
+            "165": {
+              "surge": 0.5818111191703792,
+              "other": 0.5358545894463559
+            },
+            "170": {
+              "surge": 0.6374761707969393,
+              "other": 0.5528800645605424
+            },
+            "175": {
+              "surge": 0.7316749086197847,
+              "other": 0.5391976558747325
+            },
+            "180": {
+              "surge": 0.7454802635969414,
+              "other": 0.5693962548907564
+            },
+            "190": {
+              "surge": 0.8815753761537055,
+              "other": 0.5247469595654278
+            },
+            "200": {
+              "surge": 0.9263829501208976,
+              "other": 0.55104862074041
+            },
+            "209": {
+              "surge": 0.8213190429167528,
+              "other": 0.5493566035205796
+            }
+          }
+        }
+      },
+      "threshold_sweep": {
+        "A": {
+          "0.6": {
+            "detected_share_first": 0.125,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.3125,
+            "fp_nonsurge_sku_share_post": 0.6534653465346535,
+            "fp_nonsurge_skuday_share_post": 0.14484332849138826
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.27722772277227725,
+            "fp_nonsurge_skuday_share_post": 0.026146503423946876
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.039603960396039604,
+            "fp_nonsurge_skuday_share_post": 0.0008300477277443454
+          }
+        },
+        "A3": {
+          "0.6": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.46534653465346537,
+            "fp_nonsurge_skuday_share_post": 0.14484332849138826
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.22772277227722773,
+            "fp_nonsurge_skuday_share_post": 0.017223490350695165
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.04950495049504951,
+            "fp_nonsurge_skuday_share_post": 0.0010375596596804316
+          }
+        },
+        "B": {
+          "0.6": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.375,
+            "fp_nonsurge_sku_share_post": 0.9504950495049505,
+            "fp_nonsurge_skuday_share_post": 0.30109981323926127
+          },
+          "0.7": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.0625,
+            "fp_nonsurge_sku_share_post": 0.6831683168316832,
+            "fp_nonsurge_skuday_share_post": 0.14048557792073044
+          },
+          "0.8": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.40594059405940597,
+            "fp_nonsurge_skuday_share_post": 0.06578128242373936
+          }
+        }
+      },
+      "uplift_mae": {
+        "none": {
+          "surge": 3.0907248175712168,
+          "other": 1.3663544563663526
+        },
+        "A": {
+          "surge": 3.359342081484165,
+          "other": 1.375103098158118
+        },
+        "A3": {
+          "surge": 3.3895618672308503,
+          "other": 1.3749345025151127
+        },
+        "B": {
+          "surge": 2.6963894700159523,
+          "other": 1.378833494762778
+        },
+        "oracle": {
+          "surge": 2.584894182838278,
+          "other": 1.3663544563663526
+        }
+      },
+      "replenishment": {
+        "none": {
+          "surge": {
+            "stockout_day_share": 0.01335113484646195,
+            "lost_unit_share": 0.009390619477962336,
+            "stock_per_daily_demand": 3.907557934063715
+          },
+          "other": {
+            "stockout_day_share": 0.002368748058403231,
+            "lost_unit_share": 0.0009691688341810109,
+            "stock_per_daily_demand": 6.57350772850019
+          }
+        },
+        "A": {
+          "surge": {
+            "stockout_day_share": 0.032233454129315275,
+            "lost_unit_share": 0.029030140859292168,
+            "stock_per_daily_demand": 3.4123794618064323
+          },
+          "other": {
+            "stockout_day_share": 0.0021745883814849334,
+            "lost_unit_share": 0.0012011066748397145,
+            "stock_per_daily_demand": 6.580126240453273
+          }
+        },
+        "A3": {
+          "surge": {
+            "stockout_day_share": 0.03414075910738127,
+            "lost_unit_share": 0.02991366688544454,
+            "stock_per_daily_demand": 3.3828192053314483
+          },
+          "other": {
+            "stockout_day_share": 0.002329916123019571,
+            "lost_unit_share": 0.0013584930667152632,
+            "stock_per_daily_demand": 6.432638624277265
+          }
+        },
+        "B": {
+          "surge": {
+            "stockout_day_share": 0.004005340453938585,
+            "lost_unit_share": 0.002297167667996163,
+            "stock_per_daily_demand": 4.921921542888878
+          },
+          "other": {
+            "stockout_day_share": 0.0024852438645542093,
+            "lost_unit_share": 0.0010851377545103627,
+            "stock_per_daily_demand": 6.69265751064429
+          }
+        },
+        "oracle": {
+          "surge": {
+            "stockout_day_share": 0.0026702269692923898,
+            "lost_unit_share": 0.0017922956530519512,
+            "stock_per_daily_demand": 5.022643509870248
+          },
+          "other": {
+            "stockout_day_share": 0.002368748058403231,
+            "lost_unit_share": 0.0009691688341810109,
+            "stock_per_daily_demand": 6.57350772850019
+          }
+        }
+      },
+      "state_bytes": 122680,
+      "seconds": 1186.9
+    },
+    {
+      "seed": 2,
+      "early_stores": [
+        2,
+        6,
+        10,
+        11
+      ],
+      "late_stores": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9
+      ],
+      "surge_idx": [
+        8,
+        12,
+        32,
+        37,
+        39,
+        42,
+        55,
+        62,
+        68,
+        89,
+        92,
+        100,
+        101,
+        107,
+        112,
+        113
+      ],
+      "accuracy": {
+        "LOCAL_pre": {
+          "mae": 1.4714,
+          "rmse": 2.2283,
+          "mape": 47.139,
+          "smape": 76.809,
+          "wape": 37.742
+        },
+        "LOCAL_pre_surge_skus": {
+          "mae": 2.2296,
+          "rmse": 3.3016,
+          "mape": 46.956,
+          "smape": 43.128,
+          "wape": 31.816
+        },
+        "LOCAL_pre_other_skus": {
+          "mae": 1.3548,
+          "rmse": 2.013,
+          "mape": 47.175,
+          "smape": 81.991,
+          "wape": 39.61
+        },
+        "LOCAL_pre_per_store_mae": [
+          1.4421,
+          1.6012,
+          1.3331,
+          1.3963,
+          1.3064,
+          1.415,
+          1.2127,
+          1.7292,
+          1.1994,
+          1.7014,
+          2.1045,
+          1.2161
+        ],
+        "LOCAL_all": {
+          "mae": 1.6584,
+          "rmse": 2.9416,
+          "mape": 46.3,
+          "smape": 77.318,
+          "wape": 39.191
+        },
+        "LOCAL_all_surge_skus": {
+          "mae": 3.5844,
+          "rmse": 6.1438,
+          "mape": 42.881,
+          "smape": 45.682,
+          "wape": 37.73
+        },
+        "LOCAL_all_other_skus": {
+          "mae": 1.3621,
+          "rmse": 2.0439,
+          "mape": 46.988,
+          "smape": 82.185,
+          "wape": 39.815
+        },
+        "LOCAL_all_per_store_mae": [
+          1.55,
+          1.8486,
+          1.5623,
+          1.537,
+          1.4574,
+          1.558,
+          1.3164,
+          1.8246,
+          1.3156,
+          1.9248,
+          2.5869,
+          1.4197
+        ],
+        "FEDERATED_pre": {
+          "mae": 1.5514,
+          "rmse": 2.3956,
+          "mape": 48.587,
+          "smape": 77.745,
+          "wape": 39.794
+        },
+        "FEDERATED_pre_surge_skus": {
+          "mae": 2.3811,
+          "rmse": 3.5746,
+          "mape": 49.09,
+          "smape": 44.681,
+          "wape": 33.979
+        },
+        "FEDERATED_pre_other_skus": {
+          "mae": 1.4238,
+          "rmse": 2.1578,
+          "mape": 48.487,
+          "smape": 82.832,
+          "wape": 41.627
+        },
+        "FEDERATED_pre_per_store_mae": [
+          1.4942,
+          1.7109,
+          1.3809,
+          1.4699,
+          1.3672,
+          1.506,
+          1.2491,
+          1.8411,
+          1.2423,
+          1.8046,
+          2.2953,
+          1.2557
+        ],
+        "FEDERATED_all": {
+          "mae": 1.7347,
+          "rmse": 3.1388,
+          "mape": 47.537,
+          "smape": 78.151,
+          "wape": 40.993
+        },
+        "FEDERATED_all_surge_skus": {
+          "mae": 3.7294,
+          "rmse": 6.5278,
+          "mape": 44.265,
+          "smape": 46.594,
+          "wape": 39.256
+        },
+        "FEDERATED_all_other_skus": {
+          "mae": 1.4278,
+          "rmse": 2.1937,
+          "mape": 48.195,
+          "smape": 83.006,
+          "wape": 41.735
+        },
+        "FEDERATED_all_per_store_mae": [
+          1.608,
+          1.9693,
+          1.5737,
+          1.605,
+          1.5146,
+          1.6312,
+          1.3444,
+          1.9209,
+          1.3653,
+          2.022,
+          2.8132,
+          1.4488
+        ],
+        "MOVING_AVG_7_all": {
+          "mae": 1.7244,
+          "rmse": 2.8622,
+          "mape": 51.565,
+          "smape": 73.656,
+          "wape": 40.75
+        }
+      },
+      "warning": {
+        "A": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.0,
+          "lead_days_first": [],
+          "delay_days_first": [],
+          "detected_share_sustained3": 0.0,
+          "lead_days_sustained3": [],
+          "delay_days_sustained3": [],
+          "spurious_surge_before_precursor": 0.0625,
+          "fp_nonsurge_sku_share_post": 0.6145833333333334,
+          "fp_nonsurge_sku_share_whole": 0.6354166666666666,
+          "fp_nonsurge_skuday_share_pre": 0.1371308016877637,
+          "fp_nonsurge_skuday_share_post": 0.16893617021276597,
+          "auc_surge_vs_other_days170_179": 0.1201923076923077,
+          "trajectory": {
+            "150": {
+              "surge": 0.4923274217644054,
+              "other": 0.5154333189764436
+            },
+            "159": {
+              "surge": 0.468430556135249,
+              "other": 0.4980565321482987
+            },
+            "165": {
+              "surge": 0.4625171220168076,
+              "other": 0.5120839130516671
+            },
+            "170": {
+              "surge": 0.44410108700107714,
+              "other": 0.5251372472598451
+            },
+            "175": {
+              "surge": 0.4197992942868969,
+              "other": 0.523736466566264
+            },
+            "180": {
+              "surge": 0.3805778715287731,
+              "other": 0.5103070965715734
+            },
+            "190": {
+              "surge": 0.2901434595659503,
+              "other": 0.5163384665217294
+            },
+            "200": {
+              "surge": 0.20838365714028897,
+              "other": 0.5197370976828887
+            },
+            "209": {
+              "surge": 0.1994154809428677,
+              "other": 0.5161636341922957
+            }
+          }
+        },
+        "A3": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.0,
+          "lead_days_first": [],
+          "delay_days_first": [],
+          "detected_share_sustained3": 0.0,
+          "lead_days_sustained3": [],
+          "delay_days_sustained3": [],
+          "spurious_surge_before_precursor": 0.0,
+          "fp_nonsurge_sku_share_post": 0.4895833333333333,
+          "fp_nonsurge_sku_share_whole": 0.5,
+          "fp_nonsurge_skuday_share_pre": 0.06962025316455696,
+          "fp_nonsurge_skuday_share_post": 0.0748936170212766,
+          "auc_surge_vs_other_days170_179": 0.10396634615384616,
+          "trajectory": {
+            "150": {
+              "surge": 0.4862443751749883,
+              "other": 0.5109089389206857
+            },
+            "159": {
+              "surge": 0.4391636848549174,
+              "other": 0.472432086478831
+            },
+            "165": {
+              "surge": 0.4452871382800805,
+              "other": 0.4909753149296686
+            },
+            "170": {
+              "surge": 0.4505955878736826,
+              "other": 0.5198867417090433
+            },
+            "175": {
+              "surge": 0.4130422456183864,
+              "other": 0.4958129918534463
+            },
+            "180": {
+              "surge": 0.36659766653131964,
+              "other": 0.4763648580849269
+            },
+            "190": {
+              "surge": 0.29897277954127616,
+              "other": 0.5146881769989108
+            },
+            "200": {
+              "surge": 0.2152910577199213,
+              "other": 0.49560379185443293
+            },
+            "209": {
+              "surge": 0.18728483043485344,
+              "other": 0.481519176826897
+            }
+          }
+        },
+        "B": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 1.0,
+          "lead_days_first": [
+            10,
+            16,
+            9,
+            17,
+            20,
+            20,
+            20,
+            12,
+            18,
+            20,
+            11,
+            13,
+            7,
+            11,
+            11,
+            20
+          ],
+          "delay_days_first": [
+            10,
+            4,
+            11,
+            3,
+            0,
+            0,
+            0,
+            8,
+            2,
+            0,
+            9,
+            7,
+            13,
+            9,
+            9,
+            0
+          ],
+          "detected_share_sustained3": 1.0,
+          "lead_days_sustained3": [
+            10,
+            16,
+            9,
+            14,
+            20,
+            20,
+            20,
+            12,
+            18,
+            20,
+            11,
+            13,
+            7,
+            11,
+            11,
+            9
+          ],
+          "delay_days_sustained3": [
+            10,
+            4,
+            11,
+            6,
+            0,
+            0,
+            0,
+            8,
+            2,
+            0,
+            9,
+            7,
+            13,
+            9,
+            9,
+            11
+          ],
+          "spurious_surge_before_precursor": 0.625,
+          "fp_nonsurge_sku_share_post": 0.9583333333333334,
+          "fp_nonsurge_sku_share_whole": 0.9583333333333334,
+          "fp_nonsurge_skuday_share_pre": 0.3280590717299578,
+          "fp_nonsurge_skuday_share_post": 0.2948936170212766,
+          "auc_surge_vs_other_days170_179": 0.8966346153846154,
+          "trajectory": {
+            "150": {
+              "surge": 0.5021184154675794,
+              "other": 0.5428401476361536
+            },
+            "159": {
+              "surge": 0.5368693669290854,
+              "other": 0.5912001030773484
+            },
+            "165": {
+              "surge": 0.5339572686435607,
+              "other": 0.5196481214874069
+            },
+            "170": {
+              "surge": 0.6347390052585253,
+              "other": 0.5327581274425893
+            },
+            "175": {
+              "surge": 0.6992321478860304,
+              "other": 0.5435248014231773
+            },
+            "180": {
+              "surge": 0.7404563044016803,
+              "other": 0.5623048832581833
+            },
+            "190": {
+              "surge": 0.8766796760401427,
+              "other": 0.5390771988431161
+            },
+            "200": {
+              "surge": 0.9240087587205126,
+              "other": 0.5527198616734516
+            },
+            "209": {
+              "surge": 0.8448051495990775,
+              "other": 0.5032892150942462
+            }
+          }
+        }
+      },
+      "threshold_sweep": {
+        "A": {
+          "0.6": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0625,
+            "fp_nonsurge_sku_share_post": 0.6145833333333334,
+            "fp_nonsurge_skuday_share_post": 0.16893617021276597
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.2916666666666667,
+            "fp_nonsurge_skuday_share_post": 0.03021276595744681
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.0625,
+            "fp_nonsurge_skuday_share_post": 0.0019148936170212765
+          }
+        },
+        "A3": {
+          "0.6": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.4895833333333333,
+            "fp_nonsurge_skuday_share_post": 0.0748936170212766
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.13541666666666666,
+            "fp_nonsurge_skuday_share_post": 0.007021276595744681
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.010416666666666666,
+            "fp_nonsurge_skuday_share_post": 0.0002127659574468085
+          }
+        },
+        "B": {
+          "0.6": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.625,
+            "fp_nonsurge_sku_share_post": 0.9583333333333334,
+            "fp_nonsurge_skuday_share_post": 0.2948936170212766
+          },
+          "0.7": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.1875,
+            "fp_nonsurge_sku_share_post": 0.6979166666666666,
+            "fp_nonsurge_skuday_share_post": 0.13787234042553193
+          },
+          "0.8": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.3020833333333333,
+            "fp_nonsurge_skuday_share_post": 0.06
+          }
+        }
+      },
+      "uplift_mae": {
+        "none": {
+          "surge": 3.8384683940495394,
+          "other": 1.3995518952037982
+        },
+        "A": {
+          "surge": 4.348315174214911,
+          "other": 1.4138166802403567
+        },
+        "A3": {
+          "surge": 4.36105100382561,
+          "other": 1.413605893590118
+        },
+        "B": {
+          "surge": 3.2029924027607026,
+          "other": 1.413318972634653
+        },
+        "oracle": {
+          "surge": 2.9980135240497354,
+          "other": 1.3995518952037982
+        }
+      },
+      "replenishment": {
+        "none": {
+          "surge": {
+            "stockout_day_share": 0.011526832955404385,
+            "lost_unit_share": 0.006798528230701705,
+            "stock_per_daily_demand": 3.7626118301862124
+          },
+          "other": {
+            "stockout_day_share": 0.002220549491908167,
+            "lost_unit_share": 0.0008682617563460924,
+            "stock_per_daily_demand": 6.440831237764471
+          }
+        },
+        "A": {
+          "surge": {
+            "stockout_day_share": 0.034958427815570674,
+            "lost_unit_share": 0.026577762835957492,
+            "stock_per_daily_demand": 3.1927868362563268
+          },
+          "other": {
+            "stockout_day_share": 0.0021452766277756867,
+            "lost_unit_share": 0.0009092174995699647,
+            "stock_per_daily_demand": 6.355651483007462
+          }
+        },
+        "A3": {
+          "surge": {
+            "stockout_day_share": 0.035336356764928196,
+            "lost_unit_share": 0.025718608169440244,
+            "stock_per_daily_demand": 3.189593022169926
+          },
+          "other": {
+            "stockout_day_share": 0.0022958223560406474,
+            "lost_unit_share": 0.000933790945504288,
+            "stock_per_daily_demand": 6.294021280604179
+          }
+        },
+        "B": {
+          "surge": {
+            "stockout_day_share": 0.0020786092214663643,
+            "lost_unit_share": 0.0012140228983395901,
+            "stock_per_daily_demand": 4.738667563175884
+          },
+          "other": {
+            "stockout_day_share": 0.0017312758750470455,
+            "lost_unit_share": 0.0006471007429371821,
+            "stock_per_daily_demand": 6.567130558718249
+          }
+        },
+        "oracle": {
+          "surge": {
+            "stockout_day_share": 0.0017006802721088435,
+            "lost_unit_share": 0.0007097364636446835,
+            "stock_per_daily_demand": 4.875142414224613
+          },
+          "other": {
+            "stockout_day_share": 0.002220549491908167,
+            "lost_unit_share": 0.0008682617563460924,
+            "stock_per_daily_demand": 6.440831237764471
+          }
+        }
+      },
+      "state_bytes": 122680,
+      "seconds": 1366.6
+    },
+    {
+      "seed": 3,
+      "early_stores": [
+        2,
+        5,
+        7,
+        9
+      ],
+      "late_stores": [
+        0,
+        1,
+        3,
+        4,
+        6,
+        8,
+        10,
+        11
+      ],
+      "surge_idx": [
+        7,
+        8,
+        31,
+        39,
+        48,
+        52,
+        57,
+        62,
+        68,
+        82,
+        90,
+        98,
+        102,
+        106,
+        118,
+        119
+      ],
+      "accuracy": {
+        "LOCAL_pre": {
+          "mae": 1.6718,
+          "rmse": 2.4361,
+          "mape": 47.399,
+          "smape": 64.68,
+          "wape": 35.468
+        },
+        "LOCAL_pre_surge_skus": {
+          "mae": 1.9971,
+          "rmse": 2.6895,
+          "mape": 46.68,
+          "smape": 41.834,
+          "wape": 34.692
+        },
+        "LOCAL_pre_other_skus": {
+          "mae": 1.6218,
+          "rmse": 2.3947,
+          "mape": 47.53,
+          "smape": 68.195,
+          "wape": 35.619
+        },
+        "LOCAL_pre_per_store_mae": [
+          1.9147,
+          2.0591,
+          1.8119,
+          1.3783,
+          1.5557,
+          1.6841,
+          1.7665,
+          1.4311,
+          1.5893,
+          1.6312,
+          1.9867,
+          1.2535
+        ],
+        "LOCAL_all": {
+          "mae": 1.8073,
+          "rmse": 2.7368,
+          "mape": 46.795,
+          "smape": 64.763,
+          "wape": 36.2
+        },
+        "LOCAL_all_surge_skus": {
+          "mae": 3.0308,
+          "rmse": 4.3193,
+          "mape": 43.852,
+          "smape": 44.978,
+          "wape": 38.68
+        },
+        "LOCAL_all_other_skus": {
+          "mae": 1.619,
+          "rmse": 2.4025,
+          "mape": 47.333,
+          "smape": 67.807,
+          "wape": 35.544
+        },
+        "LOCAL_all_per_store_mae": [
+          2.0744,
+          2.2232,
+          1.9483,
+          1.4224,
+          1.6679,
+          1.8795,
+          1.7969,
+          1.6036,
+          1.6728,
+          1.8567,
+          2.2193,
+          1.3222
+        ],
+        "FEDERATED_pre": {
+          "mae": 1.7619,
+          "rmse": 2.6127,
+          "mape": 48.664,
+          "smape": 65.388,
+          "wape": 37.379
+        },
+        "FEDERATED_pre_surge_skus": {
+          "mae": 2.0818,
+          "rmse": 2.828,
+          "mape": 48.016,
+          "smape": 42.9,
+          "wape": 36.163
+        },
+        "FEDERATED_pre_other_skus": {
+          "mae": 1.7127,
+          "rmse": 2.578,
+          "mape": 48.781,
+          "smape": 68.847,
+          "wape": 37.616
+        },
+        "FEDERATED_pre_per_store_mae": [
+          2.0186,
+          2.2122,
+          1.9081,
+          1.4416,
+          1.6308,
+          1.7605,
+          1.8542,
+          1.5044,
+          1.6622,
+          1.7432,
+          2.1267,
+          1.2805
+        ],
+        "FEDERATED_all": {
+          "mae": 1.8964,
+          "rmse": 2.9128,
+          "mape": 47.889,
+          "smape": 65.457,
+          "wape": 37.985
+        },
+        "FEDERATED_all_surge_skus": {
+          "mae": 3.1378,
+          "rmse": 4.5156,
+          "mape": 44.983,
+          "smape": 45.983,
+          "wape": 40.046
+        },
+        "FEDERATED_all_other_skus": {
+          "mae": 1.7054,
+          "rmse": 2.5793,
+          "mape": 48.42,
+          "smape": 68.453,
+          "wape": 37.439
+        },
+        "FEDERATED_all_per_store_mae": [
+          2.1883,
+          2.3928,
+          2.0556,
+          1.47,
+          1.7296,
+          1.9688,
+          1.8816,
+          1.672,
+          1.7507,
+          1.9446,
+          2.3403,
+          1.362
+        ],
+        "MOVING_AVG_7_all": {
+          "mae": 1.9371,
+          "rmse": 2.8931,
+          "mape": 51.346,
+          "smape": 63.042,
+          "wape": 38.8
+        }
+      },
+      "warning": {
+        "A": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.0,
+          "lead_days_first": [],
+          "delay_days_first": [],
+          "detected_share_sustained3": 0.0,
+          "lead_days_sustained3": [],
+          "delay_days_sustained3": [],
+          "spurious_surge_before_precursor": 0.125,
+          "fp_nonsurge_sku_share_post": 0.5714285714285714,
+          "fp_nonsurge_sku_share_whole": 0.6020408163265306,
+          "fp_nonsurge_skuday_share_pre": 0.13697219361483007,
+          "fp_nonsurge_skuday_share_post": 0.13785287451061198,
+          "auc_surge_vs_other_days170_179": 0.1580528846153846,
+          "trajectory": {
+            "150": {
+              "surge": 0.5080278655727704,
+              "other": 0.5041944969919405
+            },
+            "159": {
+              "surge": 0.4968880276765978,
+              "other": 0.5112725780834173
+            },
+            "165": {
+              "surge": 0.4838384696216348,
+              "other": 0.5221775938522866
+            },
+            "170": {
+              "surge": 0.454453155643884,
+              "other": 0.5175717044506405
+            },
+            "175": {
+              "surge": 0.4220150704476049,
+              "other": 0.5139687567620866
+            },
+            "180": {
+              "surge": 0.4055107085759674,
+              "other": 0.5150188102734895
+            },
+            "190": {
+              "surge": 0.312248815623169,
+              "other": 0.5200130564838383
+            },
+            "200": {
+              "surge": 0.22175543607176407,
+              "other": 0.5237580771582855
+            },
+            "209": {
+              "surge": 0.21017721882526696,
+              "other": 0.530703083428428
+            }
+          }
+        },
+        "A3": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.0,
+          "lead_days_first": [],
+          "delay_days_first": [],
+          "detected_share_sustained3": 0.0,
+          "lead_days_sustained3": [],
+          "delay_days_sustained3": [],
+          "spurious_surge_before_precursor": 0.0625,
+          "fp_nonsurge_sku_share_post": 0.47959183673469385,
+          "fp_nonsurge_sku_share_whole": 0.5,
+          "fp_nonsurge_skuday_share_pre": 0.08341915550978372,
+          "fp_nonsurge_skuday_share_post": 0.10282299608489594,
+          "auc_surge_vs_other_days170_179": 0.12800480769230768,
+          "trajectory": {
+            "150": {
+              "surge": 0.4797518185179598,
+              "other": 0.4889847522571419
+            },
+            "159": {
+              "surge": 0.4872174274148995,
+              "other": 0.5139642361208839
+            },
+            "165": {
+              "surge": 0.4660988297506098,
+              "other": 0.5149320544995046
+            },
+            "170": {
+              "surge": 0.4344069051483822,
+              "other": 0.4895712312002992
+            },
+            "175": {
+              "surge": 0.4017051757552603,
+              "other": 0.499116875630393
+            },
+            "180": {
+              "surge": 0.39766648151209727,
+              "other": 0.51326652774655
+            },
+            "190": {
+              "surge": 0.2937772697477776,
+              "other": 0.49235347086899695
+            },
+            "200": {
+              "surge": 0.21999688737907985,
+              "other": 0.5155188266454559
+            },
+            "209": {
+              "surge": 0.18955713690792209,
+              "other": 0.5243128352810628
+            }
+          }
+        },
+        "B": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 1.0,
+          "lead_days_first": [
+            10,
+            6,
+            7,
+            15,
+            11,
+            5,
+            20,
+            16,
+            20,
+            13,
+            20,
+            18,
+            9,
+            20,
+            14,
+            14
+          ],
+          "delay_days_first": [
+            10,
+            14,
+            13,
+            5,
+            9,
+            15,
+            0,
+            4,
+            0,
+            7,
+            0,
+            2,
+            11,
+            0,
+            6,
+            6
+          ],
+          "detected_share_sustained3": 1.0,
+          "lead_days_sustained3": [
+            10,
+            6,
+            7,
+            15,
+            11,
+            5,
+            17,
+            16,
+            17,
+            13,
+            20,
+            18,
+            9,
+            9,
+            14,
+            14
+          ],
+          "delay_days_sustained3": [
+            10,
+            14,
+            13,
+            5,
+            9,
+            15,
+            3,
+            4,
+            3,
+            7,
+            0,
+            2,
+            11,
+            11,
+            6,
+            6
+          ],
+          "spurious_surge_before_precursor": 0.6875,
+          "fp_nonsurge_sku_share_post": 0.9591836734693877,
+          "fp_nonsurge_sku_share_whole": 0.9693877551020408,
+          "fp_nonsurge_skuday_share_pre": 0.25952626158599384,
+          "fp_nonsurge_skuday_share_post": 0.24623943952194519,
+          "auc_surge_vs_other_days170_179": 0.9429086538461539,
+          "trajectory": {
+            "150": {
+              "surge": 0.4973406684936419,
+              "other": 0.5292849115385235
+            },
+            "159": {
+              "surge": 0.5471124664925259,
+              "other": 0.5309281755257426
+            },
+            "165": {
+              "surge": 0.5478330697739406,
+              "other": 0.5244005023642472
+            },
+            "170": {
+              "surge": 0.6615160723077804,
+              "other": 0.5362548389741026
+            },
+            "175": {
+              "surge": 0.7526425556784938,
+              "other": 0.5420489403393927
+            },
+            "180": {
+              "surge": 0.7579060593940755,
+              "other": 0.5213881284870137
+            },
+            "190": {
+              "surge": 0.8873570093356139,
+              "other": 0.5202941226406587
+            },
+            "200": {
+              "surge": 0.9126119046003739,
+              "other": 0.5210914354820259
+            },
+            "209": {
+              "surge": 0.823758888953217,
+              "other": 0.5039757337596997
+            }
+          }
+        }
+      },
+      "threshold_sweep": {
+        "A": {
+          "0.6": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.125,
+            "fp_nonsurge_sku_share_post": 0.5714285714285714,
+            "fp_nonsurge_skuday_share_post": 0.13785287451061198
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.25510204081632654,
+            "fp_nonsurge_skuday_share_post": 0.015042241912219246
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.01020408163265306,
+            "fp_nonsurge_skuday_share_post": 0.000206058108386565
+          }
+        },
+        "A3": {
+          "0.6": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0625,
+            "fp_nonsurge_sku_share_post": 0.47959183673469385,
+            "fp_nonsurge_skuday_share_post": 0.10282299608489594
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.16326530612244897,
+            "fp_nonsurge_skuday_share_post": 0.009478672985781991
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.0,
+            "fp_nonsurge_skuday_share_post": 0.0
+          }
+        },
+        "B": {
+          "0.6": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.6875,
+            "fp_nonsurge_sku_share_post": 0.9591836734693877,
+            "fp_nonsurge_skuday_share_post": 0.24623943952194519
+          },
+          "0.7": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.3125,
+            "fp_nonsurge_sku_share_post": 0.6326530612244898,
+            "fp_nonsurge_skuday_share_post": 0.09437461364104678
+          },
+          "0.8": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.25510204081632654,
+            "fp_nonsurge_skuday_share_post": 0.03235112301669071
+          }
+        }
+      },
+      "uplift_mae": {
+        "none": {
+          "surge": 3.3342968265920545,
+          "other": 1.6379875841039637
+        },
+        "A": {
+          "surge": 3.6542322753166996,
+          "other": 1.651306271929661
+        },
+        "A3": {
+          "surge": 3.685103358921129,
+          "other": 1.6539528148658904
+        },
+        "B": {
+          "surge": 2.8900576630192365,
+          "other": 1.6547197527667286
+        },
+        "oracle": {
+          "surge": 2.7495480228592886,
+          "other": 1.6379875841039637
+        }
+      },
+      "replenishment": {
+        "none": {
+          "surge": {
+            "stockout_day_share": 0.012084592145015106,
+            "lost_unit_share": 0.007676048503726777,
+            "stock_per_daily_demand": 3.8219601735454445
+          },
+          "other": {
+            "stockout_day_share": 0.0015533310321021747,
+            "lost_unit_share": 0.0005865783540366978,
+            "stock_per_daily_demand": 6.282816309322318
+          }
+        },
+        "A": {
+          "surge": {
+            "stockout_day_share": 0.0324773413897281,
+            "lost_unit_share": 0.02483034820335966,
+            "stock_per_daily_demand": 3.3034152853487595
+          },
+          "other": {
+            "stockout_day_share": 0.001587849499482223,
+            "lost_unit_share": 0.0005926885452245801,
+            "stock_per_daily_demand": 6.24862367943493
+          }
+        },
+        "A3": {
+          "surge": {
+            "stockout_day_share": 0.0324773413897281,
+            "lost_unit_share": 0.025453331850038938,
+            "stock_per_daily_demand": 3.260941150294805
+          },
+          "other": {
+            "stockout_day_share": 0.0015188125647221263,
+            "lost_unit_share": 0.0005560273980972864,
+            "stock_per_daily_demand": 6.16336207159922
+          }
+        },
+        "B": {
+          "surge": {
+            "stockout_day_share": 0.0020770392749244714,
+            "lost_unit_share": 0.001112470797641562,
+            "stock_per_daily_demand": 4.84298587162087
+          },
+          "other": {
+            "stockout_day_share": 0.001484294097342078,
+            "lost_unit_share": 0.0005193662509699929,
+            "stock_per_daily_demand": 6.366116545786718
+          }
+        },
+        "oracle": {
+          "surge": {
+            "stockout_day_share": 0.0016993957703927492,
+            "lost_unit_share": 0.0008232283902547558,
+            "stock_per_daily_demand": 4.935765936144176
+          },
+          "other": {
+            "stockout_day_share": 0.0015533310321021747,
+            "lost_unit_share": 0.0005865783540366978,
+            "stock_per_daily_demand": 6.282816309322318
+          }
+        }
+      },
+      "state_bytes": 122680,
+      "seconds": 1122.1
+    },
+    {
+      "seed": 4,
+      "early_stores": [
+        1,
+        3,
+        4,
+        11
+      ],
+      "late_stores": [
+        0,
+        2,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "surge_idx": [
+        2,
+        4,
+        6,
+        8,
+        11,
+        31,
+        36,
+        51,
+        56,
+        58,
+        72,
+        82,
+        88,
+        90,
+        103,
+        119
+      ],
+      "accuracy": {
+        "LOCAL_pre": {
+          "mae": 1.4846,
+          "rmse": 2.2354,
+          "mape": 47.51,
+          "smape": 78.334,
+          "wape": 36.574
+        },
+        "LOCAL_pre_surge_skus": {
+          "mae": 2.0013,
+          "rmse": 2.6613,
+          "mape": 47.525,
+          "smape": 42.24,
+          "wape": 34.241
+        },
+        "LOCAL_pre_other_skus": {
+          "mae": 1.4052,
+          "rmse": 2.1625,
+          "mape": 47.507,
+          "smape": 83.887,
+          "wape": 37.129
+        },
+        "LOCAL_pre_per_store_mae": [
+          1.3516,
+          1.4748,
+          1.2989,
+          1.8315,
+          1.4371,
+          1.2574,
+          1.6422,
+          1.4209,
+          1.4993,
+          1.3291,
+          1.5613,
+          1.7115
+        ],
+        "LOCAL_all": {
+          "mae": 1.6422,
+          "rmse": 2.647,
+          "mape": 46.778,
+          "smape": 78.662,
+          "wape": 37.678
+        },
+        "LOCAL_all_surge_skus": {
+          "mae": 3.1582,
+          "rmse": 4.6925,
+          "mape": 43.912,
+          "smape": 45.212,
+          "wape": 39.062
+        },
+        "LOCAL_all_other_skus": {
+          "mae": 1.409,
+          "rmse": 2.1672,
+          "mape": 47.363,
+          "smape": 83.809,
+          "wape": 37.223
+        },
+        "LOCAL_all_per_store_mae": [
+          1.475,
+          1.6223,
+          1.3761,
+          2.1621,
+          1.635,
+          1.3504,
+          1.816,
+          1.524,
+          1.5966,
+          1.475,
+          1.7195,
+          1.9548
+        ],
+        "FEDERATED_pre": {
+          "mae": 1.5549,
+          "rmse": 2.3971,
+          "mape": 48.234,
+          "smape": 79.014,
+          "wape": 38.305
+        },
+        "FEDERATED_pre_surge_skus": {
+          "mae": 2.088,
+          "rmse": 2.7964,
+          "mape": 48.657,
+          "smape": 43.476,
+          "wape": 35.723
+        },
+        "FEDERATED_pre_other_skus": {
+          "mae": 1.4729,
+          "rmse": 2.3296,
+          "mape": 48.149,
+          "smape": 84.482,
+          "wape": 38.919
+        },
+        "FEDERATED_pre_per_store_mae": [
+          1.4035,
+          1.5476,
+          1.3251,
+          1.9263,
+          1.5191,
+          1.2973,
+          1.7286,
+          1.4873,
+          1.5778,
+          1.3809,
+          1.6427,
+          1.8226
+        ],
+        "FEDERATED_all": {
+          "mae": 1.7169,
+          "rmse": 2.8194,
+          "mape": 47.47,
+          "smape": 79.363,
+          "wape": 39.391
+        },
+        "FEDERATED_all_surge_skus": {
+          "mae": 3.2667,
+          "rmse": 4.9026,
+          "mape": 44.86,
+          "smape": 46.345,
+          "wape": 40.404
+        },
+        "FEDERATED_all_other_skus": {
+          "mae": 1.4785,
+          "rmse": 2.3397,
+          "mape": 48.002,
+          "smape": 84.442,
+          "wape": 39.058
+        },
+        "FEDERATED_all_per_store_mae": [
+          1.5288,
+          1.6853,
+          1.4178,
+          2.2563,
+          1.7213,
+          1.4002,
+          1.9388,
+          1.5832,
+          1.6704,
+          1.5311,
+          1.8032,
+          2.0666
+        ],
+        "MOVING_AVG_7_all": {
+          "mae": 1.7292,
+          "rmse": 2.7294,
+          "mape": 51.303,
+          "smape": 76.382,
+          "wape": 39.672
+        }
+      },
+      "warning": {
+        "A": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.1875,
+          "lead_days_first": [
+            13,
+            18,
+            20
+          ],
+          "delay_days_first": [
+            7,
+            2,
+            0
+          ],
+          "detected_share_sustained3": 0.125,
+          "lead_days_sustained3": [
+            18,
+            20
+          ],
+          "delay_days_sustained3": [
+            2,
+            0
+          ],
+          "spurious_surge_before_precursor": 0.25,
+          "fp_nonsurge_sku_share_post": 0.6122448979591837,
+          "fp_nonsurge_sku_share_whole": 0.6224489795918368,
+          "fp_nonsurge_skuday_share_pre": 0.11745689655172414,
+          "fp_nonsurge_skuday_share_post": 0.16259640102827763,
+          "auc_surge_vs_other_days170_179": 0.22175480769230768,
+          "trajectory": {
+            "150": {
+              "surge": 0.47714392997464333,
+              "other": 0.49673423534077543
+            },
+            "159": {
+              "surge": 0.5123320997876094,
+              "other": 0.5121619484016697
+            },
+            "165": {
+              "surge": 0.522665761209921,
+              "other": 0.526862373527787
+            },
+            "170": {
+              "surge": 0.4852625310674846,
+              "other": 0.5160589344388073
+            },
+            "175": {
+              "surge": 0.44270136690336814,
+              "other": 0.5041181052530057
+            },
+            "180": {
+              "surge": 0.4066013736693059,
+              "other": 0.5136383964974692
+            },
+            "190": {
+              "surge": 0.29825373607955485,
+              "other": 0.5158471258055178
+            },
+            "200": {
+              "surge": 0.2312973442085911,
+              "other": 0.5067045909655774
+            },
+            "209": {
+              "surge": 0.20844760224794692,
+              "other": 0.5181444737682955
+            }
+          }
+        },
+        "A3": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 0.0625,
+          "lead_days_first": [
+            14
+          ],
+          "delay_days_first": [
+            6
+          ],
+          "detected_share_sustained3": 0.0,
+          "lead_days_sustained3": [],
+          "delay_days_sustained3": [],
+          "spurious_surge_before_precursor": 0.0,
+          "fp_nonsurge_sku_share_post": 0.4387755102040816,
+          "fp_nonsurge_sku_share_whole": 0.45918367346938777,
+          "fp_nonsurge_skuday_share_pre": 0.03987068965517242,
+          "fp_nonsurge_skuday_share_post": 0.05248500428449015,
+          "auc_surge_vs_other_days170_179": 0.1778846153846154,
+          "trajectory": {
+            "150": {
+              "surge": 0.4562689920828286,
+              "other": 0.470817397123438
+            },
+            "159": {
+              "surge": 0.4724232576166585,
+              "other": 0.4797623341860758
+            },
+            "165": {
+              "surge": 0.47975559099634374,
+              "other": 0.4953595744627797
+            },
+            "170": {
+              "surge": 0.4565659165260919,
+              "other": 0.486031849928074
+            },
+            "175": {
+              "surge": 0.41560727627827937,
+              "other": 0.47677752112045496
+            },
+            "180": {
+              "surge": 0.380284727771975,
+              "other": 0.4848374769973347
+            },
+            "190": {
+              "surge": 0.29145431740429756,
+              "other": 0.48852690433710677
+            },
+            "200": {
+              "surge": 0.21993936998372426,
+              "other": 0.47799529317695183
+            },
+            "209": {
+              "surge": 0.18547411074006592,
+              "other": 0.4908883586733693
+            }
+          }
+        },
+        "B": {
+          "surge_skus": 16,
+          "surge_published": 16,
+          "detected_share_first": 1.0,
+          "lead_days_first": [
+            20,
+            12,
+            17,
+            6,
+            15,
+            9,
+            11,
+            8,
+            13,
+            20,
+            3,
+            10,
+            18,
+            10,
+            8,
+            15
+          ],
+          "delay_days_first": [
+            0,
+            8,
+            3,
+            14,
+            5,
+            11,
+            9,
+            12,
+            7,
+            0,
+            17,
+            10,
+            2,
+            10,
+            12,
+            5
+          ],
+          "detected_share_sustained3": 1.0,
+          "lead_days_sustained3": [
+            7,
+            12,
+            17,
+            6,
+            7,
+            9,
+            5,
+            8,
+            10,
+            9,
+            3,
+            10,
+            18,
+            10,
+            8,
+            15
+          ],
+          "delay_days_sustained3": [
+            13,
+            8,
+            3,
+            14,
+            13,
+            11,
+            15,
+            12,
+            10,
+            11,
+            17,
+            10,
+            2,
+            10,
+            12,
+            5
+          ],
+          "spurious_surge_before_precursor": 0.5625,
+          "fp_nonsurge_sku_share_post": 0.9387755102040817,
+          "fp_nonsurge_sku_share_whole": 0.9591836734693877,
+          "fp_nonsurge_skuday_share_pre": 0.34375,
+          "fp_nonsurge_skuday_share_post": 0.30569837189374466,
+          "auc_surge_vs_other_days170_179": 0.8419471153846154,
+          "trajectory": {
+            "150": {
+              "surge": 0.5523682383534328,
+              "other": 0.5675851620243672
+            },
+            "159": {
+              "surge": 0.47674058192827595,
+              "other": 0.5694687487757846
+            },
+            "165": {
+              "surge": 0.5193464457253221,
+              "other": 0.5477962226907721
+            },
+            "170": {
+              "surge": 0.6031726355412845,
+              "other": 0.5400034536009856
+            },
+            "175": {
+              "surge": 0.7042757720981447,
+              "other": 0.564136551369067
+            },
+            "180": {
+              "surge": 0.7621153585999239,
+              "other": 0.5374418090469738
+            },
+            "190": {
+              "surge": 0.8779502682867977,
+              "other": 0.5602412460617051
+            },
+            "200": {
+              "surge": 0.9244392519860398,
+              "other": 0.5521360138603078
+            },
+            "209": {
+              "surge": 0.8386608931314676,
+              "other": 0.5339048564845682
+            }
+          }
+        }
+      },
+      "threshold_sweep": {
+        "A": {
+          "0.6": {
+            "detected_share_first": 0.1875,
+            "detected_share_sustained3": 0.125,
+            "spurious_surge_before_precursor": 0.25,
+            "fp_nonsurge_sku_share_post": 0.6122448979591837,
+            "fp_nonsurge_skuday_share_post": 0.16259640102827763
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.2755102040816326,
+            "fp_nonsurge_skuday_share_post": 0.02442159383033419
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.030612244897959183,
+            "fp_nonsurge_skuday_share_post": 0.0019280205655526992
+          }
+        },
+        "A3": {
+          "0.6": {
+            "detected_share_first": 0.0625,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.4387755102040816,
+            "fp_nonsurge_skuday_share_post": 0.05248500428449015
+          },
+          "0.7": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.07142857142857142,
+            "fp_nonsurge_skuday_share_post": 0.003213367609254499
+          },
+          "0.8": {
+            "detected_share_first": 0.0,
+            "detected_share_sustained3": 0.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.0,
+            "fp_nonsurge_skuday_share_post": 0.0
+          }
+        },
+        "B": {
+          "0.6": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.5625,
+            "fp_nonsurge_sku_share_post": 0.9387755102040817,
+            "fp_nonsurge_skuday_share_post": 0.30569837189374466
+          },
+          "0.7": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.125,
+            "fp_nonsurge_sku_share_post": 0.673469387755102,
+            "fp_nonsurge_skuday_share_post": 0.16838046272493573
+          },
+          "0.8": {
+            "detected_share_first": 1.0,
+            "detected_share_sustained3": 1.0,
+            "spurious_surge_before_precursor": 0.0,
+            "fp_nonsurge_sku_share_post": 0.41836734693877553,
+            "fp_nonsurge_skuday_share_post": 0.08354755784061697
+          }
+        }
+      },
+      "uplift_mae": {
+        "none": {
+          "surge": 3.2042212878408947,
+          "other": 1.3675332711937425
+        },
+        "A": {
+          "surge": 3.505435369832413,
+          "other": 1.3801193382766863
+        },
+        "A3": {
+          "surge": 3.5344797356268747,
+          "other": 1.3817304140727675
+        },
+        "B": {
+          "surge": 2.7881189606033394,
+          "other": 1.380247682562696
+        },
+        "oracle": {
+          "surge": 2.6720589064559905,
+          "other": 1.3675332711937425
+        }
+      },
+      "replenishment": {
+        "none": {
+          "surge": {
+            "stockout_day_share": 0.012670196671709532,
+            "lost_unit_share": 0.01265493424165011,
+            "stock_per_daily_demand": 3.9321600908316774
+          },
+          "other": {
+            "stockout_day_share": 0.002343475373979612,
+            "lost_unit_share": 0.0008313017065664841,
+            "stock_per_daily_demand": 6.480948003676912
+          }
+        },
+        "A": {
+          "surge": {
+            "stockout_day_share": 0.031013615733736764,
+            "lost_unit_share": 0.0276989308354622,
+            "stock_per_daily_demand": 3.4169032074936134
+          },
+          "other": {
+            "stockout_day_share": 0.002616880834277233,
+            "lost_unit_share": 0.00091922784860717,
+            "stock_per_daily_demand": 6.420246992526278
+          }
+        },
+        "A3": {
+          "surge": {
+            "stockout_day_share": 0.03328290468986384,
+            "lost_unit_share": 0.029402024789478665,
+            "stock_per_daily_demand": 3.3874538745387452
+          },
+          "other": {
+            "stockout_day_share": 0.0026559387571768933,
+            "lost_unit_share": 0.0008792614204068582,
+            "stock_per_daily_demand": 6.290555933016266
+          }
+        },
+        "B": {
+          "surge": {
+            "stockout_day_share": 0.0035930408472012103,
+            "lost_unit_share": 0.003973885892705081,
+            "stock_per_daily_demand": 4.957659191976535
+          },
+          "other": {
+            "stockout_day_share": 0.0019528961449830097,
+            "lost_unit_share": 0.000599496423004676,
+            "stock_per_daily_demand": 6.575260780944007
+          }
+        },
+        "oracle": {
+          "surge": {
+            "stockout_day_share": 0.0035930408472012103,
+            "lost_unit_share": 0.003075030750307503,
+            "stock_per_daily_demand": 5.0576923076923075
+          },
+          "other": {
+            "stockout_day_share": 0.002343475373979612,
+            "lost_unit_share": 0.0008313017065664841,
+            "stock_per_daily_demand": 6.480948003676912
+          }
+        }
+      },
+      "state_bytes": 122680,
+      "seconds": 1168.3
+    }
+  ]
+}

@@ -5,6 +5,7 @@ export const pool = new pg.Pool({ connectionString: cfg.dbUrl, max: 8 });
 // timestamptz(3) values are read as JS Dates (ms precision)
 pg.types.setTypeParser(20, (v) => Number(v)); // int8 -> number (ids fit in 2^53)
 pg.types.setTypeParser(1700, (v) => v); // numeric stays a string (exact money)
+pg.types.setTypeParser(1082, (v) => v); // date stays 'YYYY-MM-DD' (no timezone shift)
 
 export async function q<T = any>(text: string, params: any[] = [], client?: pg.PoolClient): Promise<T[]> {
   const r = await (client ?? pool).query(text, params);

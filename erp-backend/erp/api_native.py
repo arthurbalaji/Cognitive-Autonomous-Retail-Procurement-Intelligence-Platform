@@ -187,6 +187,53 @@ def add_lot(item_id: int, req: LotReq, co: dict = Depends(company_of)):
     return domain.receive_lot(co, item_id, req.qty, exp, req.lotNo)
 
 
+class NewItem(BaseModel):
+    sku: str
+    name: str
+    gtin: str | None = None
+    category: str | None = None
+    uom: str | None = "EA"
+    packSize: int = 1
+    moq: int = 1
+    leadTimeDays: int = 3
+    shelfLifeDays: int | None = None
+    maxDiscountPct: float = 0.2
+    listPrice: str
+    tiers: list[dict] | None = None
+    openingQty: int = 0
+    openingExpiryDays: int | None = None
+
+
+@router.post("/items", status_code=201)
+def create_item(req: NewItem, co: dict = Depends(company_of), user: dict = Depends(current_user)):
+    return domain.create_item(co, req.model_dump(), user["name"])
+
+
+class BillLine(BaseModel):
+    itemId: int
+    qty: int
+    unitCost: str
+    lotNo: str | None = None
+    expiryDate: str | None = None
+
+
+class NewBill(BaseModel):
+    vendor: str
+    billNo: str
+    billDate: date | None = None
+    lines: list[BillLine]
+
+
+@router.get("/purchases")
+def purchases(co: dict = Depends(company_of)):
+    return domain.list_purchase_bills(co["id"])
+
+
+@router.post("/purchases", status_code=201)
+def create_purchase(req: NewBill, co: dict = Depends(company_of), user: dict = Depends(current_user)):
+    return domain.create_purchase_bill(co, req.vendor, req.billNo, req.billDate, [ln.model_dump() for ln in req.lines], user["name"])
+
+
 class Flags(BaseModel):
     autoConfirm: bool | None = None
     autoProgress: bool | None = None

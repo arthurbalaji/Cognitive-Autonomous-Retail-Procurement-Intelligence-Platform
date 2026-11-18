@@ -151,20 +151,124 @@ function Incoming({ shop, token, tick }: { shop: Shop; token: string; tick: numb
   );
 }
 
+function AddProduct({ shop, token, onCreated, onCancel }: { shop: Shop; token: string; onCreated: (p: { sku: string; title: string; cost: string }) => void; onCancel: () => void }) {
+  const [f, setF] = useState({ title: '', sku: '', barcode: '', category: '', price: '', cost: '', stock: '0' });
+  const [err, setErr] = useState('');
+  const [busy, setBusy] = useState(false);
+  const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
+  async function save(e: React.FormEvent) {
+    e.preventDefault(); setBusy(true); setErr('');
+    try {
+      await call(`/pos/api/shops/${shop.handle}/products`, token, { ...f, price: Number(f.price), cost: f.cost === '' ? null : Number(f.cost), stock: Number(f.stock || 0) });
+      onCreated({ sku: f.sku.trim(), title: f.title.trim(), cost: f.cost });
+    } catch (x: any) { setErr(x.message); } finally { setBusy(false); }
+  }
+  return (
+    <form onSubmit={save} className="card space-y-3 border-pos-500 p-4">
+      <h3 className="font-semibold">Add product</h3>
+      <div className="grid gap-3 md:grid-cols-3">
+        <label className="text-xs text-slate-500 md:col-span-2">Product name *<input className="input mt-1" value={f.title} onChange={set('title')} required /></label>
+        <label className="text-xs text-slate-500">SKU *<input className="input mt-1" value={f.sku} onChange={set('sku')} required /></label>
+        <label className="text-xs text-slate-500">Barcode (GTIN)<input className="input mt-1" value={f.barcode} onChange={set('barcode')} inputMode="numeric" /></label>
+        <label className="text-xs text-slate-500">Category<input className="input mt-1" value={f.category} onChange={set('category')} placeholder="e.g. FOOD_BEVERAGE" /></label>
+        <label className="text-xs text-slate-500">Selling price (₹) *<input className="input mt-1" type="number" min="0.01" step="0.01" value={f.price} onChange={set('price')} required /></label>
+        <label className="text-xs text-slate-500">Cost (₹)<input className="input mt-1" type="number" min="0" step="0.01" value={f.cost} onChange={set('cost')} /></label>
+        <label className="text-xs text-slate-500">Opening stock<input className="input mt-1" type="number" min="0" step="1" value={f.stock} onChange={set('stock')} /></label>
+      </div>
+      <p className="text-xs text-slate-500">Use the manufacturer barcode (GTIN) so CARPIP can match this product to wholesaler offers. It appears in CARPIP within seconds.</p>
+      {err && <p role="alert" className="rounded bg-red-50 p-2 text-sm text-red-800">⚠ {err}</p>}
+      <div className="flex gap-2"><button className="btn-pos" disabled={busy}>{busy ? 'Saving…' : 'Save product'}</button><button type="button" className="btn-ghost" onClick={onCancel}>Cancel</button></div>
+    </form>
+  );
+}
+
+type BillLine = { sku: string; title: string; qty: string; cost: string };
+
+function Purchases({ shop, token, onChanged }: { shop: Shop; token: string; onChanged: () => void }) {
+  const [rows, setRows] = useState<any[]>([]);
+  const [open, setOpen] = useState(false);
+  const [addNew, setAddNew] = useState(false);
+  const [supplier, setSupplier] = useState('');
+  const [invoice, setInvoice] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [lines, setLines] = useState<BillLine[]>([]);
+  const [q, setQ] = useState('');
+  const [hits, setHits] = useState<Product[]>([]);
+  const [err, setErr] = useState('');
+  const [ok, setOk] = useState('');
+  const [busy, setBusy] = useState(false);
+  const load = useCallback(() => call<any[]>(`/pos/api/shops/${shop.handle}/purchases`, token).then(setRows).catch(() => undefined), [shop.handle, token]);
+  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    if (!q.trim()) { setHits([]); return; }
+    const t = setTimeout(() => call<Product[]>(`/pos/api/shops/${shop.handle}/products?q=${encodeURIComponent(q.trim())}`, token).then((r) => setHits(r.slice(0, 8))).catch(() => undefined), 200);
+    return () => clearTimeout(t);
+  }, [q, shop.handle, token]);
+  const addLine = (sku: string, title: string, cost = '') => { setLines((l) => (l.some((x) => x.sku === sku) ? l : [...l, { sku, title, qty: '1', cost }])); setQ(''); setHits([]); };
+  const patch = (i: number, k: 'qty' | 'cost', v: string) => setLines((l) => l.map((x, j) => (j === i ? { ...x, [k]: v } : x)));
+  const total = lines.reduce((a, l) => a + (Number(l.qty) || 0) * (Number(l.cost) || 0), 0);
+  function reset() { setOpen(false); setAddNew(false); setSupplier(''); setInvoice(''); setLines([]); setQ(''); setErr(''); }
+  async function save() {
+    setBusy(true); setErr(''); setOk('');
+    try {
+      const r = await call(`/pos/api/shops/${shop.handle}/purchases`, token, { supplier, invoiceNo: invoice, invoiceDate: date, lines: lines.map((l) => ({ sku: l.sku, qty: Number(l.qty), unitCost: Number(l.cost) })) });
+      setOk(`Purchase ${r.invoice_no} saved · ${r.lines} item(s) · ${inr(r.total)} · stock updated`);
+      reset(); await load(); onChanged();
+    } catch (x: any) { setErr(x.message); } finally { setBusy(false); }
+  }
+  const valid = supplier.trim() && invoice.trim() && lines.length > 0 && lines.every((l) => Number(l.qty) >= 1 && Number.isInteger(Number(l.qty)) && l.cost !== '' && Number(l.cost) >= 0);
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3"><button className="btn-pos" onClick={() => (open ? reset() : setOpen(true))}>{open ? 'Close' : '＋ New purchase bill'}</button>{ok && <span role="status" className="rounded bg-emerald-50 px-2 py-1 text-sm text-emerald-800">✓ {ok}</span>}</div>
+      {open && (
+        <div className="card space-y-3 p-4">
+          <div className="grid gap-3 md:grid-cols-3">
+            <label className="text-xs text-slate-500">Supplier *<input className="input mt-1" value={supplier} onChange={(e) => setSupplier(e.target.value)} /></label>
+            <label className="text-xs text-slate-500">Invoice no. *<input className="input mt-1" value={invoice} onChange={(e) => setInvoice(e.target.value)} /></label>
+            <label className="text-xs text-slate-500">Invoice date<input className="input mt-1" type="date" value={date} onChange={(e) => setDate(e.target.value)} /></label>
+          </div>
+          <div className="relative flex items-center gap-2">
+            <input className="input max-w-sm" placeholder="Search product to add (name, SKU or barcode)…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Add product to bill" />
+            <button className="btn-ghost" onClick={() => setAddNew(true)}>＋ New product</button>
+            {hits.length > 0 && <ul className="absolute left-0 top-full z-10 mt-1 w-full max-w-sm rounded-lg border border-slate-200 bg-white shadow-lg">{hits.map((h) => <li key={h.sku}><button className="w-full px-3 py-2 text-left text-sm hover:bg-pos-50" onClick={() => addLine(h.sku, h.title)}>{h.title} <span className="text-xs text-slate-400">{h.sku} · {h.available} on hand</span></button></li>)}</ul>}
+          </div>
+          {addNew && <AddProduct shop={shop} token={token} onCancel={() => setAddNew(false)} onCreated={(p) => { setAddNew(false); addLine(p.sku, p.title, p.cost); onChanged(); }} />}
+          <table className="w-full text-sm"><thead className="border-b text-left text-xs uppercase text-slate-500"><tr><th className="py-2">Product</th><th>Quantity</th><th>Unit cost (₹)</th><th className="text-right">Line total</th><th /></tr></thead>
+            <tbody className="divide-y divide-slate-100">{lines.map((l, i) => <tr key={l.sku}><td className="py-2">{l.title}<div className="text-xs text-slate-400">{l.sku}</div></td>
+              <td><input className="input !w-24 !py-1" type="number" min="1" step="1" value={l.qty} onChange={(e) => patch(i, 'qty', e.target.value)} aria-label="quantity" /></td>
+              <td><input className="input !w-28 !py-1" type="number" min="0" step="0.01" value={l.cost} onChange={(e) => patch(i, 'cost', e.target.value)} aria-label="unit cost" /></td>
+              <td className="text-right tabular-nums">{inr((Number(l.qty) || 0) * (Number(l.cost) || 0))}</td>
+              <td className="text-right"><button className="text-xs text-slate-500 hover:underline" onClick={() => setLines(lines.filter((_, j) => j !== i))}>remove</button></td></tr>)}</tbody></table>
+          {lines.length === 0 && <p className="text-sm text-slate-500">Search for a product above, or add a new one, to start the bill.</p>}
+          {err && <p role="alert" className="rounded bg-red-50 p-2 text-sm text-red-800">⚠ {err}</p>}
+          <div className="flex items-center justify-between border-t border-slate-100 pt-3"><span className="text-sm text-slate-500">Bill total <b className="ml-2 text-lg text-ink tabular-nums">{inr(total)}</b></span><button className="btn-pos" disabled={!valid || busy} onClick={save}>{busy ? 'Saving…' : 'Save purchase & add stock'}</button></div>
+        </div>
+      )}
+      <div className="card overflow-x-auto"><table className="w-full text-sm"><thead className="border-b bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th className="p-3">Invoice</th><th>Supplier</th><th>Date</th><th>Items</th><th className="pr-4 text-right">Total</th><th>Entered by</th></tr></thead>
+        <tbody className="divide-y divide-slate-100">{rows.map((p) => <tr key={p.id}><td className="p-3 font-medium">{p.invoice_no}</td><td>{p.supplier}</td><td>{String(p.invoice_date).slice(0, 10)}</td><td className="text-slate-600">{(p.lines ?? []).map((l: any) => `${l.title} ×${l.quantity}`).join(', ')}</td><td className="pr-4 text-right tabular-nums">{inr(p.total)}</td><td className="text-slate-500">{p.created_by}</td></tr>)}</tbody></table>
+        {rows.length === 0 && <p className="p-8 text-center text-sm text-slate-500">No purchase bills yet.</p>}</div>
+    </div>
+  );
+}
+
 function Stock({ shop, token }: { shop: Shop; token: string }) {
   const [rows, setRows] = useState<Product[]>([]);
   const [q, setQ] = useState('');
   const [msg, setMsg] = useState('');
+  const [adding, setAdding] = useState(false);
   const load = useCallback(() => call<Product[]>(`/pos/api/shops/${shop.handle}/products${q ? `?q=${encodeURIComponent(q)}` : ''}`, token).then(setRows).catch(() => undefined), [shop.handle, token, q]);
   useEffect(() => { load(); const t = setInterval(load, 8000); return () => clearInterval(t); }, [load]);
   async function adj(sku: string, delta: number) {
     try { const r = await call(`/pos/api/shops/${shop.handle}/adjust`, token, { sku, delta, reason: 'MANUAL_COUNT' }); setMsg(`${sku}: now ${r.available}`); load(); } catch (e: any) { setMsg(e.message); }
   }
   return (
-    <div className="card"><div className="flex items-center gap-3 border-b border-slate-100 p-3"><input className="input max-w-xs" placeholder="Filter…" value={q} onChange={(e) => setQ(e.target.value)} /><span className="text-sm text-slate-500">{msg}</span></div>
+    <div className="space-y-4">
+    {adding && <AddProduct shop={shop} token={token} onCancel={() => setAdding(false)} onCreated={(p) => { setAdding(false); setMsg(`${p.sku}: product added`); load(); }} />}
+    <div className="card"><div className="flex items-center gap-3 border-b border-slate-100 p-3"><input className="input max-w-xs" placeholder="Filter…" value={q} onChange={(e) => setQ(e.target.value)} /><button className="btn-pos" onClick={() => setAdding(true)}>＋ Add product</button><span className="text-sm text-slate-500">{msg}</span></div>
       <div className="max-h-[70vh] overflow-y-auto"><table className="w-full text-sm"><thead className="sticky top-0 border-b bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th className="p-3">Product</th><th>SKU</th><th>Barcode</th><th>Price</th><th>On hand</th><th>Count correction</th></tr></thead>
         <tbody className="divide-y divide-slate-100">{rows.map((p) => <tr key={p.sku}><td className="p-3">{p.title}</td><td className="text-slate-500">{p.sku}</td><td className="font-mono text-xs text-slate-500">{p.barcode}</td><td className="tabular-nums">{inr(p.price)}</td><td className="font-semibold tabular-nums">{p.available}</td>
           <td><button className="btn-ghost mr-1 !px-2 !py-1" onClick={() => adj(p.sku, -1)}>−1</button><button className="btn-ghost !px-2 !py-1" onClick={() => adj(p.sku, 1)}>+1</button></td></tr>)}</tbody></table></div></div>
+    </div>
   );
 }
 
@@ -199,7 +303,7 @@ function Integration({ shop, token, tick }: { shop: Shop; token: string; tick: n
 export default function App() {
   const saved = useMemo(() => { try { return JSON.parse(localStorage.getItem('pos.session') ?? 'null'); } catch { return null; } }, []);
   const [session, setSession] = useState<{ shop: Shop; token: string; user: string } | null>(saved);
-  const [tab, setTab] = useState<'register' | 'orders' | 'incoming' | 'stock' | 'integration'>('register');
+  const [tab, setTab] = useState<'register' | 'orders' | 'incoming' | 'stock' | 'purchases' | 'integration'>('register');
   const [tick, setTick] = useState(0);
   useEffect(() => { if (session) localStorage.setItem('pos.session', JSON.stringify(session)); else localStorage.removeItem('pos.session'); }, [session]);
   useEffect(() => { // token expired / server restarted -> back to login
@@ -208,7 +312,7 @@ export default function App() {
   }, [session]);
   if (!session) return <Login onDone={(shop, token, user) => setSession({ shop, token, user })} />;
   const { shop, token } = session;
-  const TABS: [typeof tab, string][] = [['register', 'Register'], ['orders', 'Orders'], ['incoming', 'Incoming stock'], ['stock', 'Stock'], ['integration', 'Integration log']];
+  const TABS: [typeof tab, string][] = [['register', 'Register'], ['orders', 'Orders'], ['incoming', 'Incoming stock'], ['stock', 'Stock'], ['purchases', 'Purchases'], ['integration', 'Integration log']];
   return (
     <div className="flex h-full flex-col">
       <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2">
@@ -221,6 +325,7 @@ export default function App() {
         {tab === 'orders' && <Orders shop={shop} token={token} tick={tick} />}
         {tab === 'incoming' && <Incoming shop={shop} token={token} tick={tick} />}
         {tab === 'stock' && <Stock shop={shop} token={token} />}
+        {tab === 'purchases' && <Purchases shop={shop} token={token} onChanged={() => setTick((t) => t + 1)} />}
         {tab === 'integration' && <Integration shop={shop} token={token} tick={tick} />}
       </main>
     </div>

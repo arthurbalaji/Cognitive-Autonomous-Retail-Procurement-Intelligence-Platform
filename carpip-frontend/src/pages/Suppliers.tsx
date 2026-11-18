@@ -23,7 +23,7 @@ export default function Suppliers() {
                 {!wholesaler && <td className="td font-medium">{o.supplier}</td>}
                 <td className="td">{o.name}<div className="text-xs text-slate-400">{o.supplier_sku} · {o.gtin}</div></td>
                 <td className="td tabular-nums">{inr(o.list_price, 2)}</td>
-                <td className="td text-xs text-slate-500">{(o.price_tiers ?? []).map((t: any) => `${t.minQty}+ → ${inr(t.unitPrice, 2)}`).join(' · ') || '-'}</td>
+                <td className="td text-xs text-slate-500">{(Array.isArray(o.price_tiers) ? o.price_tiers : []).map((t: any) => `${t.minQty}+ → ${inr(t.unitPrice, 2)}`).join(' · ') || '-'}</td>
                 <td className="td tabular-nums">{o.moq} / {o.pack_size}</td>
                 <td className={`td tabular-nums ${o.available_qty < o.moq * 2 ? 'font-semibold text-amber-700' : ''}`}>{num(o.available_qty)}</td>
                 <td className="td">{o.lead_time_days}d</td><td className="td tabular-nums">{(Number(o.shipping_reliability) * 100).toFixed(0)}%</td>

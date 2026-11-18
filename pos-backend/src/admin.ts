@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { cfg } from './config.js';
 import { q, tx } from './db.js';
-import { adjustLevel, checkout, shopLocation } from './inventory.js';
+import { adjustLevel, checkout, createProduct, shopLocation } from './inventory.js';
 import { enqueueLegacyPush } from './webhooks.js';
 import { pinHash } from './internal.js';
 import { hmacB64, rand, safeEq, sha256Hex } from './util.js';
@@ -77,7 +77,6 @@ export function registerAdmin(app: FastifyInstance): void {
     s.post('/pos/admin/shops/:handle/catalog', async (req) => {
       const shop = await pickShop((req.params as any).handle);
       const items = ((req.body ?? {}) as any).products as any[];
-      const loc = await shopLocation(undefined, shop.id);
       let created = 0;
       let updated = 0;
       await tx(async (c) => {
@@ -90,10 +89,7 @@ export function registerAdmin(app: FastifyInstance): void {
             updated++;
             continue;
           }
-          const p = (await q<any>('INSERT INTO products(shop_id, title, product_type, tags) VALUES ($1,$2,$3,$4) RETURNING id', [shop.id, it.title, it.product_type, it.tags ?? ''], c))[0];
-          const ii = (await q<any>('INSERT INTO inventory_items(shop_id, sku, cost) VALUES ($1,$2,$3) RETURNING id', [shop.id, it.sku, it.cost ?? null], c))[0];
-          await q('INSERT INTO variants(product_id, shop_id, sku, barcode, price, inventory_item_id) VALUES ($1,$2,$3,$4,$5,$6)', [p.id, shop.id, it.sku, it.barcode ?? null, it.price, ii.id], c);
-          await q(`INSERT INTO inventory_levels(inventory_item_id, location_id, available, updated_at) VALUES ($1,$2,$3, now() - interval '1 hour')`, [ii.id, loc, it.stock ?? 0], c);
+          await createProduct(c, shop, it, false); // bootstrap: no per-product webhook, CARPIP syncs the whole catalog afterwards
           created++;
         }
       });

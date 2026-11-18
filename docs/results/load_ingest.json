@@ -1,0 +1,185 @@
+{
+  "hardware": {
+    "host": "Windows-10-10.0.26200-SP0",
+    "note": "all services + load generator on one laptop (i5-1235U, 16 GB, Docker Desktop)"
+  },
+  "secs_per_rate": 60,
+  "items": 100,
+  "outbox_relay_lag_s_p50_p99": [
+    0.197,
+    0.619
+  ],
+  "purchase_orders_before_after": [
+    "43",
+    "43"
+  ],
+  "restore_mismatches": [],
+  "phases": [
+    {
+      "rate": 25,
+      "sent": 1500,
+      "ok": 1500,
+      "errors": 0,
+      "codes": {
+        "200": 1500
+      },
+      "outcomes": {
+        "processed": 1500
+      },
+      "wall_s": 59.99,
+      "achieved_rps": 25.0,
+      "p50_ms": 12.5,
+      "p95_ms": 27.6,
+      "p99_ms": 35.0,
+      "max_ms": 78.1,
+      "drain_s": 3.6,
+      "peak_cpu_pct": {
+        "carpip-carpip-backend-1": 76.75,
+        "carpip-pos-backend-1": 6.85,
+        "carpip-postgres-1": 42.38,
+        "carpip-kafka-1": 240.28
+      },
+      "mean_cpu_pct": {
+        "carpip-carpip-backend-1": 38.2,
+        "carpip-pos-backend-1": 1.2,
+        "carpip-postgres-1": 19.2,
+        "carpip-kafka-1": 49.8
+      },
+      "pipeline": {
+        "applied": 1500,
+        "lag_p50_s": 0.142,
+        "lag_p95_s": 0.24,
+        "lag_p99_s": 0.268,
+        "lag_max_s": 0.357,
+        "span_s": 60.1
+      },
+      "lost_or_unapplied": 0
+    },
+    {
+      "rate": 50,
+      "sent": 3000,
+      "ok": 1311,
+      "errors": 1689,
+      "codes": {
+        "200": 1311,
+        "429": 1689
+      },
+      "outcomes": {
+        "processed": 1311,
+        "429": 1689
+      },
+      "wall_s": 59.97,
+      "achieved_rps": 50.0,
+      "p50_ms": 6.8,
+      "p95_ms": 26.0,
+      "p99_ms": 34.0,
+      "max_ms": 43.2,
+      "drain_s": 3.5,
+      "peak_cpu_pct": {
+        "carpip-carpip-backend-1": 67.13,
+        "carpip-pos-backend-1": 2.3,
+        "carpip-postgres-1": 31.39,
+        "carpip-kafka-1": 183.05
+      },
+      "mean_cpu_pct": {
+        "carpip-carpip-backend-1": 29.4,
+        "carpip-pos-backend-1": 0.4,
+        "carpip-postgres-1": 12.3,
+        "carpip-kafka-1": 39.4
+      },
+      "pipeline": {
+        "applied": 1311,
+        "lag_p50_s": 0.189,
+        "lag_p95_s": 0.309,
+        "lag_p99_s": 0.374,
+        "lag_max_s": 0.442,
+        "span_s": 36.1
+      },
+      "lost_or_unapplied": 0
+    },
+    {
+      "rate": 100,
+      "sent": 6000,
+      "ok": 1200,
+      "errors": 4800,
+      "codes": {
+        "429": 4800,
+        "200": 1200
+      },
+      "outcomes": {
+        "429": 4800,
+        "processed": 1200
+      },
+      "wall_s": 59.99,
+      "achieved_rps": 100.0,
+      "p50_ms": 6.4,
+      "p95_ms": 48.1,
+      "p99_ms": 65.2,
+      "max_ms": 231.2,
+      "drain_s": 3.5,
+      "peak_cpu_pct": {
+        "carpip-carpip-backend-1": 253.87,
+        "carpip-pos-backend-1": 9.26,
+        "carpip-postgres-1": 147.63,
+        "carpip-kafka-1": 232.87
+      },
+      "mean_cpu_pct": {
+        "carpip-carpip-backend-1": 56.1,
+        "carpip-pos-backend-1": 1.2,
+        "carpip-postgres-1": 25.1,
+        "carpip-kafka-1": 61.0
+      },
+      "pipeline": {
+        "applied": 1200,
+        "lag_p50_s": 5.597,
+        "lag_p95_s": 8.491,
+        "lag_p99_s": 9.552,
+        "lag_max_s": 9.844,
+        "span_s": 17.7
+      },
+      "lost_or_unapplied": 0
+    },
+    {
+      "rate": 200,
+      "sent": 12000,
+      "ok": 2400,
+      "errors": 9600,
+      "codes": {
+        "429": 9600,
+        "200": 2400
+      },
+      "outcomes": {
+        "429": 9600,
+        "processed": 2400
+      },
+      "wall_s": 120.7,
+      "achieved_rps": 99.4,
+      "p50_ms": 2846.2,
+      "p95_ms": 16433.7,
+      "p99_ms": 25945.5,
+      "max_ms": 59054.8,
+      "drain_s": 3.7,
+      "peak_cpu_pct": {
+        "carpip-carpip-backend-1": 222.08,
+        "carpip-pos-backend-1": 12.72,
+        "carpip-postgres-1": 97.58,
+        "carpip-kafka-1": 233.76
+      },
+      "mean_cpu_pct": {
+        "carpip-carpip-backend-1": 74.1,
+        "carpip-pos-backend-1": 1.2,
+        "carpip-postgres-1": 28.7,
+        "carpip-kafka-1": 51.2
+      },
+      "pipeline": {
+        "applied": 2400,
+        "lag_p50_s": 1.448,
+        "lag_p95_s": 3.374,
+        "lag_p99_s": 3.823,
+        "lag_max_s": 4.103,
+        "span_s": 80.7
+      },
+      "lost_or_unapplied": 0
+    }
+  ]
+}

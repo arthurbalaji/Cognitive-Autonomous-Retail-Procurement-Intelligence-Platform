@@ -105,7 +105,7 @@ export default function ProductPage() {
           <Table head={['Supplier', 'List price', 'Tiers', 'MOQ / pack', 'Available', 'Lead', 'Reliability', 'Expiry']}>
             {(offers.data ?? []).map((o: any) => (
               <tr key={o.id}><td className="td font-medium">{o.supplier}</td><td className="td tabular-nums">{inr(o.list_price, 2)}</td>
-                <td className="td text-xs text-slate-500">{(o.price_tiers ?? []).map((t: any) => `${t.minQty}+: ${inr(t.unitPrice, 2)}`).join(' · ') || '-'}</td>
+                <td className="td text-xs text-slate-500">{(Array.isArray(o.price_tiers) ? o.price_tiers : []).map((t: any) => `${t.minQty}+: ${inr(t.unitPrice, 2)}`).join(' · ') || '-'}</td>
                 <td className="td tabular-nums">{o.moq} / {o.pack_size}</td><td className="td tabular-nums">{num(o.available_qty)}</td><td className="td">{o.lead_time_days}d</td>
                 <td className="td tabular-nums">{(Number(o.shipping_reliability) * 100).toFixed(0)}%</td><td className="td text-xs">{o.nearest_expiry ?? '-'}</td></tr>
             ))}

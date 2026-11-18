@@ -81,8 +81,11 @@ def _cv(series: Iterable[float]) -> float | None:
     s = [p for p in series if ok(p) and p > 0]
     if len(s) < 2:
         return None
-    m = statistics.fmean(s)
-    return statistics.pstdev(s) / m if m > 0 else None
+    try:
+        m = statistics.fmean(s)
+        return statistics.pstdev(s) / m if m > 0 else None
+    except (OverflowError, ValueError, ZeroDivisionError):   # absurdly large prices: treat as "no usable volatility signal"
+        return None
 
 
 def price_volatility(prices_across_suppliers: Iterable[float], history_prices: Iterable[float]) -> tuple[float, bool]:

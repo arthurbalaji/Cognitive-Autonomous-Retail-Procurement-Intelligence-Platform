@@ -2,8 +2,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { cfg } from './config.js';
 import { q, tx } from './db.js';
-import { adjustLevel, checkout, OutOfStock, shopLocation } from './inventory.js';
-import { sha256Hex, signToken, verifyToken } from './util.js';
+import { adjustLevel, checkout, createProduct, HttpError, OutOfStock, recordPurchase, shopLocation } from './inventory.js';
+import { fromCents, sha256Hex, signToken, toCents, verifyToken } from './util.js';
 import type { Shop } from './webhooks.js';
 
 declare module 'fastify' {
@@ -52,6 +52,50 @@ export function registerInternal(app: FastifyInstance): void {
          WHERE v.shop_id = $1 AND ($2::text IS NULL OR lower(p.title) LIKE $2 OR lower(v.sku) LIKE $2 OR v.barcode = $3)
          ORDER BY p.title LIMIT 400`, [req.uiShop!.id, term, qs.q ?? null]);
     });
+
+    s.post('/pos/api/shops/:handle/products', async (req, reply) => {
+      const b = (req.body ?? {}) as any;
+      const sku = String(b.sku ?? '').trim();
+      const title = String(b.title ?? '').trim();
+      const price = Number(b.price);
+      const cost = b.cost === undefined || b.cost === null || b.cost === '' ? null : Number(b.cost);
+      const stock = b.stock === undefined || b.stock === '' ? 0 : Number(b.stock);
+      if (!sku || !title) return reply.code(400).send({ code: 'BAD_REQUEST', detail: 'sku and title are required' });
+      if (!Number.isFinite(price) || price <= 0) return reply.code(400).send({ code: 'BAD_REQUEST', detail: 'selling price must be greater than 0' });
+      if (cost !== null && (!Number.isFinite(cost) || cost < 0)) return reply.code(400).send({ code: 'BAD_REQUEST', detail: 'cost must be 0 or more' });
+      if (!Number.isInteger(stock) || stock < 0) return reply.code(400).send({ code: 'BAD_REQUEST', detail: 'opening stock must be a whole number, 0 or more' });
+      try {
+        const r = await tx((c) => createProduct(c, req.uiShop!, {
+          sku, title, product_type: b.category ? String(b.category).trim() : null, barcode: b.barcode ? String(b.barcode).trim() : null,
+          price: fromCents(toCents(price)), cost: cost === null ? null : fromCents(toCents(cost)), stock,
+        }));
+        return reply.code(201).send(r);
+      } catch (e: any) {
+        if (e instanceof HttpError) return reply.code(e.statusCode).send({ code: e.code, detail: e.message });
+        throw e;
+      }
+    });
+
+    s.post('/pos/api/shops/:handle/purchases', async (req, reply) => {
+      const b = (req.body ?? {}) as any;
+      const supplier = String(b.supplier ?? '').trim();
+      const invoiceNo = String(b.invoiceNo ?? '').trim();
+      if (!supplier || !invoiceNo) return reply.code(400).send({ code: 'BAD_REQUEST', detail: 'supplier and invoice number are required' });
+      if (b.invoiceDate && !/^\d{4}-\d{2}-\d{2}$/.test(String(b.invoiceDate))) return reply.code(400).send({ code: 'BAD_REQUEST', detail: 'invoice date must be YYYY-MM-DD' });
+      try {
+        const r = await recordPurchase(req.uiShop!, { supplier, invoiceNo, invoiceDate: b.invoiceDate || undefined, lines: Array.isArray(b.lines) ? b.lines : [] }, req.uiUser ?? 'cashier');
+        return reply.code(201).send(r);
+      } catch (e: any) {
+        if (e instanceof HttpError) return reply.code(e.statusCode).send({ code: e.code, detail: e.message });
+        if (e?.code === '23505') return reply.code(409).send({ code: 'DUPLICATE_INVOICE', detail: `invoice ${invoiceNo} from ${supplier} is already recorded` });
+        throw e;
+      }
+    });
+
+    s.get('/pos/api/shops/:handle/purchases', async (req) =>
+      q<any>(`SELECT p.id, p.supplier, p.invoice_no, p.invoice_date, p.total, p.created_by, p.created_at,
+                     (SELECT json_agg(json_build_object('sku', l.sku, 'title', l.title, 'quantity', l.quantity, 'unit_cost', l.unit_cost) ORDER BY l.id) FROM purchase_lines l WHERE l.purchase_id = p.id) AS lines
+              FROM purchases p WHERE p.shop_id = $1 ORDER BY p.id DESC LIMIT 60`, [req.uiShop!.id]));
 
     s.post('/pos/api/shops/:handle/checkout', async (req, reply) => {
       const b = (req.body ?? {}) as { items?: { sku: string; qty: number }[] };

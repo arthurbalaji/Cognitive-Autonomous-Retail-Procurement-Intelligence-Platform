@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import { NavLink, Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from './api';
 import { useAuth, useLive, type User } from './store';
-import { Toasts, useToast } from './ui';
+import { ErrorBoundary, Toasts, useToast } from './ui';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Inventory from './pages/Inventory';
@@ -66,6 +66,7 @@ function useLiveFeed() {
 function Layout() {
   const { user, logout } = useAuth();
   const nav = useNavigate();
+  const { pathname } = useLocation();
   const connected = useLive((s) => s.connected);
   useLiveFeed();
   const toasts = useToast((s) => s.items);
@@ -109,7 +110,7 @@ function Layout() {
             <span className="text-slate-400">INR · IST</span>
           </div>
         </header>
-        <main className="min-h-0 flex-1 overflow-y-auto p-5 lg:p-6"><Outlet /></main>
+        <main className="min-h-0 flex-1 overflow-y-auto p-5 lg:p-6"><ErrorBoundary key={pathname}><Outlet /></ErrorBoundary></main>
       </div>
       <Toasts items={toasts} />
     </div>
@@ -118,6 +119,10 @@ function Layout() {
 
 function Guard() {
   const token = useAuth((s) => s.token);
+  const qc = useQueryClient();
+  // drop every cached response when the session ends (sign-out or 401): the next user must never see, or crash on, the previous user's data
+  // (Guard unmounts whenever the user leaves the signed-in area, which covers sign-out and the 401 auto-logout)
+  useEffect(() => () => qc.clear(), [qc]);
   return token ? <Layout /> : <Navigate to="/login" replace />;
 }
 

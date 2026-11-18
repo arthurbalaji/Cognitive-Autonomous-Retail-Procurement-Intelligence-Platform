@@ -18,9 +18,20 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--n", type=int, default=6)
 a = ap.parse_args()
 
-cred = json.load(open(os.getenv("AWS_CREDENTIALS_FILE", ".demo/aws/credentials.json")))
-client = AnthropicBedrock(aws_region=os.getenv("AWS_REGION", "us-east-1"), aws_access_key=cred["AccessKeyId"], aws_secret_key=cred["SecretAccessKey"],
-                          aws_session_token=cred.get("SessionToken"), timeout=60)
+CRED_FILE = os.getenv("AWS_CREDENTIALS_FILE", ".demo/aws/credentials.json")
+_client, _mtime = None, None
+
+
+def get_client():
+    """Re-read the credentials file whenever aws-creds.sh --loop refreshed it (temporary tokens expire in ~15 min)."""
+    global _client, _mtime
+    m = os.path.getmtime(CRED_FILE)
+    if _client is None or m != _mtime:
+        cred = json.load(open(CRED_FILE))
+        _client = AnthropicBedrock(aws_region=os.getenv("AWS_REGION", "us-east-1"), aws_access_key=cred["AccessKeyId"], aws_secret_key=cred["SecretAccessKey"],
+                                   aws_session_token=cred.get("SessionToken"), timeout=60)
+        _mtime = m
+    return _client
 MODEL = os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-sonnet-5-5")
 SCHEMA = {"type": "object", "properties": {"action": {"type": "string", "enum": ["OFFER", "COUNTER", "ACCEPT", "REJECT"]}, "price": {"type": "number"}, "message": {"type": "string"}},
           "required": ["action", "price", "message"], "additionalProperties": False}
@@ -41,7 +52,7 @@ def raw_rag():
 
 def call(payload):
     t = time.perf_counter()
-    r = client.messages.create(model=MODEL, max_tokens=300, system=SYSTEM, messages=[{"role": "user", "content": json.dumps(payload)}],
+    r = get_client().messages.create(model=MODEL, max_tokens=300, system=SYSTEM, messages=[{"role": "user", "content": json.dumps(payload)}],
                                output_config={"effort": "low", "format": {"type": "json_schema", "schema": SCHEMA}})
     return r.usage.input_tokens, r.usage.output_tokens, (time.perf_counter() - t) * 1000
 

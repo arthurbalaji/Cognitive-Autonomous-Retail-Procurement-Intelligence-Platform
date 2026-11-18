@@ -179,6 +179,27 @@ CREATE TABLE IF NOT EXISTS api_log (
 );
 CREATE INDEX IF NOT EXISTS idx_api_log_shop ON api_log(shop_id, id DESC);
 
+-- manual purchase bills entered at the till (stock-in from any supplier, independent of CARPIP purchase orders)
+CREATE TABLE IF NOT EXISTS purchases (
+  id bigserial PRIMARY KEY,
+  shop_id int NOT NULL REFERENCES shops(id),
+  supplier text NOT NULL,
+  invoice_no text NOT NULL,
+  invoice_date date NOT NULL DEFAULT current_date,
+  total numeric(14,2) NOT NULL,
+  created_by text,
+  created_at timestamptz(3) NOT NULL DEFAULT now(),
+  UNIQUE (shop_id, supplier, invoice_no)
+);
+CREATE TABLE IF NOT EXISTS purchase_lines (
+  id bigserial PRIMARY KEY,
+  purchase_id bigint NOT NULL REFERENCES purchases(id),
+  sku text NOT NULL,
+  title text NOT NULL,
+  quantity int NOT NULL CHECK (quantity > 0),
+  unit_cost numeric(12,2) NOT NULL CHECK (unit_cost >= 0)
+);
+
 CREATE TABLE IF NOT EXISTS settings (key text PRIMARY KEY, value text NOT NULL);
 INSERT INTO settings(key, value) VALUES ('webhooks_paused', 'false'), ('webhooks_drop', 'false') ON CONFLICT DO NOTHING;
 `;

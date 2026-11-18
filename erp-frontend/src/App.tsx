@@ -104,11 +104,125 @@ function OrderDetail({ id, onBack }: { id: number; onBack: () => void }) {
   );
 }
 
+function NewItem({ onCreated, onCancel }: { onCreated: (it: { id: number; sku: string }) => void; onCancel: () => void }) {
+  const [f, setF] = useState({ name: '', sku: '', gtin: '', category: '', uom: 'EA', packSize: '1', moq: '1', leadTimeDays: '3', shelfLifeDays: '', maxDiscountPct: '20', listPrice: '', openingQty: '0', openingExpiryDays: '' });
+  const [err, setErr] = useState('');
+  const [busy, setBusy] = useState(false);
+  const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.value });
+  async function save(e: React.FormEvent) {
+    e.preventDefault(); setBusy(true); setErr('');
+    try {
+      const r = await call('/erp/api/items', {
+        sku: f.sku.trim(), name: f.name.trim(), gtin: f.gtin.trim() || null, category: f.category.trim() || null, uom: f.uom.trim() || 'EA',
+        packSize: Number(f.packSize || 1), moq: Number(f.moq || 1), leadTimeDays: Number(f.leadTimeDays || 0), shelfLifeDays: f.shelfLifeDays ? Number(f.shelfLifeDays) : null,
+        maxDiscountPct: Number(f.maxDiscountPct || 0) / 100, listPrice: f.listPrice, openingQty: Number(f.openingQty || 0), openingExpiryDays: f.openingExpiryDays ? Number(f.openingExpiryDays) : null,
+      });
+      onCreated(r);
+    } catch (x: any) { setErr(typeof x.message === 'string' ? x.message : 'could not save item'); } finally { setBusy(false); }
+  }
+  const lbl = 'text-xs text-slate-500';
+  return (
+    <form onSubmit={save} className="card space-y-3 border-erp-500 p-4">
+      <h3 className="font-semibold">New catalog item</h3>
+      <div className="grid gap-3 md:grid-cols-4">
+        <label className={`${lbl} md:col-span-2`}>Item name *<input className="input mt-1" value={f.name} onChange={set('name')} required /></label>
+        <label className={lbl}>SKU *<input className="input mt-1" value={f.sku} onChange={set('sku')} required /></label>
+        <label className={lbl}>Barcode (GTIN)<input className="input mt-1" value={f.gtin} onChange={set('gtin')} inputMode="numeric" /></label>
+        <label className={lbl}>Category<input className="input mt-1" value={f.category} onChange={set('category')} placeholder="e.g. FOOD_BEVERAGE" /></label>
+        <label className={lbl}>Unit<input className="input mt-1" value={f.uom} onChange={set('uom')} /></label>
+        <label className={lbl}>List price (₹) *<input className="input mt-1" type="number" min="0.01" step="0.01" value={f.listPrice} onChange={set('listPrice')} required /></label>
+        <label className={lbl}>Max discount %<input className="input mt-1" type="number" min="0" max="50" step="1" value={f.maxDiscountPct} onChange={set('maxDiscountPct')} /></label>
+        <label className={lbl}>Pack size<input className="input mt-1" type="number" min="1" value={f.packSize} onChange={set('packSize')} /></label>
+        <label className={lbl}>MOQ<input className="input mt-1" type="number" min="1" value={f.moq} onChange={set('moq')} /></label>
+        <label className={lbl}>Lead time (days)<input className="input mt-1" type="number" min="0" value={f.leadTimeDays} onChange={set('leadTimeDays')} /></label>
+        <label className={lbl}>Shelf life (days)<input className="input mt-1" type="number" min="1" value={f.shelfLifeDays} onChange={set('shelfLifeDays')} /></label>
+        <label className={lbl}>Opening stock<input className="input mt-1" type="number" min="0" value={f.openingQty} onChange={set('openingQty')} /></label>
+        <label className={lbl}>Opening lot expires in (days)<input className="input mt-1" type="number" min="1" value={f.openingExpiryDays} onChange={set('openingExpiryDays')} /></label>
+      </div>
+      <p className="text-xs text-slate-500">Volume price tiers can be added after saving. Retail buyers in CARPIP match your item by barcode (GTIN), so use the manufacturer barcode.</p>
+      {err && <p role="alert" className="rounded bg-red-50 p-2 text-sm text-red-800">⚠ {err}</p>}
+      <div className="flex gap-2"><button className="btn-erp" disabled={busy}>{busy ? 'Saving…' : 'Save item'}</button><button type="button" className="btn-ghost" onClick={onCancel}>Cancel</button></div>
+    </form>
+  );
+}
+
+type BillLine = { itemId: number; name: string; sku: string; qty: string; cost: string; lotNo: string; expiry: string };
+
+function Purchases() {
+  const [rows, setRows] = useState<any[]>([]);
+  const [open, setOpen] = useState(false);
+  const [addNew, setAddNew] = useState(false);
+  const [vendor, setVendor] = useState('');
+  const [billNo, setBillNo] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [lines, setLines] = useState<BillLine[]>([]);
+  const [q, setQ] = useState('');
+  const [hits, setHits] = useState<any[]>([]);
+  const [err, setErr] = useState('');
+  const [ok, setOk] = useState('');
+  const [busy, setBusy] = useState(false);
+  const load = useCallback(() => call<any[]>('/erp/api/purchases').then(setRows).catch(() => undefined), []);
+  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    if (!q.trim()) { setHits([]); return; }
+    const t = setTimeout(() => call<any[]>(`/erp/api/items?q=${encodeURIComponent(q.trim())}`).then((r) => setHits(r.slice(0, 8))).catch(() => undefined), 200);
+    return () => clearTimeout(t);
+  }, [q]);
+  const addLine = (itemId: number, name: string, sku: string) => { setLines((l) => (l.some((x) => x.itemId === itemId) ? l : [...l, { itemId, name, sku, qty: '1', cost: '', lotNo: '', expiry: '' }])); setQ(''); setHits([]); };
+  const patch = (i: number, k: keyof BillLine, v: string) => setLines((l) => l.map((x, j) => (j === i ? { ...x, [k]: v } : x)));
+  const total = lines.reduce((a, l) => a + (Number(l.qty) || 0) * (Number(l.cost) || 0), 0);
+  function reset() { setOpen(false); setAddNew(false); setVendor(''); setBillNo(''); setLines([]); setQ(''); setErr(''); }
+  async function save() {
+    setBusy(true); setErr(''); setOk('');
+    try {
+      const r = await call('/erp/api/purchases', { vendor, billNo, billDate: date || null, lines: lines.map((l) => ({ itemId: l.itemId, qty: Number(l.qty), unitCost: l.cost, lotNo: l.lotNo || null, expiryDate: l.expiry || null })) });
+      setOk(`Bill ${r.bill_no} saved · ${r.lines} lot(s) received · ${inr(r.total)}`);
+      reset(); await load();
+    } catch (x: any) { setErr(typeof x.message === 'string' ? x.message : 'could not save bill'); } finally { setBusy(false); }
+  }
+  const valid = vendor.trim() && billNo.trim() && lines.length > 0 && lines.every((l) => Number.isInteger(Number(l.qty)) && Number(l.qty) >= 1 && l.cost !== '' && Number(l.cost) >= 0);
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3"><button className="btn-erp" onClick={() => (open ? reset() : setOpen(true))}>{open ? 'Close' : '＋ New purchase bill'}</button>{ok && <span role="status" className="rounded bg-emerald-50 px-2 py-1 text-sm text-emerald-800">✓ {ok}</span>}</div>
+      {open && (
+        <div className="card space-y-3 p-4">
+          <div className="grid gap-3 md:grid-cols-3">
+            <label className="text-xs text-slate-500">Vendor *<input className="input mt-1" value={vendor} onChange={(e) => setVendor(e.target.value)} /></label>
+            <label className="text-xs text-slate-500">Bill no. *<input className="input mt-1" value={billNo} onChange={(e) => setBillNo(e.target.value)} /></label>
+            <label className="text-xs text-slate-500">Bill date<input className="input mt-1" type="date" value={date} onChange={(e) => setDate(e.target.value)} /></label>
+          </div>
+          <div className="relative flex items-center gap-2">
+            <input className="input max-w-sm" placeholder="Search item to add (name, SKU or barcode)…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Add item to bill" />
+            <button className="btn-ghost" onClick={() => setAddNew(true)}>＋ New item</button>
+            {hits.length > 0 && <ul className="absolute left-0 top-full z-10 mt-1 w-full max-w-sm rounded-lg border border-slate-200 bg-white shadow-lg">{hits.map((h) => <li key={h.id}><button className="w-full px-3 py-2 text-left text-sm hover:bg-erp-50" onClick={() => addLine(h.id, h.name, h.sku)}>{h.name} <span className="text-xs text-slate-400">{h.sku} · {h.on_hand} on hand</span></button></li>)}</ul>}
+          </div>
+          {addNew && <NewItem onCancel={() => setAddNew(false)} onCreated={async (it) => { setAddNew(false); const full = await call(`/erp/api/items/${it.id}`); addLine(full.id, full.name, full.sku); }} />}
+          <table className="w-full text-sm"><thead className="border-b text-left text-xs uppercase text-slate-500"><tr><th className="py-2">Item</th><th>Quantity</th><th>Unit cost (₹)</th><th>Lot no.</th><th>Expiry date</th><th className="text-right">Line total</th><th /></tr></thead>
+            <tbody className="divide-y divide-slate-100">{lines.map((l, i) => <tr key={l.itemId}><td className="py-2">{l.name}<div className="text-xs text-slate-400">{l.sku}</div></td>
+              <td><input className="input !w-24 !py-1" type="number" min="1" step="1" value={l.qty} onChange={(e) => patch(i, 'qty', e.target.value)} aria-label="quantity" /></td>
+              <td><input className="input !w-28 !py-1" type="number" min="0" step="0.01" value={l.cost} onChange={(e) => patch(i, 'cost', e.target.value)} aria-label="unit cost" /></td>
+              <td><input className="input !w-28 !py-1" value={l.lotNo} placeholder="auto" onChange={(e) => patch(i, 'lotNo', e.target.value)} aria-label="lot number" /></td>
+              <td><input className="input !w-36 !py-1" type="date" value={l.expiry} onChange={(e) => patch(i, 'expiry', e.target.value)} aria-label="expiry date" /></td>
+              <td className="text-right tabular-nums">{inr((Number(l.qty) || 0) * (Number(l.cost) || 0))}</td>
+              <td className="text-right"><button className="text-xs text-slate-500 hover:underline" onClick={() => setLines(lines.filter((_, j) => j !== i))}>remove</button></td></tr>)}</tbody></table>
+          {lines.length === 0 && <p className="text-sm text-slate-500">Search for an item above, or create a new one, to start the bill.</p>}
+          {err && <p role="alert" className="rounded bg-red-50 p-2 text-sm text-red-800">⚠ {err}</p>}
+          <div className="flex items-center justify-between border-t border-slate-100 pt-3"><span className="text-sm text-slate-500">Bill total <b className="ml-2 text-lg text-ink tabular-nums">{inr(total)}</b></span><button className="btn-erp" disabled={!valid || busy} onClick={save}>{busy ? 'Saving…' : 'Save bill & receive stock'}</button></div>
+        </div>
+      )}
+      <div className="card overflow-x-auto"><table className="w-full text-sm"><thead className="border-b bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th className="p-3">Bill</th><th>Vendor</th><th>Date</th><th>Items</th><th className="pr-4 text-right">Total</th><th>Entered by</th></tr></thead>
+        <tbody className="divide-y divide-slate-100">{rows.map((b) => <tr key={b.id}><td className="p-3 font-medium">{b.bill_no}</td><td>{b.vendor}</td><td>{String(b.bill_date).slice(0, 10)}</td><td className="max-w-md truncate text-slate-600">{(b.lines ?? []).map((l: any) => `${l.name} ×${l.qty}`).join(', ')}</td><td className="pr-4 text-right tabular-nums">{inr(b.total)}</td><td className="text-slate-500">{b.created_by}</td></tr>)}</tbody></table>
+        {rows.length === 0 && <p className="p-8 text-center text-sm text-slate-500">No purchase bills yet.</p>}</div>
+    </div>
+  );
+}
+
 function Catalog() {
   const [rows, setRows] = useState<any[]>([]);
   const [q, setQ] = useState('');
   const [sel, setSel] = useState<any>(null);
   const [msg, setMsg] = useState('');
+  const [adding, setAdding] = useState(false);
   const load = useCallback(() => call<any[]>(`/erp/api/items${q ? `?q=${encodeURIComponent(q)}` : ''}`).then(setRows).catch(() => undefined), [q]);
   useEffect(() => { load(); }, [load]);
   async function open(id: number) { setSel(await call(`/erp/api/items/${id}`)); setMsg(''); }
@@ -123,8 +237,10 @@ function Catalog() {
   const [lotQty, setLotQty] = useState('100');
   const [lotDays, setLotDays] = useState('120');
   return (
+    <div className="space-y-4">
+    {adding && <NewItem onCancel={() => setAdding(false)} onCreated={async (it) => { setAdding(false); await load(); await open(it.id); setMsg('Item created - CARPIP picks it up on the next catalog sync'); }} />}
     <div className="grid gap-4 xl:grid-cols-[1fr_24rem]">
-      <div className="card"><div className="border-b border-slate-100 p-3"><input className="input max-w-xs" placeholder="Search items…" value={q} onChange={(e) => setQ(e.target.value)} /></div>
+      <div className="card"><div className="flex items-center gap-3 border-b border-slate-100 p-3"><input className="input max-w-xs" placeholder="Search items…" value={q} onChange={(e) => setQ(e.target.value)} /><button className="btn-erp" onClick={() => setAdding(true)}>＋ New item</button></div>
         <div className="max-h-[70vh] overflow-auto"><table className="w-full text-sm"><thead className="sticky top-0 border-b bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th className="p-3">Item</th><th>List</th><th>On hand</th><th>Reserved</th><th>MOQ/pack</th><th>Lead</th><th>Nearest expiry</th></tr></thead>
           <tbody className="divide-y divide-slate-100">{rows.map((i) => <tr key={i.id} className={`cursor-pointer hover:bg-slate-50 ${sel?.id === i.id ? 'bg-erp-50' : ''}`} onClick={() => open(i.id)}><td className="p-3">{i.name}<div className="text-xs text-slate-400">{i.sku} · {i.gtin}</div></td><td className="tabular-nums">{inr(i.list_price)}</td>
             <td className={`tabular-nums ${i.on_hand - i.reserved < i.moq * 2 ? 'font-semibold text-amber-700' : ''}`}>{i.on_hand}</td><td className="tabular-nums">{i.reserved}</td><td>{i.moq}/{i.pack_size}</td><td>{i.lead_time_days}d</td><td className="text-xs">{i.nearest_expiry ?? '-'}</td></tr>)}</tbody></table></div></div>
@@ -137,6 +253,7 @@ function Catalog() {
             <ul className="mb-2 space-y-0.5 text-xs text-slate-600">{sel.lots.map((l: any) => <li key={l.id}>{l.lot_no}: {l.qty_on_hand} on hand, {l.qty_reserved} reserved{l.expiry_date ? `, expires ${l.expiry_date}` : ''}</li>)}</ul>
             <div className="flex items-center gap-2"><input className="input !w-20 !py-1" type="number" value={lotQty} onChange={(e) => setLotQty(e.target.value)} aria-label="lot quantity" /><span className="text-slate-500">units, expiry in</span><input className="input !w-20 !py-1" type="number" value={lotDays} onChange={(e) => setLotDays(e.target.value)} aria-label="expiry days" /><span className="text-slate-500">days</span><button className="btn-ghost" onClick={() => addLot(Number(lotQty), lotDays ? Number(lotDays) : null)}>Receive</button></div></div>
           {msg && <p className="rounded bg-slate-100 p-2 text-xs">{msg}</p>}</div>)}</div>
+    </div>
     </div>
   );
 }
@@ -206,7 +323,7 @@ export default function App() {
   const boot = useMemo(() => localStorage.getItem('erp.token'), []);
   useEffect(() => { if (boot) { TOKEN = boot; call('/erp/api/me').then(setMe).catch(() => { localStorage.removeItem('erp.token'); TOKEN = ''; }); } }, [boot]);
   if (!me) return <Login onDone={() => call('/erp/api/me').then(setMe)} />;
-  const TABS: [string, string][] = [['dashboard', 'Dashboard'], ['orders', 'Sales orders'], ['catalog', 'Catalog & stock'], ['insights', 'Demand insights'], ['integration', 'Integration']];
+  const TABS: [string, string][] = [['dashboard', 'Dashboard'], ['orders', 'Sales orders'], ['catalog', 'Catalog & stock'], ['purchases', 'Purchases'], ['insights', 'Demand insights'], ['integration', 'Integration']];
   return (
     <div className="flex h-full flex-col">
       <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2">
@@ -218,6 +335,7 @@ export default function App() {
         {tab === 'dashboard' && <Dashboard me={me} go={setTab} />}
         {tab === 'orders' && (open ? <OrderDetail id={open} onBack={() => setOpen(null)} /> : <Orders onOpen={setOpen} />)}
         {tab === 'catalog' && <Catalog />}
+        {tab === 'purchases' && <Purchases />}
         {tab === 'insights' && <Insights />}
         {tab === 'integration' && <Integration />}
       </main>
